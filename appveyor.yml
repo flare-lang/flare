@@ -1,0 +1,48 @@
+artifacts:
+    - path: 'src/*/bin/$(CONFIGURATION)/*.nupkg'
+    - path: 'src/*/bin/$(CONFIGURATION)/*/*.zip'
+build_script:
+    - pwsh: |
+          $ErrorActionPreference = "Stop"
+          Set-StrictMode -Version 2.0
+          markdownlint *.md
+          dotnet build -c $Env:CONFIGURATION
+          dotnet pack -c $Env:CONFIGURATION
+          $rids =
+          @(
+              "linux-arm",
+              "linux-arm64",
+              "linux-armel",
+              "linux-x64",
+              "linux-x86",
+              "osx-x64",
+              "win-arm",
+              "win-arm64",
+              "win-x64",
+              "win-x86"
+          )
+          foreach ($rid in $rids)
+          {
+              dotnet publish -c $Env:CONFIGURATION -p:PublishSingleFile=true -p:PublishTrimmed=true -r $rid
+          }
+image: Visual Studio 2019 Preview
+install:
+    - pwsh: |
+          $ErrorActionPreference = "Stop"
+          Set-StrictMode -Version 2.0
+          npm install markdownlint-cli -g
+          Invoke-WebRequest https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
+          ./dotnet-install.ps1 -i "C:\Program Files\dotnet" -v 3.0.100-preview6-012264
+configuration:
+    - Debug
+    - Release
+nuget:
+    disable_publish_on_pr: true
+pull_requests:
+    do_not_increment_build_number: true
+skip_tags: true
+test_script:
+    - pwsh: |
+          $ErrorActionPreference = "Stop"
+          Set-StrictMode -Version 2.0
+          dotnet test -c $Env:CONFIGURATION

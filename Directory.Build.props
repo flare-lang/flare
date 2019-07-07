@@ -1,0 +1,33 @@
+<Project>
+  <PropertyGroup>
+    <Company>Alex Rønne Petersen</Company>
+    <Copyright>ISC License (No Attribution)</Copyright>
+    <Description>A dynamic programming language suitable for embedding.</Description>
+    <Product>Flare</Product>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyVersion>0.1.0</AssemblyVersion>
+    <FileVersion>0.1.0</FileVersion>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'True'">true</ContinuousIntegrationBuild>
+    <DebugType>portable</DebugType>
+    <Deterministic>true</Deterministic>
+    <EmbedAllSources>true</EmbedAllSources>
+    <LangVersion>preview</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Authors>$(Company)</Authors>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbolsInSingleFile>true</IncludeSymbolsInSingleFile>
+    <IsPackable>false</IsPackable>
+    <IsPublishable>false</IsPublishable>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+</Project>

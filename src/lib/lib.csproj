@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>libflare</AssemblyName>
+    <IsPackable>true</IsPackable>
+    <RootNamespace>Flare</RootNamespace>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE.md; ..\..\README.md">
+      <Pack>true</Pack>
+      <PackagePath>%(Filename)%(Extension)</PackagePath>
+      <Visible>true</Visible>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub">
+      <PrivateAssets>all</PrivateAssets>
+      <Version>1.0.0-beta2-19351-01</Version>
+    </PackageReference>
+  </ItemGroup>
+</Project>

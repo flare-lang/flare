@@ -1,0 +1,7 @@
+# Reference: https://git-scm.com/docs/gitignore
+
+*.user
+.vs
+.vscode
+/src/*/bin
+/src/*/obj

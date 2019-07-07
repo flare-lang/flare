@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>flare-tests</AssemblyName>
+    <RootNamespace>Flare.Tests</RootNamespace>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\cli\cli.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk">
+      <Version>16.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="xunit">
+      <Version>2.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="xunit.runner.visualstudio">
+      <Version>2.4.0</Version>
+    </PackageReference>
+  </ItemGroup>
+</Project>

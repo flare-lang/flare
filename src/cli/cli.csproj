@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>flare</AssemblyName>
+    <IncludeSource>false</IncludeSource>
+    <IsPackable>true</IsPackable>
+    <IsPublishable>true</IsPublishable>
+    <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+    <RootNamespace>Flare.Cli</RootNamespace>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE.md; ..\..\README.md">
+      <Pack>true</Pack>
+      <PackagePath>%(Filename)%(Extension)</PackagePath>
+      <Visible>true</Visible>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lib\lib.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub">
+      <PrivateAssets>all</PrivateAssets>
+      <Version>1.0.0-beta2-19351-01</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Target AfterTargets="Publish" Condition="'$(PublishSingleFile)' == 'true'" Name="ZipSingleFile">
+    <ZipDirectory DestinationFile="$(PublishDir)..\$(Product).$(Version).$(RuntimeIdentifier).zip" Overwrite="true" SourceDirectory="$(PublishDir)" />
+  </Target>
+</Project>
