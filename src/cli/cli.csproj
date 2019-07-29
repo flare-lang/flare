@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <ApplicationIcon>..\..\Flare.ico</ApplicationIcon>
     <AssemblyName>flare</AssemblyName>
     <IncludeSource>false</IncludeSource>
     <IsPackable>true</IsPackable>

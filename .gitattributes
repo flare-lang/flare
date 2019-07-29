@@ -1,3 +1,4 @@
 # Reference: https://git-scm.com/docs/gitattributes
 
 * text
+*.ico binary
