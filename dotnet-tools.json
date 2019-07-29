@@ -9,7 +9,7 @@
       ]
     },
     "dotnet-format": {
-      "version": "3.0.4",
+      "version": "3.1.37601",
       "commands": [
         "dotnet-format"
       ]
@@ -21,9 +21,21 @@
       ]
     },
     "dotnet-sos": {
-      "version": "1.0.4-preview6.19311.1",
+      "version": "3.0.0-preview7.19365.2",
       "commands": [
         "dotnet-sos"
+      ]
+    },
+    "dotnet-symbol": {
+      "version": "1.0.5",
+      "commands": [
+        "dotnet-symbol"
+      ]
+    },
+    "dotnet-trace": {
+      "version": "3.0.0-preview7.19365.2",
+      "commands": [
+        "dotnet-trace"
       ]
     },
     "dotnet-t4": {
