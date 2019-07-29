@@ -32,7 +32,7 @@ install:
           Set-StrictMode -Version 2.0
           npm install markdownlint-cli -g
           Invoke-WebRequest https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
-          ./dotnet-install.ps1 -i "C:\Program Files\dotnet" -v 3.0.100-preview6-012264
+          ./dotnet-install.ps1 -i "C:\Program Files\dotnet" -v 3.0.100-preview7-012821
 configuration:
     - Debug
     - Release
