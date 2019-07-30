@@ -25,6 +25,9 @@
       <PrivateAssets>all</PrivateAssets>
       <Version>1.0.0-beta2-19367-01</Version>
     </PackageReference>
+    <PackageReference Include="System.CommandLine.Rendering">
+      <Version>0.3.0-alpha.19317.1</Version>
+    </PackageReference>
   </ItemGroup>
   <Target AfterTargets="Publish" Condition="'$(PublishSingleFile)' == 'true'" Name="ZipSingleFile">
     <ZipDirectory DestinationFile="$(PublishDir)..\$(Product).$(Version).$(RuntimeIdentifier).zip" Overwrite="true" SourceDirectory="$(PublishDir)" />
