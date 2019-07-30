@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Flare.Syntax.Tree
+namespace Flare.Syntax
 {
     public abstract partial class SyntaxWalker : SyntaxVisitor
     {

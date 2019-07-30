@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Flare.Syntax.Tree
+namespace Flare.Syntax
 {
     public struct SeparatedSyntaxTokenList : IReadOnlyList<SyntaxToken>
     {

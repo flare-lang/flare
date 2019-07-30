@@ -23,7 +23,7 @@ WriteLine("using System.Collections.Immutable;");
 WriteLine("using System.Linq;");
 WriteLine(string.Empty);
 
-WriteLine("namespace Flare.Syntax.Tree");
+WriteLine("namespace Flare.Syntax");
 WriteLine("{");
 PushIndent("    ");
 

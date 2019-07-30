@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Flare.Syntax.Tree;
 
 namespace Flare.Syntax
 {

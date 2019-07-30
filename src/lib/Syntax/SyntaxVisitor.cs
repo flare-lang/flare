@@ -1,4 +1,4 @@
-namespace Flare.Syntax.Tree
+namespace Flare.Syntax
 {
     public abstract partial class SyntaxVisitor
     {
