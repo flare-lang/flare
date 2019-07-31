@@ -11,7 +11,6 @@ namespace Flare.Cli
         {
             return await new RootCommand
             {
-                new BuildCommand(),
                 new CheckCommand(),
                 new CleanCommand(),
                 new DebugCommand(),
