@@ -5,7 +5,7 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Xml.Linq" #>
 <#@ output encoding="utf-8" extension=".cs" #>
-<#@ template compilerOptions="/langversion:preview /unsafe+ /warnaserror+" debug="true" hostspecific="true" #>
+<#@ template compilerOptions="/unsafe+ /warnaserror+" debug="true" hostspecific="true" #>
 <#
 var root = XDocument.Load(Host.ResolvePath("SyntaxTree.xml")).Root;
 var settings = new Settings(root.Element("settings"));
