@@ -13,9 +13,7 @@ build_script:
           @(
               "linux-arm",
               "linux-arm64",
-              "linux-armel",
               "linux-x64",
-              "linux-x86",
               "osx-x64",
               "win-arm",
               "win-arm64",
