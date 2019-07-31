@@ -524,7 +524,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var param = ParseFunctionParameter();
@@ -600,7 +600,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var param = ParseMacroParameter();
@@ -937,7 +937,7 @@ namespace Flare.Syntax
                         expr = ParseModuleExpression();
                         break;
                     case SyntaxTokenKind.ValueIdentifier:
-                        expr = ParseIdentifierExpression();
+                        expr = ParseIdentifierOrMacroCallExpression();
                         break;
                     case SyntaxTokenKind.FragmentIdentifier:
                         expr = ParseFragmentExpression();
@@ -977,7 +977,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var pair = ParseMapExpressionPair();
@@ -1026,7 +1026,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var expr = ParseExpression();
@@ -1047,7 +1047,7 @@ namespace Flare.Syntax
                 return new SetExpressionNode(Skipped(), diags, hash, open, List(elems, seps), close);
             }
 
-            ExpressionNode ParseParenthesizedOrTupleExpression()
+            PrimaryExpressionNode ParseParenthesizedOrTupleExpression()
             {
                 var diags = Diagnostics();
 
@@ -1100,7 +1100,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var expr = ParseExpression();
@@ -1203,7 +1203,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var field = ParseExpressionField();
@@ -1264,7 +1264,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var param = ParseLambdaParameter();
@@ -1422,7 +1422,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var field = ParseExpressionField();
@@ -1499,13 +1499,58 @@ namespace Flare.Syntax
                 return new ModuleExpressionNode(Skipped(), Diagnostics(), path);
             }
 
-            IdentifierExpressionNode ParseIdentifierExpression()
+            PrimaryExpressionNode ParseIdentifierOrMacroCallExpression()
             {
                 var diags = Diagnostics();
 
                 var ident = Expect(SyntaxTokenKind.ValueIdentifier, "value identifier", ref diags);
 
+                if (_stream.Peek().Kind == SyntaxTokenKind.Exclamation)
+                {
+                    var bang = _stream.Move();
+                    var args = ParseMacroArgumentList();
+
+                    return new MacroCallExpressionNode(Skipped(), diags, ident, bang, args);
+                }
+
                 return new IdentifierExpressionNode(Skipped(), diags, ident);
+            }
+
+            MacroArgumentListNode ParseMacroArgumentList()
+            {
+                var diags = Diagnostics();
+
+                var open = Expect(SyntaxTokenKind.OpenParen, "'('", ref diags);
+                var args = ImmutableArray<ExpressionNode>.Empty;
+                var seps = ImmutableArray<SyntaxToken>.Empty;
+                var first = true;
+
+                while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseParen)
+                {
+                    if (!first)
+                    {
+                        if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
+                            break;
+
+                        seps = seps.Add(_stream.Move());
+                    }
+
+                    var arg = ParseExpression();
+                    var stop = arg is MissingExpressionNode && _stream.Peek().Kind != SyntaxTokenKind.Comma;
+
+                    if (first && stop)
+                        break;
+
+                    args = args.Add(arg);
+                    first = false;
+
+                    if (stop)
+                        break;
+                }
+
+                var close = Expect(SyntaxTokenKind.CloseParen, "')'", ref diags);
+
+                return new MacroArgumentListNode(Skipped(), diags, open, List(args, seps), close);
             }
 
             FragmentExpressionNode ParseFragmentExpression()
@@ -1685,7 +1730,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var idx = ParseIndex();
@@ -1807,7 +1852,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var expr = ParseExpression();
@@ -1857,7 +1902,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var pair = ParseMapPatternPair();
@@ -1947,7 +1992,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var pat = ParsePattern();
@@ -1988,7 +2033,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var field = ParsePatternField();
@@ -2050,7 +2095,7 @@ namespace Flare.Syntax
                         if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
                             break;
 
-                        seps = seps.Add(Expect(SyntaxTokenKind.Comma, "','", ref diags));
+                        seps = seps.Add(_stream.Move());
                     }
 
                     var field = ParsePatternField();

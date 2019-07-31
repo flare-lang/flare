@@ -263,6 +263,17 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
             <child name="Try" type="CallTry" optional="true" />
         </node>
 
+        <node name="ArgumentList">
+            <token name="OpenParen" />
+            <children name="Arguments" type="Argument" separated="true" />
+            <token name="CloseParen" />
+        </node>
+
+        <node name="Argument">
+            <token name="DotDot" optional="true" />
+            <child name="Value" type="Expression" />
+        </node>
+
         <node name="CallTry">
             <token name="Question" />
             <child name="Catch" type="CallTryCatch" optional="true" />
@@ -273,17 +284,6 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
             <token name="OpenBrace" />
             <children name="Arms" type="PatternArm" />
             <token name="CloseBrace" />
-        </node>
-
-        <node name="ArgumentList">
-            <token name="OpenParen" />
-            <children name="Arguments" type="Argument" separated="true" />
-            <token name="CloseParen" />
-        </node>
-
-        <node name="Argument">
-            <token name="DotDot" optional="true" />
-            <child name="Value" type="Expression" />
         </node>
 
         <node name="MethodCallExpression" base="PostfixExpression">
@@ -327,6 +327,18 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
 
         <node name="IdentifierExpression" base="PrimaryExpression">
             <token name="Identifier" />
+        </node>
+
+        <node name="MacroCallExpression" base="PrimaryExpression">
+            <token name="Identifier" />
+            <token name="Exclamation" />
+            <child name="ArgumentList" type="MacroArgumentList" />
+        </node>
+
+        <node name="MacroArgumentList">
+            <token name="OpenParen" />
+            <children name="Arguments" type="Expression" separated="true" />
+            <token name="CloseParen" />
         </node>
 
         <node name="FragmentExpression" base="PrimaryExpression">

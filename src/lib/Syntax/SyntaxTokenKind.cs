@@ -9,6 +9,7 @@ namespace Flare.Syntax
         AdditiveOperator,
         ShiftOperator,
         BitwiseOperator,
+        Exclamation,
         ExclamationEquals,
         Hash,
         OpenParen,
