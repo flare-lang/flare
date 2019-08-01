@@ -104,6 +104,7 @@ namespace Flare.Syntax
                         case SyntaxTokenKind.LetKeyword:
                         case SyntaxTokenKind.LoopKeyword:
                         case SyntaxTokenKind.MatchKeyword:
+                        case SyntaxTokenKind.MutKeyword:
                         case SyntaxTokenKind.NotKeyword:
                         case SyntaxTokenKind.RaiseKeyword:
                         case SyntaxTokenKind.RecKeyword:
