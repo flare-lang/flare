@@ -80,7 +80,7 @@ namespace Flare.Syntax
 
             readonly List<SyntaxDiagnostic> _currentDiagnostics = new List<SyntaxDiagnostic>();
 
-            ImmutableArray<SyntaxDiagnostic> _allDiagnostics = new ImmutableArray<SyntaxDiagnostic>();
+            readonly List<SyntaxDiagnostic> _allDiagnostics = new List<SyntaxDiagnostic>();
 
             public Lexer(SourceText source)
             {
@@ -315,7 +315,7 @@ namespace Flare.Syntax
                 _leading.Clear();
                 _trailing.Clear();
 
-                _allDiagnostics = _allDiagnostics.AddRange(_currentDiagnostics);
+                _allDiagnostics.AddRange(_currentDiagnostics);
                 _currentDiagnostics.Clear();
 
                 return token;
@@ -329,7 +329,7 @@ namespace Flare.Syntax
 
             public LexResult Lex()
             {
-                return new LexResult(_source, LexTokens().ToImmutableArray(), _allDiagnostics);
+                return new LexResult(_source, LexTokens().ToImmutableArray(), _allDiagnostics.ToImmutableArray());
             }
 
             IEnumerable<SyntaxToken> LexTokens()

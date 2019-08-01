@@ -175,7 +175,7 @@ namespace Flare.Syntax
 
             readonly Stack<ParseContext> _contexts = new Stack<ParseContext>();
 
-            ImmutableArray<SyntaxDiagnostic> _diagnostics = new ImmutableArray<SyntaxDiagnostic>();
+            readonly List<SyntaxDiagnostic> _diagnostics = new List<SyntaxDiagnostic>();
 
             public Parser(LexResult lex, SyntaxMode mode)
             {
@@ -313,7 +313,7 @@ namespace Flare.Syntax
                     ImmutableArray<(SourceLocation, string)>.Empty);
 
                 diagnostics = diagnostics.Add(diag);
-                _diagnostics = _diagnostics.Add(diag);
+                _diagnostics.Add(diag);
             }
 
             public ParseResult Parse()
@@ -329,7 +329,7 @@ namespace Flare.Syntax
 
                 _ = Expect(SyntaxTokenKind.EndOfInput, "end of input", ref diags);
 
-                return new ParseResult(_lex, _mode, node, _diagnostics);
+                return new ParseResult(_lex, _mode, node, _diagnostics.ToImmutableArray());
             }
 
             ProgramNode ParseProgram()
