@@ -1,39 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Flare.Syntax
 {
-    public struct SeparatedSyntaxTokenList : IReadOnlyList<SyntaxToken>
+    public readonly struct SeparatedSyntaxTokenList
     {
-        readonly IReadOnlyList<SyntaxToken> _tokens;
+        public SyntaxTokenList Tokens { get; }
 
-        public IReadOnlyList<SyntaxToken> Separators { get; }
+        public SyntaxTokenList Separators { get; }
 
-        public int Count => _tokens.Count;
-
-        public SyntaxToken this[int index] => _tokens[index];
-
-        internal SeparatedSyntaxTokenList(IReadOnlyList<SyntaxToken> tokens, IReadOnlyList<SyntaxToken> separators)
+        internal SeparatedSyntaxTokenList(SyntaxTokenList tokens, SyntaxTokenList separators)
         {
-            _tokens = tokens;
+            Tokens = tokens;
             Separators = separators;
         }
 
         public SeparatedSyntaxTokenList DeepClone()
         {
-            return new SeparatedSyntaxTokenList(_tokens.Select(x => x.DeepClone()).ToArray(),
-                Separators.Select(x => x.DeepClone()).ToArray());
-        }
-
-        public IEnumerator<SyntaxToken> GetEnumerator()
-        {
-            return _tokens.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            return new SeparatedSyntaxTokenList(Tokens.DeepClone(), Separators.DeepClone());
         }
     }
 }

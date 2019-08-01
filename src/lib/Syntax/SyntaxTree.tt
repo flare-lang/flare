@@ -86,7 +86,7 @@ for (var i = 0; i < nodes.Length; i++)
                 var name = prop.PropertyName;
 
                 if (prop.IsTokens)
-                    WriteLine("if ({0}.Count != 0)", name);
+                    WriteLine("if ({0}{1}.Count != 0)", name, prop.ElementsAccess);
                 else if (prop.IsToken)
                     WriteLine("if ({0} != null)", name);
 
@@ -140,7 +140,7 @@ for (var i = 0; i < nodes.Length; i++)
                 var name = prop.PropertyName;
 
                 if (prop.IsChildren)
-                    WriteLine("if ({0}.Count != 0)", name);
+                    WriteLine("if ({0}{1}.Count != 0)", name, prop.ElementsAccess);
                 else
                     WriteLine("if ({0} != null)", name);
 
@@ -260,7 +260,7 @@ for (var i = 0; i < nodes.Length; i++)
 
             if (prop.IsChildren || prop.IsTokens)
             {
-                WriteLine("foreach (var child in {0})", param);
+                WriteLine("foreach (var child in {0}{1})", param, prop.ElementsAccess);
                 PushIndent("    ");
                 WriteLine("child.Parent = this;");
                 PopIndent();
@@ -369,7 +369,7 @@ for (var i = 0; i < nodes.Length; i++)
 
                 if (prop.IsTokens)
                 {
-                    WriteLine("foreach (var token in {0})", name);
+                    WriteLine("foreach (var token in {0}{1})", name, prop.ElementsAccess);
                     PushIndent("    ");
                     WriteLine("yield return token;");
                     PopIndent();
@@ -420,7 +420,7 @@ for (var i = 0; i < nodes.Length; i++)
 
                 if (prop.IsChildren)
                 {
-                    WriteLine("foreach (var child in {0})", name);
+                    WriteLine("foreach (var child in {0}{1})", name, prop.ElementsAccess);
                     PushIndent("    ");
                     WriteLine("yield return child;");
                     PopIndent();
@@ -584,6 +584,8 @@ sealed class Property
 
     public string TypeName { get; }
 
+    public string ElementsAccess { get; }
+
     public Property(XElement element, Settings settings)
     {
         IsOverride = (bool?)element.Attribute("override") ?? false;
@@ -618,19 +620,29 @@ sealed class Property
         ParameterName = param;
 
         var type = IsToken || IsTokens ? "SyntaxToken" : (string)element.Attribute("type") + settings.TypeNameSuffix;
+        var elems = string.Empty;
 
         if (IsTokens)
+        {
             type = "SyntaxTokenList";
+            elems = ".Tokens";
+        }
         else if (IsChildren)
+        {
             type = $"SyntaxNodeList<{type}>";
+            elems = ".Nodes";
+        }
 
         if (IsSeparated)
             type = "Separated" + type;
+        else
+            elems = string.Empty;
 
         if (IsOptional)
             type += '?';
 
         TypeName = type;
+        ElementsAccess = elems;
     }
 }
 #>

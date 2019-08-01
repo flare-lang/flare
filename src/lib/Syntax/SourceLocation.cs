@@ -24,6 +24,11 @@ namespace Flare.Syntax
             Column = column;
         }
 
+        internal SourceLocation WithMissing()
+        {
+            return new SourceLocation(FullPath);
+        }
+
         public override string ToString()
         {
             return $"{FullPath}({Line},{Column})";

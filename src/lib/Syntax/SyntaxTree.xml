@@ -28,7 +28,7 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
         <!-- Common Grammar Elements -->
 
         <node name="ModulePath">
-            <tokens name="Components" separated="true" />
+            <tokens name="Component" separated="true" />
         </node>
 
         <!-- Program Structure -->

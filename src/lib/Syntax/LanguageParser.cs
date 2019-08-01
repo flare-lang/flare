@@ -253,21 +253,27 @@ namespace Flare.Syntax
                 return cur == kind1 || cur == kind2 ? _stream.Move() : null;
             }
 
-            static SyntaxNodeList<T> List<T>(IReadOnlyList<T> nodes)
+            static SyntaxNodeList<T> List<T>(ImmutableArray<T> nodes)
                 where T : SyntaxNode
             {
                 return new SyntaxNodeList<T>(nodes);
             }
 
-            static SeparatedSyntaxNodeList<T> List<T>(IReadOnlyList<T> nodes, IReadOnlyList<SyntaxToken> separators)
-                where T : SyntaxNode
+            static SyntaxTokenList List(ImmutableArray<SyntaxToken> tokens)
             {
-                return new SeparatedSyntaxNodeList<T>(nodes, separators);
+                return new SyntaxTokenList(tokens);
             }
 
-            static SeparatedSyntaxTokenList List(IReadOnlyList<SyntaxToken> nodes, IReadOnlyList<SyntaxToken> separators)
+            static SeparatedSyntaxNodeList<T> List<T>(ImmutableArray<T> nodes, ImmutableArray<SyntaxToken> separators)
+                where T : SyntaxNode
             {
-                return new SeparatedSyntaxTokenList(nodes, separators);
+                return new SeparatedSyntaxNodeList<T>(List(nodes), List(separators));
+            }
+
+            static SeparatedSyntaxTokenList List(ImmutableArray<SyntaxToken> nodes,
+                ImmutableArray<SyntaxToken> separators)
+            {
+                return new SeparatedSyntaxTokenList(List(nodes), List(separators));
             }
 
             ContextWrapper<T> Context<T>(T context)
@@ -452,8 +458,8 @@ namespace Flare.Syntax
                         Error(ref diags, SyntaxDiagnosticKind.MissingNamedDeclaration, tok.Location,
                             $"Expected declaration, but found {(tok.IsEndOfInput ? "end of input" : $"'{tok}'")}");
 
-                        return new MissingNamedDeclarationNode(skipped, diags, List(Array.Empty<AttributeNode>()),
-                            Missing(), Missing(), Missing());
+                        return new MissingNamedDeclarationNode(skipped, diags,
+                            List(ImmutableArray<AttributeNode>.Empty), Missing(), Missing(), Missing());
                 }
             }
 
