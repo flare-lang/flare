@@ -872,22 +872,24 @@ namespace Flare.Syntax
                 switch (tok.Kind)
                 {
                     case SyntaxTokenKind.Hash:
-                        var tok2 = _stream.Peek(2);
+                        var htok2 = _stream.Peek(2);
 
-                        switch (tok2.Kind)
+                        switch (htok2.Kind)
                         {
                             case SyntaxTokenKind.OpenBracket:
-                                return ParseMapExpression();
-                            case SyntaxTokenKind.OpenBrace:
-                                return ParseSetExpression();
-                            default:
+                                expr = ParseMapExpression();
                                 break;
+                            case SyntaxTokenKind.OpenBrace:
+                                expr = ParseSetExpression();
+                                break;
+                            default:
+                                Error(ref diags, SyntaxDiagnosticKind.MissingExpression, htok2.Location,
+                                    $"Expected set or map expression, but found {(htok2.IsEndOfInput ? "end of input" : $"'{htok2}'")}");
+
+                                return new MissingExpressionNode(Skipped(), diags);
                         }
 
-                        Error(ref diags, SyntaxDiagnosticKind.MissingExpression, tok2.Location,
-                            $"Expected set or map expression, but found {(tok2.IsEndOfInput ? "end of input" : $"'{tok2}'")}");
-
-                        return new MissingExpressionNode(Skipped(), diags);
+                        break;
                     case SyntaxTokenKind.OpenParen:
                         expr = ParseParenthesizedOrTupleExpression();
                         break;
@@ -923,6 +925,41 @@ namespace Flare.Syntax
                         break;
                     case SyntaxTokenKind.MatchKeyword:
                         expr = ParseMatchExpression();
+                        break;
+                    case SyntaxTokenKind.MutKeyword:
+                        var mtok2 = _stream.Peek(2);
+
+                        switch (mtok2.Kind)
+                        {
+                            case SyntaxTokenKind.Hash:
+                                var mtok3 = _stream.Peek(3);
+
+                                switch (mtok3.Kind)
+                                {
+                                    case SyntaxTokenKind.OpenBracket:
+                                        expr = ParseMapExpression();
+                                        break;
+                                    case SyntaxTokenKind.OpenBrace:
+                                        expr = ParseSetExpression();
+                                        break;
+                                    default:
+                                        Error(ref diags, SyntaxDiagnosticKind.MissingExpression, mtok3.Location,
+                                            $"Expected set or map expression, but found {(mtok3.IsEndOfInput ? "end of input" : $"'{mtok3}'")}");
+
+                                        return new MissingExpressionNode(Skipped(), diags);
+                                }
+
+                                break;
+                            case SyntaxTokenKind.OpenBracket:
+                                expr = ParseArrayExpression();
+                                break;
+                            default:
+                                Error(ref diags, SyntaxDiagnosticKind.MissingExpression, mtok2.Location,
+                                    $"Expected array, set, or map expression, but found {(mtok2.IsEndOfInput ? "end of input" : $"'{mtok2}'")}");
+
+                                return new MissingExpressionNode(Skipped(), diags);
+                        }
+
                         break;
                     case SyntaxTokenKind.RaiseKeyword:
                         expr = ParseRaiseExpression();
@@ -970,6 +1007,7 @@ namespace Flare.Syntax
             {
                 var diags = Diagnostics();
 
+                var mut = Optional1(SyntaxTokenKind.MutKeyword);
                 var hash = Expect(SyntaxTokenKind.Hash, "'#'", ref diags);
                 var open = Expect(SyntaxTokenKind.OpenBracket, "'['", ref diags);
                 var elems = ImmutableArray<MapExpressionPairNode>.Empty;
@@ -1001,7 +1039,7 @@ namespace Flare.Syntax
 
                 var close = Expect(SyntaxTokenKind.CloseBracket, "']'", ref diags);
 
-                return new MapExpressionNode(Skipped(), diags, hash, open, List(elems, seps), close);
+                return new MapExpressionNode(Skipped(), diags, mut, hash, open, List(elems, seps), close);
             }
 
             MapExpressionPairNode ParseMapExpressionPair()
@@ -1019,6 +1057,7 @@ namespace Flare.Syntax
             {
                 var diags = Diagnostics();
 
+                var mut = Optional1(SyntaxTokenKind.MutKeyword);
                 var hash = Expect(SyntaxTokenKind.Hash, "'#'", ref diags);
                 var open = Expect(SyntaxTokenKind.OpenBrace, "'{'", ref diags);
                 var elems = ImmutableArray<ExpressionNode>.Empty;
@@ -1050,7 +1089,7 @@ namespace Flare.Syntax
 
                 var close = Expect(SyntaxTokenKind.CloseBrace, "'}'", ref diags);
 
-                return new SetExpressionNode(Skipped(), diags, hash, open, List(elems, seps), close);
+                return new SetExpressionNode(Skipped(), diags, mut, hash, open, List(elems, seps), close);
             }
 
             PrimaryExpressionNode ParseParenthesizedOrTupleExpression()
@@ -1094,6 +1133,7 @@ namespace Flare.Syntax
             {
                 var diags = Diagnostics();
 
+                var mut = Optional1(SyntaxTokenKind.MutKeyword);
                 var open = Expect(SyntaxTokenKind.OpenBracket, "'['", ref diags);
                 var elems = ImmutableArray<ExpressionNode>.Empty;
                 var seps = ImmutableArray<SyntaxToken>.Empty;
@@ -1124,7 +1164,7 @@ namespace Flare.Syntax
 
                 var close = Expect(SyntaxTokenKind.CloseBracket, "']'", ref diags);
 
-                return new ArrayExpressionNode(Skipped(), diags, open, List(elems, seps), close);
+                return new ArrayExpressionNode(Skipped(), diags, mut, open, List(elems, seps), close);
             }
 
             BlockExpressionNode ParseBlockExpression()

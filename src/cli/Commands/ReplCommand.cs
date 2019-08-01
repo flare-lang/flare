@@ -88,7 +88,7 @@ namespace Flare.Cli.Commands
 
             var tree = parse.Tree;
 
-            if (tree.SkippedTokens.Count != 0)
+            if (tree.HasSkippedTokens)
                 return false;
 
             var last = tree.Children().LastOrDefault();

@@ -401,12 +401,14 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
         </node>
 
         <node name="ArrayExpression" base="PrimaryExpression">
+            <token name="MutKeyword" optional="true" />
             <token name="OpenBracket" />
             <children name="Elements" type="Expression" separated="true" />
             <token name="CloseBracket" />
         </node>
 
         <node name="SetExpression" base="PrimaryExpression">
+            <token name="MutKeyword" optional="true" />
             <token name="Hash" />
             <token name="OpenBrace" />
             <children name="Elements" type="Expression" separated="true" />
@@ -414,6 +416,7 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
         </node>
 
         <node name="MapExpression" base="PrimaryExpression">
+            <token name="MutKeyword" optional="true" />
             <token name="Hash" />
             <token name="OpenBracket" />
             <children name="Pairs" type="MapExpressionPair" separated="true" />
