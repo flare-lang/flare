@@ -57,6 +57,8 @@ namespace Flare.Syntax
 
             const int UnicodeEscapeLength = 6;
 
+            readonly SourceText _source;
+
             readonly PeekableRuneEnumerator _enumerator;
 
             SourceLocation _location;
@@ -81,8 +83,9 @@ namespace Flare.Syntax
 
             public Lexer(SourceText source)
             {
+                _source = source;
                 _enumerator = new PeekableRuneEnumerator(source.Runes.GetEnumerator());
-                _location = new SourceLocation(source, 1, 1);
+                _location = new SourceLocation(source.FullPath, 1, 1);
             }
 
             public void Dispose()
@@ -105,7 +108,7 @@ namespace Flare.Syntax
                 var line = _location.Line + (nl ? 1 : 0);
                 var column = nl ? 1 : _location.Column + 1;
 
-                _location = new SourceLocation(_location.Source, line, column);
+                _location = new SourceLocation(_location.FullPath, line, column);
                 _runes.Add(cur);
 
                 return cur;
@@ -323,7 +326,7 @@ namespace Flare.Syntax
 
             public LexResult Lex()
             {
-                return new LexResult(_location.Source, LexTokens().ToArray(), _allDiagnostics);
+                return new LexResult(_source, LexTokens().ToArray(), _allDiagnostics);
             }
 
             IEnumerable<SyntaxToken> LexTokens()
@@ -531,7 +534,7 @@ namespace Flare.Syntax
 
                 // No shebang line. Reset state since we probably just ate two tokens.
                 _enumerator.Reset();
-                _location = new SourceLocation(_location.Source, 1, 1);
+                _location = new SourceLocation(_location.FullPath, 1, 1);
                 _runes.Clear();
 
                 return null;

@@ -6,27 +6,27 @@ namespace Flare.Syntax
 
         public static int MissingColumn => -1;
 
-        public SourceText Source { get; }
+        public string FullPath { get; }
 
         public int Line { get; }
 
         public int Column { get; }
 
-        internal SourceLocation(SourceText source)
-            : this(source, MissingLine, MissingColumn)
+        internal SourceLocation(string fullPath)
+            : this(fullPath, MissingLine, MissingColumn)
         {
         }
 
-        internal SourceLocation(SourceText source, int line, int column)
+        internal SourceLocation(string fullPath, int line, int column)
         {
-            Source = source;
+            FullPath = fullPath;
             Line = line;
             Column = column;
         }
 
         public override string ToString()
         {
-            return $"{Source.FullPath}({Line},{Column})";
+            return $"{FullPath}({Line},{Column})";
         }
     }
 }

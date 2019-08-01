@@ -32,8 +32,8 @@ namespace Flare.Syntax
 
         public IReadOnlyList<SyntaxDiagnostic> Diagnostics { get; }
 
-        internal SyntaxToken(SourceText source)
-            : this(new SourceLocation(source), SyntaxTokenKind.Missing, string.Empty, null,
+        internal SyntaxToken(string fullPath)
+            : this(new SourceLocation(fullPath), SyntaxTokenKind.Missing, string.Empty, null,
                 Array.Empty<SyntaxTrivia>(), Array.Empty<SyntaxTrivia>(), null)
         {
         }

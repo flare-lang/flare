@@ -187,7 +187,7 @@ namespace Flare.Syntax
 
             SyntaxToken Missing()
             {
-                return new SyntaxToken(_lex.Source);
+                return new SyntaxToken(_lex.Source.FullPath);
             }
 
             SyntaxToken Expect(SyntaxTokenKind kind, string expected, ref ImmutableArray<SyntaxDiagnostic> diagnostics)
