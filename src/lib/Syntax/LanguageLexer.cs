@@ -65,7 +65,9 @@ namespace Flare.Syntax
 
             readonly List<Rune> _string = new List<Rune>();
 
-            char[] _buffer = new char[1024];
+            byte[] _buffer8 = new byte[1024];
+
+            char[] _buffer16 = new char[1024];
 
             object? _value;
 
@@ -160,7 +162,7 @@ namespace Flare.Syntax
                 return result;
             }
 
-            string CreateString()
+            ReadOnlyMemory<byte> CreateString()
             {
                 _string.Clear();
 
@@ -223,10 +225,30 @@ namespace Flare.Syntax
                     _string.Add(code);
                 }
 
-                return RunesToString(_string);
+                return RunesToUtf8(_string);
             }
 
-            string RunesToString(IEnumerable<Rune> runes)
+            // TODO: Use Utf8String when/if it becomes available.
+            ReadOnlyMemory<byte> RunesToUtf8(IEnumerable<Rune> runes)
+            {
+                var count = 0;
+
+                // Avoid LINQ for performance reasons.
+                foreach (var rune in runes)
+                    count += rune.Utf8SequenceLength;
+
+                if (count > _buffer8.Length)
+                    Array.Resize(ref _buffer8, count);
+
+                var offset = 0;
+
+                foreach (var rune in runes)
+                    offset += rune.EncodeToUtf8(_buffer8.AsSpan().Slice(offset));
+
+                return new ReadOnlyMemory<byte>(_buffer8, 0, count).ToArray();
+            }
+
+            string RunesToUtf16(IEnumerable<Rune> runes)
             {
                 var count = 0;
 
@@ -234,20 +256,20 @@ namespace Flare.Syntax
                 foreach (var rune in runes)
                     count += rune.Utf16SequenceLength;
 
-                if (count > _buffer.Length)
-                    Array.Resize(ref _buffer, count);
+                if (count > _buffer16.Length)
+                    Array.Resize(ref _buffer16, count);
 
                 var offset = 0;
 
                 foreach (var rune in runes)
-                    offset += rune.EncodeToUtf16(_buffer.AsSpan().Slice(offset));
+                    offset += rune.EncodeToUtf16(_buffer16.AsSpan().Slice(offset));
 
-                return new string(_buffer, 0, count);
+                return new string(_buffer16, 0, count);
             }
 
             SyntaxTrivia Trivia(SourceLocation location, SyntaxTriviaKind kind)
             {
-                var trivia = new SyntaxTrivia(location, kind, RunesToString(_runes));
+                var trivia = new SyntaxTrivia(location, kind, RunesToUtf16(_runes));
 
                 _runes.Clear();
 
@@ -461,7 +483,7 @@ namespace Flare.Syntax
                                 break;
                         }
 
-                        text = RunesToString(_runes);
+                        text = RunesToUtf16(_runes);
 
                         _runes.Clear();
 
@@ -971,7 +993,7 @@ namespace Flare.Syntax
                         break;
                 }
 
-                var text = RunesToString(_runes);
+                var text = RunesToUtf16(_runes);
 
                 // If it's a value identifier, it might actually be a keyword or Boolean/nil literal.
                 if (keyword && Keywords.TryGetValue(text, out var kind2))
