@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Flare
 {
-    static class Assert
+    public static class Assert
     {
         [Conditional("DEBUG")]
         public static void Check(bool condition, string message)
