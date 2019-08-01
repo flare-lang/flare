@@ -33,7 +33,7 @@ namespace Flare.Syntax
 
         public override string ToString()
         {
-            return Message;
+            return $"{Location}: {Message}";
         }
     }
 }
