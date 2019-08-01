@@ -364,7 +364,7 @@ namespace Flare.Syntax
                 {
                     if (ctx.Context.Declarations.CanParse(tok))
                         decls = decls.Add(ParseDeclaration());
-                    if (ctx.Context.Statements.CanParse(tok))
+                    else if (ctx.Context.Statements.CanParse(tok))
                         stmts = stmts.Add(ParseStatement());
                     else
                         Skip(ref skipped);
