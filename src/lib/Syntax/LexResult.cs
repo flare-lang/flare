@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace Flare.Syntax
@@ -7,16 +8,16 @@ namespace Flare.Syntax
     {
         public SourceText Source { get; }
 
-        public IReadOnlyList<SyntaxToken> Tokens { get; }
+        public ImmutableArray<SyntaxToken> Tokens { get; }
 
-        public bool HasDiagnostics => Diagnostics.Count != 0;
+        public bool HasDiagnostics => Diagnostics.Length != 0;
 
-        public IReadOnlyList<SyntaxDiagnostic> Diagnostics { get; }
+        public ImmutableArray<SyntaxDiagnostic> Diagnostics { get; }
 
         public bool IsSuccess => Diagnostics.All(x => x.Severity != SyntaxDiagnosticSeverity.Error);
 
-        internal LexResult(SourceText source, IReadOnlyList<SyntaxToken> tokens,
-            IReadOnlyList<SyntaxDiagnostic> diagnostics)
+        internal LexResult(SourceText source, ImmutableArray<SyntaxToken> tokens,
+            ImmutableArray<SyntaxDiagnostic> diagnostics)
         {
             Source = source;
             Tokens = tokens;

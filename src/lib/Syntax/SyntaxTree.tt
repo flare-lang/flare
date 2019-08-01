@@ -55,8 +55,8 @@ for (var i = 0; i < nodes.Length; i++)
     {
         WriteLine("private protected {0}(", type);
         PushIndent("    ");
-        WriteLine("IReadOnlyList<SyntaxToken> skipped,");
-        WriteLine("IReadOnlyList<SyntaxDiagnostic> diagnostics,");
+        WriteLine("ImmutableArray<SyntaxToken> skipped,");
+        WriteLine("ImmutableArray<SyntaxDiagnostic> diagnostics,");
         WriteLine("ImmutableDictionary<string, object> annotations)");
         WriteLine("    : base(skipped, diagnostics, annotations)");
         PopIndent();
@@ -164,8 +164,8 @@ for (var i = 0; i < nodes.Length; i++)
 
         WriteLine("internal {0}(", type);
         PushIndent("    ");
-        WriteLine("IReadOnlyList<SyntaxToken> skipped,");
-        Write("IReadOnlyList<SyntaxDiagnostic> diagnostics");
+        WriteLine("ImmutableArray<SyntaxToken> skipped,");
+        Write("ImmutableArray<SyntaxDiagnostic> diagnostics");
 
         if (props.Count != 0)
         {
@@ -221,8 +221,8 @@ for (var i = 0; i < nodes.Length; i++)
 
         WriteLine("{0}(", type);
         PushIndent("    ");
-        WriteLine("IReadOnlyList<SyntaxToken> skipped,");
-        WriteLine("IReadOnlyList<SyntaxDiagnostic> diagnostics,");
+        WriteLine("ImmutableArray<SyntaxToken> skipped,");
+        WriteLine("ImmutableArray<SyntaxDiagnostic> diagnostics,");
         Write("ImmutableDictionary<string, object> annotations");
 
         if (props.Count != 0)
@@ -300,7 +300,7 @@ for (var i = 0; i < nodes.Length; i++)
         PushIndent("    ");
         WriteLine("return new {0}(", type);
         PushIndent("    ");
-        WriteLine("SkippedTokens.Select(x => x.DeepClone()).ToArray(),");
+        WriteLine("SkippedTokens.Select(x => x.DeepClone()).ToImmutableArray(),");
         WriteLine("Diagnostics,");
         Write("Annotations");
 

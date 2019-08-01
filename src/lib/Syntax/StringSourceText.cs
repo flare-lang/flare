@@ -10,8 +10,6 @@ namespace Flare.Syntax
     {
         public string Text { get; }
 
-        public override IEnumerable<Rune> Runes => Text.EnumerateRunes();
-
         StringSourceText(string fullPath, string text)
             : base(fullPath)
         {
@@ -39,6 +37,11 @@ namespace Flare.Syntax
                 detectEncodingFromByteOrderMarks: false, leaveOpen: true);
 
             return new StringSourceText(fullPath, await reader.ReadToEndAsync().ConfigureAwait(false));
+        }
+
+        public override IEnumerable<Rune> GetRunes()
+        {
+            return Text.EnumerateRunes();
         }
     }
 }

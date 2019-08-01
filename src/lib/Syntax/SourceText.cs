@@ -9,11 +9,11 @@ namespace Flare.Syntax
 
         public string FullPath { get; }
 
-        public abstract IEnumerable<Rune> Runes { get; }
-
         protected SourceText(string fullPath)
         {
             FullPath = fullPath;
         }
+
+        public abstract IEnumerable<Rune> GetRunes();
     }
 }

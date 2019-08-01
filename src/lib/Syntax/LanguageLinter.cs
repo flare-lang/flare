@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Flare.Syntax
 {
@@ -41,7 +42,7 @@ namespace Flare.Syntax
 
             readonly Walker _walker;
 
-            readonly List<SyntaxDiagnostic> _diagnostics = new List<SyntaxDiagnostic>();
+            ImmutableArray<SyntaxDiagnostic> _diagnostics = new ImmutableArray<SyntaxDiagnostic>();
 
             public Linter(ParseResult parse, SyntaxLintConfiguration configuration, IEnumerable<SyntaxLint> lints)
             {
@@ -66,9 +67,10 @@ namespace Flare.Syntax
 
                     if (!(value.Value is string s))
                     {
-                        _diagnostics.Add(new SyntaxDiagnostic(SyntaxDiagnosticKind.InvalidLintAttribute,
+                        _diagnostics = _diagnostics.Add(new SyntaxDiagnostic(SyntaxDiagnosticKind.InvalidLintAttribute,
                             SyntaxDiagnosticSeverity.Warning, value.Location,
-                            "Lint severity level is not a string literal; ignoring attribute"));
+                            "Lint severity level is not a string literal; ignoring attribute",
+                            ImmutableArray<(SourceLocation, string)>.Empty));
                         continue;
                     }
 
@@ -89,9 +91,10 @@ namespace Flare.Syntax
                             severity = SyntaxDiagnosticSeverity.Error;
                             break;
                         default:
-                            _diagnostics.Add(new SyntaxDiagnostic(SyntaxDiagnosticKind.InvalidLintAttribute,
-                                SyntaxDiagnosticSeverity.Warning, value.Location,
-                                "Invalid lint severity level; ignoring attribute"));
+                            _diagnostics = _diagnostics.Add(new SyntaxDiagnostic(
+                                SyntaxDiagnosticKind.InvalidLintAttribute, SyntaxDiagnosticSeverity.Warning,
+                                value.Location, "Invalid lint severity level; ignoring attribute",
+                                ImmutableArray<(SourceLocation, string)>.Empty));
                             continue;
                     }
 
@@ -114,8 +117,8 @@ namespace Flare.Syntax
 
                     if (severity is SyntaxDiagnosticSeverity sev)
                         foreach (var diag in runner(lint))
-                            _diagnostics.Add(diag.Severity == sev ? diag : new SyntaxDiagnostic(diag.Kind, sev,
-                                diag.Location, diag.Message, diag.Notes));
+                            _diagnostics = _diagnostics.Add(diag.Severity == sev ? diag : new SyntaxDiagnostic(
+                                diag.Kind, sev, diag.Location, diag.Message, diag.Notes));
                 }
             }
 

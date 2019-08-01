@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -176,7 +175,7 @@ namespace Flare.Syntax
 
             readonly Stack<ParseContext> _contexts = new Stack<ParseContext>();
 
-            readonly List<SyntaxDiagnostic> _diagnostics = new List<SyntaxDiagnostic>();
+            ImmutableArray<SyntaxDiagnostic> _diagnostics = new ImmutableArray<SyntaxDiagnostic>();
 
             public Parser(LexResult lex, SyntaxMode mode)
             {
@@ -310,10 +309,11 @@ namespace Flare.Syntax
             void Error(ref ImmutableArray<SyntaxDiagnostic> diagnostics, SyntaxDiagnosticKind kind,
                 SourceLocation location, string message)
             {
-                var diag = new SyntaxDiagnostic(kind, SyntaxDiagnosticSeverity.Error, location, message);
+                var diag = new SyntaxDiagnostic(kind, SyntaxDiagnosticSeverity.Error, location, message,
+                    ImmutableArray<(SourceLocation, string)>.Empty);
 
                 diagnostics = diagnostics.Add(diag);
-                _diagnostics.Add(diag);
+                _diagnostics = _diagnostics.Add(diag);
             }
 
             public ParseResult Parse()

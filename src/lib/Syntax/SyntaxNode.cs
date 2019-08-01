@@ -9,17 +9,17 @@ namespace Flare.Syntax
     {
         public SyntaxNode? Parent { get; internal set; }
 
-        public bool HasSkippedTokens => SkippedTokens.Count != 0;
+        public bool HasSkippedTokens => SkippedTokens.Length != 0;
 
-        public IReadOnlyList<SyntaxToken> SkippedTokens { get; }
+        public ImmutableArray<SyntaxToken> SkippedTokens { get; }
 
         public abstract bool HasTokens { get; }
 
         public abstract bool HasChildren { get; }
 
-        public bool HasDiagnostics => Diagnostics.Count != 0;
+        public bool HasDiagnostics => Diagnostics.Length != 0;
 
-        public IReadOnlyList<SyntaxDiagnostic> Diagnostics { get; }
+        public ImmutableArray<SyntaxDiagnostic> Diagnostics { get; }
 
         public bool HasAnnotations => _annotations.Count != 0;
 
@@ -27,7 +27,7 @@ namespace Flare.Syntax
 
         ImmutableDictionary<string, object> _annotations;
 
-        private protected SyntaxNode(IReadOnlyList<SyntaxToken> skipped, IReadOnlyList<SyntaxDiagnostic> diagnostics,
+        private protected SyntaxNode(ImmutableArray<SyntaxToken> skipped, ImmutableArray<SyntaxDiagnostic> diagnostics,
             ImmutableDictionary<string, object> annotations)
         {
             SkippedTokens = skipped;

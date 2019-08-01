@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Flare.Syntax
 {
@@ -13,22 +12,23 @@ namespace Flare.Syntax
 
         public string Message { get; }
 
-        public IReadOnlyList<(SourceLocation Location, string Message)> Notes { get; }
+        public ImmutableArray<(SourceLocation Location, string Message)> Notes { get; }
 
         public SyntaxDiagnostic(SourceLocation location, string message,
-            IReadOnlyList<(SourceLocation, string)>? notes = null)
-            : this(SyntaxDiagnosticKind.Lint, SyntaxDiagnosticSeverity.Warning, location, message, notes)
+            ImmutableArray<(SourceLocation Location, string Message)> notes = default)
+            : this(SyntaxDiagnosticKind.Lint, SyntaxDiagnosticSeverity.Warning, location, message,
+                !notes.IsDefault ? notes : ImmutableArray<(SourceLocation, string)>.Empty)
         {
         }
 
         internal SyntaxDiagnostic(SyntaxDiagnosticKind kind, SyntaxDiagnosticSeverity severity, SourceLocation location,
-            string message, IReadOnlyList<(SourceLocation, string)>? notes = null)
+            string message, ImmutableArray<(SourceLocation Location, string Message)> notes)
         {
             Kind = kind;
             Severity = severity;
             Location = location;
             Message = message;
-            Notes = notes ?? Array.Empty<(SourceLocation, string)>();
+            Notes = notes;
         }
 
         public override string ToString()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -79,12 +80,12 @@ namespace Flare.Syntax
 
             readonly List<SyntaxDiagnostic> _currentDiagnostics = new List<SyntaxDiagnostic>();
 
-            readonly List<SyntaxDiagnostic> _allDiagnostics = new List<SyntaxDiagnostic>();
+            ImmutableArray<SyntaxDiagnostic> _allDiagnostics = new ImmutableArray<SyntaxDiagnostic>();
 
             public Lexer(SourceText source)
             {
                 _source = source;
-                _enumerator = new PeekableRuneEnumerator(source.Runes.GetEnumerator());
+                _enumerator = new PeekableRuneEnumerator(source.GetRunes().GetEnumerator());
                 _location = new SourceLocation(source.FullPath, 1, 1);
             }
 
@@ -305,15 +306,16 @@ namespace Flare.Syntax
                 }
 
                 var token = new SyntaxToken(location, kind, text, value,
-                    _leading.Count != 0 ? _leading.ToArray() : null, _trailing.Count != 0 ? _trailing.ToArray() : null,
-                    hasDiags ? _currentDiagnostics.ToArray() : null);
+                    _leading.Count != 0 ? _leading.ToImmutableArray() : ImmutableArray<SyntaxTrivia>.Empty,
+                    _trailing.Count != 0 ? _trailing.ToImmutableArray() : ImmutableArray<SyntaxTrivia>.Empty,
+                    hasDiags ? _currentDiagnostics.ToImmutableArray() : ImmutableArray<SyntaxDiagnostic>.Empty);
 
                 _value = null;
 
                 _leading.Clear();
                 _trailing.Clear();
 
-                _allDiagnostics.AddRange(_currentDiagnostics);
+                _allDiagnostics = _allDiagnostics.AddRange(_currentDiagnostics);
                 _currentDiagnostics.Clear();
 
                 return token;
@@ -321,12 +323,13 @@ namespace Flare.Syntax
 
             void Error(SyntaxDiagnosticKind kind, SourceLocation location, string message)
             {
-                _currentDiagnostics.Add(new SyntaxDiagnostic(kind, SyntaxDiagnosticSeverity.Error, location, message));
+                _currentDiagnostics.Add(new SyntaxDiagnostic(kind, SyntaxDiagnosticSeverity.Error, location, message,
+                    ImmutableArray<(SourceLocation, string)>.Empty));
             }
 
             public LexResult Lex()
             {
-                return new LexResult(_source, LexTokens().ToArray(), _allDiagnostics);
+                return new LexResult(_source, LexTokens().ToImmutableArray(), _allDiagnostics);
             }
 
             IEnumerable<SyntaxToken> LexTokens()
