@@ -1408,8 +1408,6 @@ namespace Flare.Syntax
                 var open = Expect(SyntaxTokenKind.OpenBrace, "'{'", ref diags);
                 var arms = ImmutableArray<PatternArmNode>.Empty;
 
-                arms = arms.Add(ParsePatternArm(false));
-
                 do
                     arms = arms.Add(ParsePatternArm(false));
                 while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBrace);
