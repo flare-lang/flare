@@ -12,7 +12,7 @@ namespace Flare.Syntax
             {
                 public Linter Linter { get; }
 
-                public SyntaxLintConfiguration? Configuration { get; set; }
+                public SyntaxLintConfiguration Configuration { get; set; } = null!;
 
                 public Walker(Linter linter)
                 {
@@ -21,13 +21,14 @@ namespace Flare.Syntax
 
                 protected override void DefaultVisit(SyntaxNode node)
                 {
-                    var cfg = Configuration!;
+                    var cfg = Configuration;
 
-                    if (node is StatementNode stmt)
+                    if (node is StatementNode stmt &&
+                        !(node is ExpressionStatementNode e && e.Expression is MissingExpressionNode))
                         Linter.RunLints(SyntaxLintContexts.Statement, cfg, lint => lint.Run(stmt));
-                    else if (node is ExpressionNode expr)
+                    else if (node is ExpressionNode expr && !(node is MissingExpressionNode))
                         Linter.RunLints(SyntaxLintContexts.Expression, cfg, lint => lint.Run(expr));
-                    else if (node is PatternNode pat)
+                    else if (node is PatternNode pat && !(node is MissingPatternNode))
                         Linter.RunLints(SyntaxLintContexts.Pattern, cfg, lint => lint.Run(pat));
 
                     base.DefaultVisit(node);
@@ -36,13 +37,13 @@ namespace Flare.Syntax
 
             readonly ParseResult _parse;
 
-            SyntaxLintConfiguration _configuration;
+            readonly SyntaxLintConfiguration _configuration;
 
             readonly IEnumerable<SyntaxLint> _lints;
 
             readonly Walker _walker;
 
-            ImmutableArray<SyntaxDiagnostic> _diagnostics = new ImmutableArray<SyntaxDiagnostic>();
+            readonly List<SyntaxDiagnostic> _diagnostics = new List<SyntaxDiagnostic>();
 
             public Linter(ParseResult parse, SyntaxLintConfiguration configuration, IEnumerable<SyntaxLint> lints)
             {
@@ -63,11 +64,18 @@ namespace Flare.Syntax
                         continue;
 
                     var name = ident.Substring(AttributePrefix.Length);
+
+                    if (name == string.Empty)
+                        continue;
+
                     var value = attr.ValueToken;
+
+                    if (value.IsMissing)
+                        continue;
 
                     if (!(value.Value is string s))
                     {
-                        _diagnostics = _diagnostics.Add(new SyntaxDiagnostic(SyntaxDiagnosticKind.InvalidLintAttribute,
+                        _diagnostics.Add(new SyntaxDiagnostic(SyntaxDiagnosticKind.InvalidLintAttribute,
                             SyntaxDiagnosticSeverity.Warning, value.Location,
                             "Lint severity level is not a string literal; ignoring attribute",
                             ImmutableArray<(SourceLocation, string)>.Empty));
@@ -91,7 +99,7 @@ namespace Flare.Syntax
                             severity = SyntaxDiagnosticSeverity.Error;
                             break;
                         default:
-                            _diagnostics = _diagnostics.Add(new SyntaxDiagnostic(
+                            _diagnostics.Add(new SyntaxDiagnostic(
                                 SyntaxDiagnosticKind.InvalidLintAttribute, SyntaxDiagnosticSeverity.Warning,
                                 value.Location, "Invalid lint severity level; ignoring attribute",
                                 ImmutableArray<(SourceLocation, string)>.Empty));
@@ -117,7 +125,7 @@ namespace Flare.Syntax
 
                     if (severity is SyntaxDiagnosticSeverity sev)
                         foreach (var diag in runner(lint))
-                            _diagnostics = _diagnostics.Add(diag.Severity == sev ? diag : new SyntaxDiagnostic(
+                            _diagnostics.Add(diag.Severity == sev ? diag : new SyntaxDiagnostic(
                                 diag.Kind, sev, diag.Location, diag.Message, diag.Notes));
                 }
             }
@@ -125,19 +133,19 @@ namespace Flare.Syntax
             public LintResult Lint()
             {
                 var tree = (ProgramNode)_parse.Tree;
+                var cfg = Configure(tree.Attributes, _configuration);
 
-                _configuration = Configure(tree.Attributes, _configuration);
-
-                RunLints(SyntaxLintContexts.Program, _configuration, lint => lint.Run(tree));
+                RunLints(SyntaxLintContexts.Program, cfg, lint => lint.Run(tree));
 
                 foreach (var decl in tree.Declarations)
                 {
-                    var attrs = decl.Attributes;
-
-                    if (attrs.Count == 0)
+                    if (decl is MissingNamedDeclarationNode)
                         continue;
 
-                    var cfg = Configure(attrs, _configuration);
+                    var attrs = decl.Attributes;
+
+                    if (attrs.Count != 0)
+                        cfg = Configure(attrs, cfg);
 
                     switch (decl)
                     {
@@ -158,7 +166,7 @@ namespace Flare.Syntax
                     _walker.Visit(decl);
                 }
 
-                return new LintResult(_parse, _diagnostics);
+                return new LintResult(_parse, _diagnostics.ToImmutableArray());
             }
         }
 
