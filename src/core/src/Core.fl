@@ -1,0 +1,15 @@
+mod Core;
+
+pub extern panic(format, .. args);
+
+pub extern halt(code);
+
+pub extern new_ref();
+
+pub fn defer(function) {
+    rec {
+        function = function,
+
+        __drop__ = fn(self) => self.function()?
+    };
+}

@@ -1,0 +1,12 @@
+[lints]
+undocumented_declaration = "error"
+
+[project]
+description = "The Flare core library."
+license = "ISC"
+name = "Core"
+type = "library"
+url = "https://flare-lang.org"
+url-doc = "https://flare-lang.org/documentation.html"
+url-src = "https://github.com/flare-lang/flare/tree/master/src/core"
+version = "0.1.0"

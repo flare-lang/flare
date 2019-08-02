@@ -1,0 +1,5 @@
+mod Core::IO;
+
+pub extern print(format, .. args);
+
+pub extern println(format, .. args);

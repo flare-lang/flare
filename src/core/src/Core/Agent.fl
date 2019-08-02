@@ -1,0 +1,15 @@
+mod Core::Agent;
+
+pub extern self();
+
+pub extern get();
+
+pub extern get(key);
+
+pub extern set(key, value);
+
+pub extern remove(key);
+
+pub extern sleep(duration);
+
+pub extern spawn(function, args, .. options);
