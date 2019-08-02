@@ -969,7 +969,7 @@ namespace Flare.Syntax
                         expr = ParseRecordExpression();
                         break;
                     case SyntaxTokenKind.RecvKeyword:
-                        expr = ParseReceiveExpressin();
+                        expr = ParseReceiveExpression();
                         break;
                     case SyntaxTokenKind.ReturnKeyword:
                         expr = ParseReturnExpression();
@@ -1213,7 +1213,15 @@ namespace Flare.Syntax
                 var arms = ImmutableArray<ConditionExpressionArmNode>.Empty;
 
                 do
-                    arms = arms.Add(ParseConditionExpressionArm());
+                {
+                    var arm = ParseConditionExpressionArm();
+
+                    arms = arms.Add(arm);
+
+                    if (arm.Condition is MissingExpressionNode && arm.ArrowToken.IsMissing &&
+                        arm.Body is MissingExpressionNode)
+                        break;
+                }
                 while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBrace);
 
                 var close = Expect(SyntaxTokenKind.CloseBrace, "'}'", ref diags);
@@ -1409,7 +1417,15 @@ namespace Flare.Syntax
                 var arms = ImmutableArray<PatternArmNode>.Empty;
 
                 do
-                    arms = arms.Add(ParsePatternArm(false));
+                {
+                    var arm = ParsePatternArm(false);
+
+                    arms = arms.Add(arm);
+
+                    if (arm.Pattern is MissingPatternNode && arm.ArrowToken.IsMissing &&
+                        arm.Body is MissingExpressionNode)
+                        break;
+                }
                 while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBrace);
 
                 var close = Expect(SyntaxTokenKind.CloseBrace, "'}'", ref diags);
@@ -1488,7 +1504,7 @@ namespace Flare.Syntax
                 return new RecordExpressionNode(Skipped(), diags, rec, name, open, List(fields, seps), close);
             }
 
-            ReceiveExpressionNode ParseReceiveExpressin()
+            ReceiveExpressionNode ParseReceiveExpression()
             {
                 var diags = Diagnostics();
 
@@ -1497,7 +1513,15 @@ namespace Flare.Syntax
                 var arms = ImmutableArray<PatternArmNode>.Empty;
 
                 do
-                    arms = arms.Add(ParsePatternArm(false));
+                {
+                    var arm = ParsePatternArm(false);
+
+                    arms = arms.Add(arm);
+
+                    if (arm.Pattern is MissingPatternNode && arm.ArrowToken.IsMissing &&
+                        arm.Body is MissingExpressionNode)
+                        break;
+                }
                 while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBrace);
 
                 var close = Expect(SyntaxTokenKind.CloseBrace, "'}'", ref diags);
@@ -1673,7 +1697,15 @@ namespace Flare.Syntax
                 var arms = ImmutableArray<PatternArmNode>.Empty;
 
                 do
-                    arms = arms.Add(ParsePatternArm(true));
+                {
+                    var arm = ParsePatternArm(true);
+
+                    arms = arms.Add(arm);
+
+                    if (arm.Pattern is MissingPatternNode && arm.ArrowToken.IsMissing &&
+                        arm.Body is MissingExpressionNode)
+                        break;
+                }
                 while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBrace);
 
                 var close = Expect(SyntaxTokenKind.CloseBrace, "'}'", ref diags);
