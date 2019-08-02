@@ -187,9 +187,6 @@ namespace Flare.Syntax
                 throw new ArgumentException("The given parse result cannot be linted due to its syntax mode.",
                     nameof(parse));
 
-            if (!parse.IsSuccess)
-                throw new ArgumentException("Unsuccessful parse result given.", nameof(parse));
-
             return new Linter(parse, configuration, lints).Lint();
         }
     }

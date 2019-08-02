@@ -72,6 +72,11 @@ namespace Flare.Cli.Commands
                     foreach (var diag in parse.Diagnostics)
                         PrintDiagnostic(diag);
 
+                    var analysis = LanguageAnalyzer.Analyze(parse);
+
+                    foreach (var diag in analysis.Diagnostics)
+                        PrintDiagnostic(diag);
+
                     break;
                 }
 

@@ -125,7 +125,7 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
             <token name="VisibilityKeyword" optional="true" override="true" />
             <token name="Keyword" override="true" />
             <token name="Name" override="true" />
-            <child name="Parameters" type="FunctionParameterList" />
+            <child name="ParameterList" type="FunctionParameterList" />
             <token name="Semicolon" />
         </node>
 
@@ -286,9 +286,21 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
             <token name="CloseBrace" />
         </node>
 
+        <node name="PatternArm">
+            <child name="Pattern" type="Pattern" />
+            <child name="Guard" type="PatternArmGuard" optional="true" />
+            <token name="Arrow" />
+            <child name="Body" type="Expression" />
+        </node>
+
+        <node name="PatternArmGuard">
+            <token name="IfKeyword" />
+            <child name="Condition" type="Expression" />
+        </node>
+
         <node name="MethodCallExpression" base="PostfixExpression">
             <child name="Subject" type="Expression" override="true" />
-            <token name="RightArrow" />
+            <token name="Arrow" />
             <token name="Name" />
             <child name="ArgumentList" type="ArgumentList" />
             <child name="Try" type="CallTry" optional="true" />
@@ -352,7 +364,7 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
         <node name="LambdaExpression" base="PrimaryExpression">
             <token name="FnKeyword" />
             <child name="ParameterList" type="LambdaParameterList" />
-            <token name="RightArrow" />
+            <token name="Arrow" />
             <child name="Body" type="Expression" />
         </node>
 
@@ -456,7 +468,7 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
 
         <node name="ConditionExpressionArm">
             <child name="Condition" type="Expression" />
-            <token name="RightArrow" />
+            <token name="Arrow" />
             <child name="Body" type="Expression" />
         </node>
 
@@ -466,18 +478,6 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
             <token name="OpenBrace" />
             <children name="Arms" type="PatternArm" />
             <token name="CloseBrace" />
-        </node>
-
-        <node name="PatternArm">
-            <child name="Pattern" type="Pattern" />
-            <child name="Guard" type="PatternArmGuard" optional="true" />
-            <token name="RightArrow" />
-            <child name="Body" type="Expression" />
-        </node>
-
-        <node name="PatternArmGuard">
-            <token name="IfKeyword" />
-            <child name="Condition" type="Expression" />
         </node>
 
         <node name="ForExpression" base="PrimaryExpression">

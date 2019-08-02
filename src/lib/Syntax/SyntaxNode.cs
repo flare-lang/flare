@@ -105,9 +105,9 @@ namespace Flare.Syntax
             return result;
         }
 
-        public void Set<T>(string name, T value)
+        public void Set(string name, object value)
         {
-            _ = ImmutableInterlocked.AddOrUpdate(ref _annotations, name, k => value!, (k, v) => value!);
+            _ = ImmutableInterlocked.AddOrUpdate(ref _annotations, name, k => value, (k, v) => value);
         }
 
         public void Remove(string name)
