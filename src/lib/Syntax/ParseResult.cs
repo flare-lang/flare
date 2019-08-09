@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace Flare.Syntax
 {
@@ -11,11 +10,9 @@ namespace Flare.Syntax
 
         public SyntaxNode Tree { get; }
 
-        public bool HasDiagnostics => Diagnostics.Length != 0;
-
         public ImmutableArray<SyntaxDiagnostic> Diagnostics { get; }
 
-        public bool IsSuccess => Lex.IsSuccess && Diagnostics.All(x => x.Severity != SyntaxDiagnosticSeverity.Error);
+        public bool IsSuccess => Lex.IsSuccess && Diagnostics.IsEmpty;
 
         internal ParseResult(LexResult lex, SyntaxMode mode, SyntaxNode tree,
             ImmutableArray<SyntaxDiagnostic> diagnostics)

@@ -7,7 +7,7 @@ namespace Flare.Syntax
     {
         public ParseResult Parse { get; }
 
-        public bool HasDiagnostics => Diagnostics.Length != 0;
+        public bool HasDiagnostics => !Diagnostics.IsEmpty;
 
         public ImmutableArray<SyntaxDiagnostic> Diagnostics { get; }
 

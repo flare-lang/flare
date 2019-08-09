@@ -13,6 +13,7 @@ namespace Flare.Syntax
         MissingNamedDeclaration,
         MissingExpression,
         MissingPattern,
+        DuplicateUseDeclarationAlias,
         InvalidDeclarationName,
         DuplicateDeclaration,
         DuplicateParameter,
@@ -22,6 +23,7 @@ namespace Flare.Syntax
         DuplicateExpressionField,
         InvalidLoopTarget,
         DuplicatePatternField,
+        ModuleLoadFailed,
         InvalidLintAttribute,
         Lint,
     }

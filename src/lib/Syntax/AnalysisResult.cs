@@ -1,5 +1,5 @@
 using System.Collections.Immutable;
-using System.Linq;
+using Flare.Runtime;
 
 namespace Flare.Syntax
 {
@@ -7,15 +7,20 @@ namespace Flare.Syntax
     {
         public ParseResult Parse { get; }
 
-        public bool HasDiagnostics => Diagnostics.Length != 0;
+        public ModuleLoader Loader { get; }
+
+        public SyntaxContext Context { get; }
 
         public ImmutableArray<SyntaxDiagnostic> Diagnostics { get; }
 
-        public bool IsSuccess => Parse.IsSuccess && Diagnostics.All(x => x.Severity != SyntaxDiagnosticSeverity.Error);
+        public bool IsSuccess => Parse.IsSuccess && Diagnostics.IsEmpty;
 
-        internal AnalysisResult(ParseResult parse, ImmutableArray<SyntaxDiagnostic> diagnostics)
+        internal AnalysisResult(ParseResult parse, ModuleLoader loader, SyntaxContext context,
+            ImmutableArray<SyntaxDiagnostic> diagnostics)
         {
             Parse = parse;
+            Loader = loader;
+            Context = context;
             Diagnostics = diagnostics;
         }
     }
