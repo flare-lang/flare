@@ -491,8 +491,6 @@ namespace Flare.Syntax
 
                         text = RunesToUtf16(_runes);
 
-                        _runes.Clear();
-
                         LexTrivia(_trailing, true);
                     }
                     else
@@ -504,6 +502,8 @@ namespace Flare.Syntax
                     }
 
                     yield return Token(text, location, kind);
+
+                    _runes.Clear();
 
                     if (kind == SyntaxTokenKind.EndOfInput)
                         break;
