@@ -24,7 +24,7 @@ namespace Flare.Syntax
 
                     public SyntaxSymbol? Get(string name)
                     {
-                        return Symbols.TryGetValue(name, out var sym) ? sym : Previous.Get(name);
+                        return Symbols.TryGetValue(name, out var sym) ? sym : Previous?.Get(name);
                     }
 
                     public virtual bool IsMutable(string name)
