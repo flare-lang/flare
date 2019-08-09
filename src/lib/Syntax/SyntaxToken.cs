@@ -19,15 +19,15 @@ namespace Flare.Syntax
 
         public object? Value { get; }
 
-        public bool HasLeadingTrivia => LeadingTrivia.Length != 0;
+        public bool HasLeadingTrivia => !LeadingTrivia.IsEmpty;
 
         public ImmutableArray<SyntaxTrivia> LeadingTrivia { get; }
 
-        public bool HasTrailingTrivia => TrailingTrivia.Length != 0;
+        public bool HasTrailingTrivia => !TrailingTrivia.IsEmpty;
 
         public ImmutableArray<SyntaxTrivia> TrailingTrivia { get; }
 
-        public bool HasDiagnostics => Diagnostics.Length != 0;
+        public bool HasDiagnostics => !Diagnostics.IsEmpty;
 
         public ImmutableArray<SyntaxDiagnostic> Diagnostics { get; }
 
