@@ -12,6 +12,8 @@ namespace Flare.Syntax
 
         public string Message { get; }
 
+        public bool HasNotes => !Notes.IsEmpty;
+
         public ImmutableArray<(SourceLocation Location, string Message)> Notes { get; }
 
         public SyntaxDiagnostic(SourceLocation location, string message,
