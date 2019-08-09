@@ -9,7 +9,7 @@ namespace Flare.Syntax
     {
         public SyntaxNode? Parent { get; internal set; }
 
-        public bool HasSkippedTokens => SkippedTokens.Length != 0;
+        public bool HasSkippedTokens => !SkippedTokens.IsEmpty;
 
         public ImmutableArray<SyntaxToken> SkippedTokens { get; }
 
@@ -17,13 +17,13 @@ namespace Flare.Syntax
 
         public abstract bool HasChildren { get; }
 
-        public bool HasDiagnostics => Diagnostics.Length != 0;
+        public bool HasDiagnostics => !Diagnostics.IsEmpty;
 
-        public ImmutableArray<SyntaxDiagnostic> Diagnostics { get; }
+        public ImmutableArray<SyntaxDiagnostic> Diagnostics { get; private set; }
 
-        public bool HasAnnotations => _annotations.Count != 0;
+        public bool HasAnnotations => !_annotations.IsEmpty;
 
-        protected ImmutableDictionary<string, object> Annotations => _annotations;
+        public ImmutableDictionary<string, object> Annotations => _annotations;
 
         ImmutableDictionary<string, object> _annotations;
 
@@ -90,13 +90,18 @@ namespace Flare.Syntax
 
         internal abstract T Accept<T>(SyntaxVisitor<T> visitor, T state);
 
-        public T Get<T>(string name)
+        internal void AddDiagnostic(SyntaxDiagnostic diagnostic)
+        {
+            Diagnostics = Diagnostics.Add(diagnostic);
+        }
+
+        public T GetAnnotation<T>(string name)
         {
             return _annotations.TryGetValue(name, out var obj) ? (T)obj :
                 throw new ArgumentException("Annotation with the specified name does not exist.");
         }
 
-        public bool TryGet<T>(string name, [NotNullWhen(true)] out T value)
+        public bool TryGetAnnotation<T>(string name, [NotNullWhen(true)] out T value)
         {
             var result = _annotations.TryGetValue(name, out var obj);
 
@@ -105,12 +110,12 @@ namespace Flare.Syntax
             return result;
         }
 
-        public void Set(string name, object value)
+        public void SetAnnotation(string name, object value)
         {
             _ = ImmutableInterlocked.AddOrUpdate(ref _annotations, name, k => value, (k, v) => value);
         }
 
-        public void Remove(string name)
+        public void RemoveAnnotation(string name)
         {
             _ = ImmutableInterlocked.TryRemove(ref _annotations, name, out _);
         }
