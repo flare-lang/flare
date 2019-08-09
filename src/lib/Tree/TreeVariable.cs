@@ -8,7 +8,7 @@ namespace Flare.Tree
 
         public bool IsMutable { get; }
 
-        public TreeVariable(TreeType type, string? name, bool mutable)
+        protected TreeVariable(TreeType type, string? name, bool mutable)
         {
             Type = type;
             Name = name;

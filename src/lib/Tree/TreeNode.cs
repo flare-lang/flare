@@ -12,7 +12,7 @@ namespace Flare.Tree
 
         public abstract TreeType Type { get; }
 
-        public TreeNode(TreeContext context, SourceLocation location)
+        protected TreeNode(TreeContext context, SourceLocation location)
         {
             Reference = context.RegisterNode(this);
             Location = location;
