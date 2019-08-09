@@ -1,18 +1,18 @@
-using System.Collections.Immutable;
+using Flare.Runtime;
 using Flare.Syntax;
 
 namespace Flare.Tree.HighLevel
 {
     sealed class TreeModuleNode : TreeNode
     {
-        public ImmutableArray<string> Path { get; }
+        public Module Module { get; }
 
         public override TreeType Type => TreeType.Module;
 
-        public TreeModuleNode(TreeContext context, SourceLocation location, ImmutableArray<string> path)
+        public TreeModuleNode(TreeContext context, SourceLocation location, Module module)
             : base(context, location)
         {
-            Path = path;
+            Module = module;
         }
     }
 }

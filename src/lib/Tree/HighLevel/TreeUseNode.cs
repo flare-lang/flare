@@ -1,4 +1,3 @@
-using System;
 using Flare.Syntax;
 using Flare.Tree.HighLevel.Patterns;
 
