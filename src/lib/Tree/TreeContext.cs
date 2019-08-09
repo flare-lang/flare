@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Flare.Runtime;
@@ -18,7 +19,7 @@ namespace Flare.Tree
 
         readonly List<TreeLocal> _locals = new List<TreeLocal>();
 
-        readonly Dictionary<int, TreeNode> _nodes = new Dictionary<int, TreeNode>();
+        TreeNode[] _nodes = new TreeNode[1024];
 
         int _nextId;
 
@@ -82,9 +83,13 @@ namespace Flare.Tree
 
         public TreeReference RegisterNode(TreeNode node)
         {
-            var r = new TreeReference(this, _nextId++);
+            var id = _nextId++;
+            var r = new TreeReference(this, id);
 
-            _nodes.Add(r.Id, node);
+            if (id >= _nodes.Length)
+                Array.Resize(ref _nodes, _nodes.Length * 2);
+
+            ReplaceNode(id, node);
 
             return r;
         }
