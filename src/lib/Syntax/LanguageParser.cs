@@ -1264,7 +1264,7 @@ namespace Flare.Syntax
                 var open = Expect(SyntaxTokenKind.OpenBrace, "'{'", ref diags);
                 var fields = ImmutableArray<ExpressionFieldNode>.Empty;
                 var seps = ImmutableArray<SyntaxToken>.Empty;
-                var first = false;
+                var first = true;
 
                 while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBrace)
                 {
@@ -1489,7 +1489,7 @@ namespace Flare.Syntax
                 var open = Expect(SyntaxTokenKind.OpenBrace, "'{'", ref diags);
                 var fields = ImmutableArray<ExpressionFieldNode>.Empty;
                 var seps = ImmutableArray<SyntaxToken>.Empty;
-                var first = false;
+                var first = true;
 
                 while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBrace)
                 {
@@ -2116,7 +2116,7 @@ namespace Flare.Syntax
                 var open = Expect(SyntaxTokenKind.OpenBrace, "'{'", ref diags);
                 var fields = ImmutableArray<PatternFieldNode>.Empty;
                 var seps = ImmutableArray<SyntaxToken>.Empty;
-                var first = false;
+                var first = true;
 
                 while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBrace)
                 {
@@ -2178,7 +2178,7 @@ namespace Flare.Syntax
                 var open = Expect(SyntaxTokenKind.OpenBrace, "'{'", ref diags);
                 var fields = ImmutableArray<PatternFieldNode>.Empty;
                 var seps = ImmutableArray<SyntaxToken>.Empty;
-                var first = false;
+                var first = true;
 
                 while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBrace)
                 {
