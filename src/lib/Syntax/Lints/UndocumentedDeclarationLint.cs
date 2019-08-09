@@ -24,7 +24,7 @@ namespace Flare.Syntax.Lints
                     $"The value of the 'doc' attribute must be a string literal or the 'false' Boolean literal") : null;
         }
 
-        public override IEnumerable<SyntaxDiagnostic> Run(ProgramNode node)
+        public override IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(ProgramNode node)
         {
             foreach (var comp in node.Path.ComponentTokens.Tokens)
                 if (comp.IsMissing)
@@ -51,16 +51,17 @@ namespace Flare.Syntax.Lints
             var mod = toks[0].Text;
 
             foreach (var tok in toks.Skip(1))
-                mod += $"::{tok.Text}";
+                if (!tok.IsMissing)
+                    mod += $"::{tok.Text}";
 
             var diag = CheckDocAttribute(node.Attributes, toks[0].Location,
-                $"Module {mod} has public declarations but is undocumented");
+                $"Module '{mod}' has public declarations but is undocumented");
 
             if (diag != null)
-                yield return diag;
+                yield return (node, diag);
         }
 
-        public override IEnumerable<SyntaxDiagnostic> Run(NamedDeclarationNode node)
+        public override IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(NamedDeclarationNode node)
         {
             if (node.VisibilityKeywordToken?.Kind != SyntaxTokenKind.PubKeyword)
                 yield break;
@@ -69,7 +70,7 @@ namespace Flare.Syntax.Lints
             {
                 ConstantDeclarationNode _ => "constant",
                 FunctionDeclarationNode _ => "function",
-                ExternalDeclarationNode _ => "external function",
+                ExternalDeclarationNode _ => "function",
                 MacroDeclarationNode _ => "macro",
                 _ => throw Assert.Unreachable(),
             };
@@ -82,7 +83,7 @@ namespace Flare.Syntax.Lints
             var diag = CheckDocAttribute(node.Attributes, ident.Location, $"Public {type} {ident} is undocumented");
 
             if (diag != null)
-               yield return diag;
+               yield return (node, diag);
         }
     }
 }

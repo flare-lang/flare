@@ -11,34 +11,34 @@ namespace Flare.Syntax
 
         public virtual SyntaxDiagnosticSeverity DefaultSeverity => SyntaxDiagnosticSeverity.Warning;
 
-        public virtual IEnumerable<SyntaxDiagnostic> Run(ProgramNode node)
+        public virtual IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(ProgramNode node)
         {
-            return Array.Empty<SyntaxDiagnostic>();
+            return Array.Empty<(SyntaxNode, SyntaxDiagnostic)>();
         }
 
-        public virtual IEnumerable<SyntaxDiagnostic> Run(DeclarationNode node)
+        public virtual IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(DeclarationNode node)
         {
-            return Array.Empty<SyntaxDiagnostic>();
+            return Array.Empty<(SyntaxNode, SyntaxDiagnostic)>();
         }
 
-        public virtual IEnumerable<SyntaxDiagnostic> Run(NamedDeclarationNode node)
+        public virtual IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(NamedDeclarationNode node)
         {
-            return Array.Empty<SyntaxDiagnostic>();
+            return Array.Empty<(SyntaxNode, SyntaxDiagnostic)>();
         }
 
-        public virtual IEnumerable<SyntaxDiagnostic> Run(StatementNode node)
+        public virtual IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(StatementNode node)
         {
-            return Array.Empty<SyntaxDiagnostic>();
+            return Array.Empty<(SyntaxNode, SyntaxDiagnostic)>();
         }
 
-        public virtual IEnumerable<SyntaxDiagnostic> Run(ExpressionNode node)
+        public virtual IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(ExpressionNode node)
         {
-            return Array.Empty<SyntaxDiagnostic>();
+            return Array.Empty<(SyntaxNode, SyntaxDiagnostic)>();
         }
 
-        public virtual IEnumerable<SyntaxDiagnostic> Run(PatternNode node)
+        public virtual IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(PatternNode node)
         {
-            return Array.Empty<SyntaxDiagnostic>();
+            return Array.Empty<(SyntaxNode, SyntaxDiagnostic)>();
         }
     }
 }
