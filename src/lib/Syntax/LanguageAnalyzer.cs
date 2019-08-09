@@ -396,6 +396,22 @@ namespace Flare.Syntax
                     base.Visit(node);
                 }
 
+                public override void Visit(LetStatementNode node)
+                {
+                    // We need to visit the initializer first so that it can't refer to variables
+                    // introduced in the pattern.
+                    Visit(node.Initializer);
+                    Visit(node.Pattern);
+                }
+
+                public override void Visit(UseStatementNode node)
+                {
+                    // We need to visit the initializer first so that it can't refer to variables
+                    // introduced in the pattern.
+                    Visit(node.Initializer);
+                    Visit(node.Pattern);
+                }
+
                 public override void Visit(AssignExpressionNode node)
                 {
                     var left = node.LeftOperand;

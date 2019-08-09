@@ -29,26 +29,26 @@ namespace Flare.Syntax
 
         void VisitTokens(IEnumerable<SyntaxToken> tokens, bool skipped)
         {
-            if (_depth >= SyntaxWalkerDepth.Tokens)
+            if (_depth < SyntaxWalkerDepth.Tokens)
+                return;
+
+            foreach (var token in tokens)
             {
-                foreach (var token in tokens)
-                {
-                    if (skipped)
-                        VisitSkipped(token);
-                    else
-                        Visit(token);
+                if (skipped)
+                    VisitSkipped(token);
+                else
+                    Visit(token);
 
-                    if (_depth >= SyntaxWalkerDepth.Trivia)
-                    {
-                        if (token.HasLeadingTrivia)
-                            foreach (var trivia in token.LeadingTrivia)
-                                VisitLeading(trivia);
+                if (_depth < SyntaxWalkerDepth.Trivia)
+                    continue;
 
-                        if (token.HasTrailingTrivia)
-                            foreach (var trivia in token.TrailingTrivia)
-                                VisitTrailing(trivia);
-                    }
-                }
+                if (token.HasLeadingTrivia)
+                    foreach (var trivia in token.LeadingTrivia)
+                        VisitLeading(trivia);
+
+                if (token.HasTrailingTrivia)
+                    foreach (var trivia in token.TrailingTrivia)
+                        VisitTrailing(trivia);
             }
         }
 
@@ -97,23 +97,23 @@ namespace Flare.Syntax
 
         T VisitTokens(IEnumerable<SyntaxToken> tokens, bool skipped, T state)
         {
-            if (_depth >= SyntaxWalkerDepth.Tokens)
+            if (_depth < SyntaxWalkerDepth.Tokens)
+                return state;
+
+            foreach (var token in tokens)
             {
-                foreach (var token in tokens)
-                {
-                    state = skipped ? VisitSkipped(token, state) : Visit(token, state);
+                state = skipped ? VisitSkipped(token, state) : Visit(token, state);
 
-                    if (_depth >= SyntaxWalkerDepth.Trivia)
-                    {
-                        if (token.HasLeadingTrivia)
-                            foreach (var trivia in token.LeadingTrivia)
-                                state = VisitLeading(trivia, state);
+                if (_depth < SyntaxWalkerDepth.Trivia)
+                    continue;
 
-                        if (token.HasTrailingTrivia)
-                            foreach (var trivia in token.TrailingTrivia)
-                                state = VisitTrailing(trivia, state);
-                    }
-                }
+                if (token.HasLeadingTrivia)
+                    foreach (var trivia in token.LeadingTrivia)
+                        state = VisitLeading(trivia, state);
+
+                if (token.HasTrailingTrivia)
+                    foreach (var trivia in token.TrailingTrivia)
+                        state = VisitTrailing(trivia, state);
             }
 
             return state;
