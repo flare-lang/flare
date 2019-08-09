@@ -1,9 +1,10 @@
-using System.CommandLine;
-using System.CommandLine.Invocation;
+using System.Threading.Tasks;
+using Flare.Runtime;
+using Flare.Syntax;
 
 namespace Flare.Cli.Commands
 {
-    public sealed class TestCommand : Command
+    sealed class TestCommand : BaseCommand
     {
         sealed class Options
         {
@@ -12,11 +13,29 @@ namespace Flare.Cli.Commands
         public TestCommand()
             : base("test", "Run unit tests of a project.")
         {
-            Handler = CommandHandler.Create<Options>(Run);
+            RegisterHandler<Options>(Run);
         }
 
-        void Run(Options options)
+        async Task<int> Run(Options options)
         {
+            var project = Project.Instance;
+
+            if (project == null)
+            {
+                Log.ErrorLine("No '{0}' file found in the current directory.", Project.ProjectFileName);
+                return 1;
+            }
+
+            var context = new SyntaxContext();
+
+            _ = await project.LoadModules(ModuleLoaderMode.Normal, context);
+
+            foreach (var diag in context.Diagnostics)
+                LogDiagnostic(diag);
+
+            // TODO
+
+            return context.HasDiagnostics ? 1 : 0;
         }
     }
 }

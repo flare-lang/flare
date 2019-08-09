@@ -1,9 +1,8 @@
-using System.CommandLine;
-using System.CommandLine.Invocation;
+using System.Threading.Tasks;
 
 namespace Flare.Cli.Commands
 {
-    public sealed class SearchCommand : Command
+    sealed class SearchCommand : BaseCommand
     {
         sealed class Options
         {
@@ -12,11 +11,14 @@ namespace Flare.Cli.Commands
         public SearchCommand()
             : base("search", "Search the package registry.")
         {
-            Handler = CommandHandler.Create<Options>(Run);
+            RegisterHandler<Options>(Run);
         }
 
-        void Run(Options options)
+        async Task<int> Run(Options options)
         {
+            // TODO
+
+            return await Task.FromResult(0);
         }
     }
 }

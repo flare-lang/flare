@@ -1,13 +1,13 @@
 using System;
-using System.CommandLine;
-using System.CommandLine.Invocation;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Flare.Runtime;
 using Flare.Syntax;
 
 namespace Flare.Cli.Commands
 {
-    public sealed class ReplCommand : Command
+    sealed class ReplCommand : BaseCommand
     {
         sealed class Options
         {
@@ -16,13 +16,14 @@ namespace Flare.Cli.Commands
         public ReplCommand()
             : base("repl", "Run an interactive evaluator.")
         {
-            Handler = CommandHandler.Create<Options>(Run);
+            RegisterHandler<Options>(Run);
         }
 
-        void Run(Options options)
+        async Task<int> Run(Options options)
         {
             ReadLine.AutoCompletionHandler = null;
 
+            var loader = new StandardModuleLoader(ModuleLoaderMode.Interactive);
             var i = 0;
 
             while (true)
@@ -32,6 +33,7 @@ namespace Flare.Cli.Commands
                 Console.ResetColor();
 
                 var text = new StringBuilder();
+                var quit = false;
                 var continued = false;
 
                 while (true)
@@ -43,6 +45,11 @@ namespace Flare.Cli.Commands
 
                     var broken = false;
 
+                    if (input == "'repl:quit")
+                    {
+                        quit = true;
+                        break;
+                    }
                     if (continued && input == "'repl:break")
                         broken = true;
                     else
@@ -51,7 +58,7 @@ namespace Flare.Cli.Commands
                     var lex = LanguageLexer.Lex(StringSourceText.From("<repl>", text.ToString()));
 
                     foreach (var diag in lex.Diagnostics)
-                        PrintDiagnostic(diag);
+                        LogDiagnostic(diag);
 
                     if (!lex.IsSuccess)
                         break;
@@ -70,18 +77,23 @@ namespace Flare.Cli.Commands
                     }
 
                     foreach (var diag in parse.Diagnostics)
-                        PrintDiagnostic(diag);
+                        LogDiagnostic(diag);
 
-                    var analysis = LanguageAnalyzer.Analyze(parse);
+                    var analysis = LanguageAnalyzer.Analyze(parse, loader, new SyntaxContext());
 
                     foreach (var diag in analysis.Diagnostics)
-                        PrintDiagnostic(diag);
+                        LogDiagnostic(diag);
 
                     break;
                 }
 
+                if (quit)
+                    break;
+
                 i++;
             }
+
+            return await Task.FromResult(0);
         }
 
         static bool IsIncomplete(Syntax.ParseResult parse)
@@ -107,19 +119,6 @@ namespace Flare.Cli.Commands
             var tokens = last.Tokens();
 
             return tokens.Any() && tokens.Last().Kind == SyntaxTokenKind.Missing;
-        }
-
-        static void PrintDiagnostic(SyntaxDiagnostic diagnostic)
-        {
-            Console.ForegroundColor = diagnostic.Severity switch
-            {
-                SyntaxDiagnosticSeverity.Suggestion => ConsoleColor.White,
-                SyntaxDiagnosticSeverity.Warning => ConsoleColor.Yellow,
-                SyntaxDiagnosticSeverity.Error => ConsoleColor.Red,
-                _ => throw Assert.Unreachable(),
-            };
-            Console.WriteLine(diagnostic);
-            Console.ResetColor();
         }
     }
 }

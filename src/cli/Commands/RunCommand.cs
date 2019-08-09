@@ -1,22 +1,51 @@
 using System.CommandLine;
-using System.CommandLine.Invocation;
+using System.Threading.Tasks;
+using Flare.Runtime;
+using Flare.Syntax;
 
 namespace Flare.Cli.Commands
 {
-    public sealed class RunCommand : Command
+    sealed class RunCommand : BaseCommand
     {
         sealed class Options
         {
+            public string[] Arguments { get; set; } = null!;
         }
 
         public RunCommand()
             : base("run", "Run an executable project.")
         {
-            Handler = CommandHandler.Create<Options>(Run);
+            AddArgument<string[]>("arguments", "Arguments to be passed to the program.", ArgumentArity.ZeroOrMore);
+
+            RegisterHandler<Options>(Run);
         }
 
-        void Run(Options options)
+        async Task<int> Run(Options options)
         {
+            var project = Project.Instance;
+
+            if (project == null)
+            {
+                Log.ErrorLine("No '{0}' file found in the current directory.", Project.ProjectFileName);
+                return 1;
+            }
+
+            if (project.Type != ProjectType.Executable)
+            {
+                Log.ErrorLine("Project '{0}' is not executable.", project.Name);
+                return 1;
+            }
+
+            var context = new SyntaxContext();
+
+            _ = await project.LoadModules(ModuleLoaderMode.Normal, context);
+
+            foreach (var diag in context.Diagnostics)
+                LogDiagnostic(diag);
+
+            // TODO
+
+            return context.HasDiagnostics ? 1 : 0;
         }
     }
 }

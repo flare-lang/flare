@@ -1,9 +1,8 @@
-using System.CommandLine;
-using System.CommandLine.Invocation;
+using System.Threading.Tasks;
 
 namespace Flare.Cli.Commands
 {
-    public sealed class CleanCommand : Command
+    sealed class CleanCommand : BaseCommand
     {
         sealed class Options
         {
@@ -12,11 +11,23 @@ namespace Flare.Cli.Commands
         public CleanCommand()
             : base("clean", "Clean build artifacts of a project.")
         {
-            Handler = CommandHandler.Create<Options>(Run);
+            RegisterHandler<Options>(Run);
         }
 
-        void Run(Options options)
+        async Task<int> Run(Options options)
         {
+            var project = Project.Instance;
+
+            if (project == null)
+            {
+                Log.ErrorLine("No '{0}' file found in the current directory.", Project.ProjectFileName);
+                return 1;
+            }
+
+            if (project.BuildDirectory.Exists)
+                project.BuildDirectory.Delete();
+
+            return await Task.FromResult(0);
         }
     }
 }

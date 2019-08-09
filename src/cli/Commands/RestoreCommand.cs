@@ -1,9 +1,8 @@
-using System.CommandLine;
-using System.CommandLine.Invocation;
+using System.Threading.Tasks;
 
 namespace Flare.Cli.Commands
 {
-    public sealed class RestoreCommand : Command
+    sealed class RestoreCommand : BaseCommand
     {
         sealed class Options
         {
@@ -12,11 +11,22 @@ namespace Flare.Cli.Commands
         public RestoreCommand()
             : base("restore", "Restore remote dependencies of a project.")
         {
-            Handler = CommandHandler.Create<Options>(Run);
+            RegisterHandler<Options>(Run);
         }
 
-        void Run(Options options)
+        async Task<int> Run(Options options)
         {
+            var project = Project.Instance;
+
+            if (project == null)
+            {
+                Log.ErrorLine("No '{0}' file found in the current directory.", Project.ProjectFileName);
+                return 1;
+            }
+
+            // TODO
+
+            return await Task.FromResult(0);
         }
     }
 }
