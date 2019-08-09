@@ -64,6 +64,7 @@ namespace Flare.Syntax
                         case SyntaxTokenKind.MacroKeyword:
                         case SyntaxTokenKind.PrivKeyword:
                         case SyntaxTokenKind.PubKeyword:
+                        case SyntaxTokenKind.TestKeyword:
                         case SyntaxTokenKind.UseKeyword:
                             return true;
                         default:
@@ -431,6 +432,9 @@ namespace Flare.Syntax
                 if (_stream.Peek().Kind == SyntaxTokenKind.UseKeyword)
                     return ParseUseDeclaration(attrs);
 
+                if (_stream.Peek().Kind == SyntaxTokenKind.TestKeyword)
+                    return ParseTestDeclaration(attrs);
+
                 var vis = Optional2(SyntaxTokenKind.PrivKeyword, SyntaxTokenKind.PubKeyword);
                 var tok = _stream.Peek();
 
@@ -462,6 +466,17 @@ namespace Flare.Syntax
                         return new MissingNamedDeclarationNode(skipped, diags,
                             List(ImmutableArray<AttributeNode>.Empty), Missing(), Missing(), Missing());
                 }
+            }
+
+            TestDeclarationNode ParseTestDeclaration(ImmutableArray<AttributeNode> attributes)
+            {
+                var diags = Diagnostics();
+
+                var test = Expect(SyntaxTokenKind.TestKeyword, "'test' keyword", ref diags);
+                var name = Expect(SyntaxTokenKind.ValueIdentifier, "value identifier", ref diags);
+                var body = ParseBlockExpression();
+
+                return new TestDeclarationNode(Skipped(), diags, List(attributes), test, name, body);
             }
 
             UseDeclarationNode ParseUseDeclaration(ImmutableArray<AttributeNode> attributes)

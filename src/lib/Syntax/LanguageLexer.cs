@@ -1301,6 +1301,7 @@ namespace Flare.Syntax
                 ["rec"] = SyntaxTokenKind.RecKeyword,
                 ["recv"] = SyntaxTokenKind.RecvKeyword,
                 ["return"] = SyntaxTokenKind.ReturnKeyword,
+                ["test"] = SyntaxTokenKind.TestKeyword,
                 ["use"] = SyntaxTokenKind.UseKeyword,
                 ["while"] = SyntaxTokenKind.WhileKeyword,
 
@@ -1313,7 +1314,6 @@ namespace Flare.Syntax
                 ["pragma"] = SyntaxTokenKind.PragmaKeyword,
                 ["quote"] = SyntaxTokenKind.QuoteKeyword,
                 ["super"] = SyntaxTokenKind.SuperKeyword,
-                ["test"] = SyntaxTokenKind.TestKeyword,
                 ["try"] = SyntaxTokenKind.TryKeyword,
                 ["unquote"] = SyntaxTokenKind.UnquoteKeyword,
                 ["yield"] = SyntaxTokenKind.YieldKeyword,

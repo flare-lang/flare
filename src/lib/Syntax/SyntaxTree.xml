@@ -77,6 +77,13 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
             <token name="Name" />
         </node>
 
+        <node name="TestDeclaration" base="Declaration">
+            <children name="Attributes" type="Attribute" override="true" />
+            <token name="Keyword" override="true" />
+            <token name="Name" />
+            <child name="Body" type="BlockExpression" />
+        </node>
+
         <node name="NamedDeclaration" base="Declaration" abstract="true">
             <token name="VisibilityKeyword" optional="true" />
             <token name="Name" />
