@@ -1,4 +1,5 @@
 mod Core::Time;
 
 pub fn seconds(value) {
+    nil;
 }

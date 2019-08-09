@@ -2,7 +2,7 @@ mod Core::Agent;
 
 pub extern self();
 
-pub extern get();
+pub extern get_all();
 
 pub extern get(key);
 
