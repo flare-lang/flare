@@ -9,7 +9,7 @@ namespace Flare.Cli.Commands
         }
 
         public SearchCommand()
-            : base("search", "Search the package registry.")
+            : base("search", "Search the package registry. [NYI]")
         {
             RegisterHandler<Options>(Run);
         }
@@ -17,6 +17,7 @@ namespace Flare.Cli.Commands
         async Task<int> Run(Options options)
         {
             // TODO
+            Log.WarningLine("This command is not yet implemented.");
 
             return await Task.FromResult(0);
         }

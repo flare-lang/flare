@@ -9,7 +9,7 @@ namespace Flare.Cli.Commands
         }
 
         public RestoreCommand()
-            : base("restore", "Restore remote dependencies of a project.")
+            : base("restore", "Restore remote dependencies of a project. [NYI]")
         {
             RegisterHandler<Options>(Run);
         }
@@ -25,6 +25,7 @@ namespace Flare.Cli.Commands
             }
 
             // TODO
+            Log.WarningLine("This command is not yet implemented.");
 
             return await Task.FromResult(0);
         }

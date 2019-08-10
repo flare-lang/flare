@@ -9,7 +9,7 @@ namespace Flare.Cli.Commands
         }
 
         public UninstallCommand()
-            : base("uninstall", "Uninstall an executable project.")
+            : base("uninstall", "Uninstall an executable project. [NYI]")
         {
             RegisterHandler<Options>(Run);
         }
@@ -31,6 +31,7 @@ namespace Flare.Cli.Commands
             }
 
             // TODO
+            Log.WarningLine("This command is not yet implemented.");
 
             return await Task.FromResult(0);
         }

@@ -9,7 +9,7 @@ namespace Flare.Cli.Commands
         }
 
         public DocCommand()
-            : base("doc", "Build documentation for a project.")
+            : base("doc", "Build documentation for a project. [NYI]")
         {
             RegisterHandler<Options>(Run);
         }
@@ -25,6 +25,7 @@ namespace Flare.Cli.Commands
             }
 
             // TODO
+            Log.WarningLine("This command is not yet implemented.");
 
             return await Task.FromResult(0);
         }
