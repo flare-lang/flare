@@ -61,10 +61,10 @@ namespace Flare.Syntax
                         return sym != null ? sym.Kind == SyntaxSymbolKind.Mutable : Previous?.IsMutable(name) ?? false;
                     }
 
-                    public void Define(SyntaxSymbolKind kind, ModulePath? module, string name)
+                    public void Define(SyntaxSymbolKind kind, ModulePath? module, SyntaxNode? definition, string name)
                     {
                         // This method is used to shadow variables, too.
-                        Symbols[name] = new SyntaxSymbol(kind, module, name);
+                        Symbols[name] = new SyntaxSymbol(kind, module, definition, name);
                     }
                 }
 
@@ -97,8 +97,6 @@ namespace Flare.Syntax
                 FunctionContext? _function;
 
                 Scope _scope = new Scope(null!);
-
-                readonly HashSet<string> _fragments = new HashSet<string>();
 
                 public Walker(ModuleLoader loader, SyntaxContext context)
                 {
@@ -240,7 +238,7 @@ namespace Flare.Syntax
                             };
 
                             if (sym is SyntaxSymbolKind kind)
-                                _scope.Define(kind, path, mdecl.Name);
+                                _scope.Define(kind, path, null, mdecl.Name);
                         }
                     }
 
@@ -293,7 +291,7 @@ namespace Flare.Syntax
                         };
 
                         if (sym is SyntaxSymbolKind kind)
-                            _scope.Define(kind, _path, name.Text);
+                            _scope.Define(kind, _path, decl, name.Text);
                     }
 
                     foreach (var decl in node.Declarations)
@@ -354,7 +352,7 @@ namespace Flare.Syntax
                         if (name.IsMissing)
                             continue;
 
-                        _scope.Define(SyntaxSymbolKind.Immutable, _path, name.Text);
+                        _scope.Define(SyntaxSymbolKind.Immutable, _path, param, name.Text);
 
                         var duplicate = false;
 
@@ -413,8 +411,7 @@ namespace Flare.Syntax
                 public override void Visit(MacroDeclarationNode node)
                 {
                     PushFunction();
-
-                    _fragments.Clear();
+                    PushScope();
 
                     foreach (var param in node.ParameterList.Parameters.Nodes)
                     {
@@ -423,7 +420,7 @@ namespace Flare.Syntax
                         if (name.IsMissing)
                             continue;
 
-                        _ = _fragments.Add(name.Text);
+                        _scope.Define(SyntaxSymbolKind.Fragment, _path, param, name.Text);
 
                         var duplicate = false;
 
@@ -445,6 +442,7 @@ namespace Flare.Syntax
 
                     base.Visit(node);
 
+                    PopScope();
                     PopFunction();
                 }
 
@@ -530,9 +528,22 @@ namespace Flare.Syntax
                 {
                     var ident = node.IdentifierToken;
 
-                    if (!ident.IsMissing && !_fragments.Contains(ident.Text))
-                        Error(node, SyntaxDiagnosticKind.UnknownValueName, ident.Location,
-                            $"Unknown fragment name '{ident}'");
+                    if (!ident.IsMissing)
+                    {
+                        if (!ident.Text.StartsWith("$_"))
+                        {
+                            var sym = _scope.Get(ident.Text);
+
+                            if (sym != null)
+                                node.SetAnnotation("Symbol", sym);
+                            else
+                                Error(node, SyntaxDiagnosticKind.UnknownValueName, ident.Location,
+                                    $"Unknown fragment name '{ident}'");
+                        }
+                        else
+                            Error(node, SyntaxDiagnosticKind.DiscardedVariableUsed, ident.Location,
+                                $"Use of discarded fragment name '{ident}'");
+                    }
 
                     base.Visit(node);
                 }
@@ -549,7 +560,7 @@ namespace Flare.Syntax
                         if (name.IsMissing)
                             continue;
 
-                        _scope.Define(SyntaxSymbolKind.Immutable, _path, name.Text);
+                        _scope.Define(SyntaxSymbolKind.Immutable, _path, param, name.Text);
 
                         var duplicate = false;
 
@@ -724,24 +735,24 @@ namespace Flare.Syntax
                 {
                     if (!node.IdentifierToken.IsMissing)
                         _scope.Define(node.MutKeywordToken != null ? SyntaxSymbolKind.Mutable :
-                            SyntaxSymbolKind.Immutable, _path, node.IdentifierToken.Text);
+                            SyntaxSymbolKind.Immutable, _path, node, node.IdentifierToken.Text);
 
                     base.Visit(node);
 
-                    var alias = node.Alias?.NameToken;
+                    var alias = node.Alias;
 
-                    if (alias != null && !alias.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias.Text);
+                    if (alias != null && !alias.NameToken.IsMissing)
+                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(LiteralPatternNode node)
                 {
                     base.Visit(node);
 
-                    var alias = node.Alias?.NameToken;
+                    var alias = node.Alias;
 
-                    if (alias != null && !alias.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias.Text);
+                    if (alias != null && !alias.NameToken.IsMissing)
+                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(ModulePatternNode node)
@@ -760,20 +771,20 @@ namespace Flare.Syntax
 
                     base.Visit(node);
 
-                    var alias = node.Alias?.NameToken;
+                    var alias = node.Alias;
 
-                    if (alias != null && !alias.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias.Text);
+                    if (alias != null && !alias.NameToken.IsMissing)
+                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(TuplePatternNode node)
                 {
                     base.Visit(node);
 
-                    var alias = node.Alias?.NameToken;
+                    var alias = node.Alias;
 
-                    if (alias != null && !alias.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias.Text);
+                    if (alias != null && !alias.NameToken.IsMissing)
+                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(RecordPatternNode node)
@@ -805,10 +816,10 @@ namespace Flare.Syntax
 
                     base.Visit(node);
 
-                    var alias = node.Alias?.NameToken;
+                    var alias = node.Alias;
 
-                    if (alias != null && !alias.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias.Text);
+                    if (alias != null && !alias.NameToken.IsMissing)
+                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(ExceptionPatternNode node)
@@ -840,40 +851,40 @@ namespace Flare.Syntax
 
                     base.Visit(node);
 
-                    var alias = node.Alias?.NameToken;
+                    var alias = node.Alias;
 
-                    if (alias != null && !alias.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias.Text);
+                    if (alias != null && !alias.NameToken.IsMissing)
+                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(ArrayPatternNode node)
                 {
                     base.Visit(node);
 
-                    var alias = node.Alias?.NameToken;
+                    var alias = node.Alias;
 
-                    if (alias != null && !alias.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias.Text);
+                    if (alias != null && !alias.NameToken.IsMissing)
+                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(SetPatternNode node)
                 {
                     base.Visit(node);
 
-                    var alias = node.Alias?.NameToken;
+                    var alias = node.Alias;
 
-                    if (alias != null && !alias.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias.Text);
+                    if (alias != null && !alias.NameToken.IsMissing)
+                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(MapPatternNode node)
                 {
                     base.Visit(node);
 
-                    var alias = node.Alias?.NameToken;
+                    var alias = node.Alias;
 
-                    if (alias != null && !alias.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias.Text);
+                    if (alias != null && !alias.NameToken.IsMissing)
+                        _scope.Define(SyntaxSymbolKind.Immutable, _path, alias, alias.NameToken.Text);
                 }
             }
 

@@ -7,5 +7,6 @@ namespace Flare.Syntax
         External,
         Immutable,
         Mutable,
+        Fragment,
     }
 }

@@ -8,12 +8,15 @@ namespace Flare.Syntax
 
         public ModulePath? Module { get; }
 
+        public SyntaxNode? Definition { get; }
+
         public string Name { get; }
 
-        public SyntaxSymbol(SyntaxSymbolKind kind, ModulePath? module, string name)
+        public SyntaxSymbol(SyntaxSymbolKind kind, ModulePath? module, SyntaxNode? definition, string name)
         {
             Kind = kind;
             Module = module;
+            Definition = definition;
             Name = name;
         }
     }
