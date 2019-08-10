@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
+using Flare.Syntax.Lints;
 
 namespace Flare.Syntax
 {
@@ -190,6 +191,11 @@ namespace Flare.Syntax
         public const string WarninngSeverityName = "warning";
 
         public const string ErrorSeverityName = "error";
+
+        public static ImmutableDictionary<string, SyntaxLint> Lints = new SyntaxLint[]
+        {
+            new UndocumentedDeclarationLint(),
+        }.ToImmutableDictionary(x => x.Name);
 
         public static LintResult Lint(ParseResult parse, SyntaxLintConfiguration configuration,
             IEnumerable<SyntaxLint> lints)

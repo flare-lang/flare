@@ -1,6 +1,8 @@
 using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.ComponentModel;
+using System.Text;
 using System.Threading.Tasks;
 using Flare.Syntax;
 
@@ -48,6 +50,26 @@ namespace Flare.Cli.Commands
                 case SyntaxDiagnosticSeverity.Error:
                     Log.ErrorLine("{0}", diagnostic);
                     break;
+            }
+        }
+
+        protected static async Task<(bool, string)> RunGitAsync(string args)
+        {
+            var result = new StringBuilder();
+
+            void write(string str)
+            {
+                lock (result)
+                    _ = result.AppendLine(str);
+            }
+
+            try
+            {
+                return (await Process.ExecuteAsync("git", args, null, write, write) == 0, result.ToString());
+            }
+            catch (Win32Exception)
+            {
+                return (false, "Could not execute 'git'.");
             }
         }
     }
