@@ -10,14 +10,41 @@ namespace Flare.Syntax
         {
             sealed class Walker : SyntaxWalker
             {
+                sealed class FunctionContext
+                {
+                    public FunctionContext? Previous { get; }
+
+                    readonly Stack<PrimaryExpressionNode> _loops = new Stack<PrimaryExpressionNode>();
+
+                    public FunctionContext(FunctionContext? previous)
+                    {
+                        Previous = previous;
+                    }
+
+                    public void Push(PrimaryExpressionNode loop)
+                    {
+                        _loops.Push(loop);
+                    }
+
+                    public void Pop()
+                    {
+                        _ = _loops.Pop();
+                    }
+
+                    public PrimaryExpressionNode? Get()
+                    {
+                        return _loops.TryPeek(out var loop) ? loop : null;
+                    }
+                }
+
                 class Scope
                 {
-                    public Scope Previous { get; }
+                    public Scope? Previous { get; }
 
-                    public Dictionary<string, SyntaxSymbol> Symbols { get; } =
+                    protected Dictionary<string, SyntaxSymbol> Symbols { get; } =
                         new Dictionary<string, SyntaxSymbol>();
 
-                    public Scope(Scope previous)
+                    public Scope(Scope? previous)
                     {
                         Previous = previous;
                     }
@@ -67,11 +94,11 @@ namespace Flare.Syntax
 
                 readonly Dictionary<string, ModulePath> _aliases = new Dictionary<string, ModulePath>();
 
+                FunctionContext? _function;
+
                 Scope _scope = new Scope(null!);
 
                 readonly HashSet<string> _fragments = new HashSet<string>();
-
-                readonly Stack<PrimaryExpressionNode> _loops = new Stack<PrimaryExpressionNode>();
 
                 public Walker(ModuleLoader loader, SyntaxContext context)
                 {
@@ -122,6 +149,16 @@ namespace Flare.Syntax
 
                         return null;
                     }
+                }
+
+                void PushFunction()
+                {
+                    _function = new FunctionContext(_function);
+                }
+
+                void PopFunction()
+                {
+                    _function = _function!.Previous;
                 }
 
                 void PushScope()
@@ -296,8 +333,18 @@ namespace Flare.Syntax
                     base.Visit(node);
                 }
 
+                public override void Visit(ConstantDeclarationNode node)
+                {
+                    PushFunction();
+
+                    base.Visit(node);
+
+                    PopFunction();
+                }
+
                 public override void Visit(FunctionDeclarationNode node)
                 {
+                    PushFunction();
                     PushScope();
 
                     foreach (var param in node.ParameterList.Parameters.Nodes)
@@ -330,6 +377,7 @@ namespace Flare.Syntax
                     base.Visit(node);
 
                     PopScope();
+                    PopFunction();
                 }
 
                 public override void Visit(ExternalDeclarationNode node)
@@ -364,6 +412,8 @@ namespace Flare.Syntax
 
                 public override void Visit(MacroDeclarationNode node)
                 {
+                    PushFunction();
+
                     _fragments.Clear();
 
                     foreach (var param in node.ParameterList.Parameters.Nodes)
@@ -394,6 +444,8 @@ namespace Flare.Syntax
                     }
 
                     base.Visit(node);
+
+                    PopFunction();
                 }
 
                 public override void Visit(LetStatementNode node)
@@ -487,6 +539,7 @@ namespace Flare.Syntax
 
                 public override void Visit(LambdaExpressionNode node)
                 {
+                    PushFunction();
                     PushLambdaScope();
 
                     foreach (var param in node.ParameterList.Parameters.Nodes)
@@ -519,6 +572,7 @@ namespace Flare.Syntax
                     base.Visit(node);
 
                     PopScope();
+                    PopFunction();
                 }
 
                 public override void Visit(ModuleExpressionNode node)
@@ -618,20 +672,20 @@ namespace Flare.Syntax
 
                 public override void Visit(ForExpressionNode node)
                 {
-                    _loops.Push(node);
+                    _function!.Push(node);
 
                     base.Visit(node);
 
-                    _ = _loops.Pop();
+                    _function!.Pop();
                 }
 
                 public override void Visit(WhileExpressionNode node)
                 {
-                    _loops.Push(node);
+                    _function!.Push(node);
 
                     base.Visit(node);
 
-                    _ = _loops.Pop();
+                    _function!.Pop();
                 }
 
                 public override void Visit(LoopExpressionNode node)
@@ -640,7 +694,7 @@ namespace Flare.Syntax
 
                     if (!kw.IsMissing)
                     {
-                        if (_loops.TryPeek(out var loop))
+                        if (_function!.Get() is PrimaryExpressionNode loop)
                             node.SetAnnotation("Target", loop);
                         else
                             Error(node, SyntaxDiagnosticKind.InvalidLoopTarget, kw.Location,
@@ -656,7 +710,7 @@ namespace Flare.Syntax
 
                     if (!kw.IsMissing)
                     {
-                        if (_loops.TryPeek(out var loop))
+                        if (_function!.Get() is PrimaryExpressionNode loop)
                             node.SetAnnotation("Target", loop);
                         else
                             Error(node, SyntaxDiagnosticKind.InvalidLoopTarget, kw.Location,
