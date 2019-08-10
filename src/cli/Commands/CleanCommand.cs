@@ -6,11 +6,14 @@ namespace Flare.Cli.Commands
     {
         sealed class Options
         {
+            public bool Deps { get; set; }
         }
 
         public CleanCommand()
             : base("clean", "Clean build artifacts of a project.")
         {
+            AddOption<bool>("-d", "--deps", "Clean locally restored dependencies.");
+
             RegisterHandler<Options>(Run);
         }
 
@@ -26,6 +29,9 @@ namespace Flare.Cli.Commands
 
             if (project.BuildDirectory.Exists)
                 project.BuildDirectory.Delete();
+
+            if (options.Deps && project.DependencyDirectory.Exists)
+                project.DependencyDirectory.Delete();
 
             return await Task.FromResult(0);
         }
