@@ -29,7 +29,7 @@ namespace Flare.Cli.Commands
 
             var context = new SyntaxContext();
 
-            _ = await project.LoadModules(ModuleLoaderMode.Normal, context);
+            _ = await project.LoadModules(ModuleLoaderMode.Reflection, context);
 
             foreach (var diag in context.Diagnostics)
                 LogDiagnostic(diag);
