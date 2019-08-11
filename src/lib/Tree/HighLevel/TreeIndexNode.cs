@@ -14,11 +14,12 @@ namespace Flare.Tree.HighLevel
         public override TreeType Type => TreeType.Any;
 
         public TreeIndexNode(TreeContext context, SourceLocation location, TreeReference subject,
-            ImmutableArray<TreeReference> arguments)
+            ImmutableArray<TreeReference> arguments, TreeReference? variadicArgument)
             : base(context, location)
         {
             Subject = subject;
             Arguments = arguments;
+            VariadicArgument = variadicArgument;
         }
     }
 }
