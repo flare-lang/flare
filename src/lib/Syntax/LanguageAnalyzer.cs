@@ -217,11 +217,13 @@ namespace Flare.Syntax
                             else
                                 Error(alias, SyntaxDiagnosticKind.DuplicateUseDeclarationAlias, name.Location,
                                     $"Module alias '{name}' declared multiple times");
-
-                            continue;
                         }
 
                         if (!(LoadModule(node, node.Path.ComponentTokens.Tokens[0].Location, path) is Module mod))
+                            continue;
+
+                        // Don't import symbols if the module is aliased.
+                        if (use.Alias != null)
                             continue;
 
                         foreach (var mdecl in mod.Declarations)
