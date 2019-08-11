@@ -234,6 +234,7 @@ namespace Flare.Syntax
                                 Constant _ => SyntaxSymbolKind.Constant,
                                 Function _ => SyntaxSymbolKind.Function,
                                 External _ => SyntaxSymbolKind.External,
+                                Macro _ => SyntaxSymbolKind.Macro,
                                 _ => (SyntaxSymbolKind?)null,
                             };
 
@@ -287,6 +288,7 @@ namespace Flare.Syntax
                             ConstantDeclarationNode _ => SyntaxSymbolKind.Constant,
                             FunctionDeclarationNode _ => SyntaxSymbolKind.Function,
                             ExternalDeclarationNode _ => SyntaxSymbolKind.External,
+                            MacroDeclarationNode _ => SyntaxSymbolKind.Macro,
                             _ => (SyntaxSymbolKind?)null,
                         };
 
@@ -510,7 +512,7 @@ namespace Flare.Syntax
                         {
                             var sym = _scope.Get(ident.Text);
 
-                            if (sym != null)
+                            if (sym != null && sym.Kind != SyntaxSymbolKind.Macro)
                                 node.SetAnnotation("Symbol", sym);
                             else
                                 Error(node, SyntaxDiagnosticKind.UnknownValueName, ident.Location,
@@ -519,6 +521,24 @@ namespace Flare.Syntax
                         else
                             Error(node, SyntaxDiagnosticKind.DiscardedVariableUsed, ident.Location,
                                 $"Use of discarded variable name '{ident}'");
+                    }
+
+                    base.Visit(node);
+                }
+
+                public override void Visit(MacroCallExpressionNode node)
+                {
+                    var ident = node.IdentifierToken;
+
+                    if (!ident.IsMissing)
+                    {
+                        var sym = _scope.Get(ident.Text);
+
+                        if (sym != null)
+                            node.SetAnnotation("Symbol", sym);
+                        else
+                            Error(node, SyntaxDiagnosticKind.UnknownValueName, ident.Location,
+                                $"Unknown macro name '{ident}'");
                     }
 
                     base.Visit(node);
