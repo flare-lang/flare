@@ -20,7 +20,7 @@ namespace Flare.Runtime
 
             foreach (var decl in node.Declarations)
             {
-                if (!(decl is NamedDeclarationNode))
+                if (decl is UseDeclarationNode)
                     continue;
 
                 decls = decls.Add(decl switch
@@ -29,6 +29,7 @@ namespace Flare.Runtime
                     FunctionDeclarationNode f => new Function(this, f),
                     ExternalDeclarationNode e => new External(this, e),
                     MacroDeclarationNode m => new Macro(this, m),
+                    TestDeclarationNode t => new Test(this, t),
                     _ => throw Assert.Unreachable(),
                 });
             }
