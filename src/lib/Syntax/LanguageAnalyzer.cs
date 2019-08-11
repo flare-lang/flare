@@ -536,7 +536,7 @@ namespace Flare.Syntax
                     {
                         var sym = _scope.Get(ident.Text);
 
-                        if (sym != null)
+                        if (sym != null && sym.Kind == SyntaxSymbolKind.Macro)
                             node.SetAnnotation("Symbol", sym);
                         else
                             Error(node, SyntaxDiagnosticKind.UnknownValueName, ident.Location,
