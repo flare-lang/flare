@@ -2,22 +2,14 @@ using Flare.Runtime;
 
 namespace Flare.Syntax
 {
-    sealed class SyntaxSymbol
+    abstract class SyntaxSymbol
     {
-        public SyntaxSymbolKind Kind { get; }
+        public abstract SyntaxSymbolKind Kind { get; }
 
-        public ModulePath? Module { get; }
+        public abstract ModulePath? Module { get; }
 
-        public SyntaxNode? Definition { get; }
+        public abstract SyntaxNode? Definition { get; }
 
-        public string Name { get; }
-
-        public SyntaxSymbol(SyntaxSymbolKind kind, ModulePath? module, SyntaxNode? definition, string name)
-        {
-            Kind = kind;
-            Module = module;
-            Definition = definition;
-            Name = name;
-        }
+        public abstract string Name { get; }
     }
 }

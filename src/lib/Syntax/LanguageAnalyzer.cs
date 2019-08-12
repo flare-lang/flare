@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using Flare.Runtime;
 
 namespace Flare.Syntax
@@ -24,7 +25,7 @@ namespace Flare.Syntax
                         Previous = previous;
                     }
 
-                    public SyntaxSymbol? Resolve(string name)
+                    public virtual SyntaxSymbol? Resolve(string name)
                     {
                         return Symbols.TryGetValue(name, out var sym) ? sym : Previous?.Resolve(name);
                     }
@@ -38,17 +39,48 @@ namespace Flare.Syntax
                     public void Define(SyntaxSymbolKind kind, ModulePath? module, SyntaxNode? definition, string name)
                     {
                         // This method is used to shadow variables, too.
-                        Symbols[name] = new SyntaxSymbol(kind, module, definition, name);
+                        Symbols[name] = new SyntaxVariableSymbol(kind, module, definition, name);
                     }
                 }
 
                 sealed class FunctionScope : Scope
                 {
+                    public IReadOnlyDictionary<SyntaxSymbol, SyntaxUpvalueSymbol> Upvalues => _upvalues;
+
                     readonly Stack<PrimaryExpressionNode> _loops = new Stack<PrimaryExpressionNode>();
+
+                    readonly Dictionary<SyntaxSymbol, SyntaxUpvalueSymbol> _upvalues =
+                        new Dictionary<SyntaxSymbol, SyntaxUpvalueSymbol>();
+
+                    int _slot;
 
                     public FunctionScope(Scope previous)
                         : base(previous)
                     {
+                    }
+
+                    public override SyntaxSymbol? Resolve(string name)
+                    {
+                        // Is it a local variable?
+                        if (Symbols.TryGetValue(name, out var sym))
+                            return sym;
+
+                        sym = Previous?.Resolve(name);
+
+                        // Is it an upvalue?
+                        if (sym != null)
+                        {
+                            if (!_upvalues.TryGetValue(sym, out var up))
+                            {
+                                sym = up = new SyntaxUpvalueSymbol(sym, _slot++);
+
+                                _upvalues.Add(sym, up);
+                            }
+                            else
+                                sym = up;
+                        }
+
+                        return sym;
                     }
 
                     public override bool IsMutable(string name)
@@ -85,7 +117,7 @@ namespace Flare.Syntax
 
                 readonly Dictionary<string, ModulePath> _aliases = new Dictionary<string, ModulePath>();
 
-                Scope _scope = new Scope(null!);
+                Scope _scope = new Scope(null);
 
                 public Walker(ModuleLoader loader, SyntaxContext context)
                 {
@@ -143,9 +175,13 @@ namespace Flare.Syntax
                     _scope = new Scope(_scope);
                 }
 
-                void PushFunctionScope()
+                FunctionScope PushFunctionScope()
                 {
-                    _scope = new FunctionScope(_scope);
+                    var func = new FunctionScope(_scope);
+
+                    _scope = func;
+
+                    return func;
                 }
 
                 void PopScope()
@@ -316,7 +352,7 @@ namespace Flare.Syntax
 
                 public override void Visit(ConstantDeclarationNode node)
                 {
-                    PushFunctionScope();
+                    _ = PushFunctionScope();
 
                     base.Visit(node);
 
@@ -325,7 +361,7 @@ namespace Flare.Syntax
 
                 public override void Visit(FunctionDeclarationNode node)
                 {
-                    PushFunctionScope();
+                    _ = PushFunctionScope();
 
                     foreach (var param in node.ParameterList.Parameters.Nodes)
                     {
@@ -391,7 +427,7 @@ namespace Flare.Syntax
 
                 public override void Visit(MacroDeclarationNode node)
                 {
-                    PushFunctionScope();
+                    _ = PushFunctionScope();
 
                     foreach (var param in node.ParameterList.Parameters.Nodes)
                     {
@@ -547,7 +583,7 @@ namespace Flare.Syntax
 
                 public override void Visit(LambdaExpressionNode node)
                 {
-                    PushFunctionScope();
+                    var scope = PushFunctionScope();
 
                     foreach (var param in node.ParameterList.Parameters.Nodes)
                     {
@@ -577,6 +613,12 @@ namespace Flare.Syntax
                     }
 
                     base.Visit(node);
+
+                    // Unwrap the upvalue symbols by one level. Some of them could still be upvalue
+                    // symbols after this, in the case of nested lambdas, and that's OK. The lowerer
+                    // will handle both cases.
+                    node.SetAnnotation("Upvalues", scope.Upvalues.Values.OrderBy(x => x.Slot).Select(x => x.Symbol)
+                        .ToImmutableArray());
 
                     PopScope();
                 }
