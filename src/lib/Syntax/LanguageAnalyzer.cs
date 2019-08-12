@@ -207,7 +207,7 @@ namespace Flare.Syntax
 
                         foreach (var mdecl in mod.Declarations)
                         {
-                            if (!mdecl.IsPublic || mdecl is Macro)
+                            if (!mdecl.IsPublic)
                                 continue;
 
                             var sym = mdecl switch
