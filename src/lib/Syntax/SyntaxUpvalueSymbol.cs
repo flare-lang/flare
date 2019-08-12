@@ -21,5 +21,10 @@ namespace Flare.Syntax
             Symbol = symbol;
             Slot = slot;
         }
+
+        public override string ToString()
+        {
+            return $"Upvalue({Symbol}, {Slot})";
+        }
     }
 }

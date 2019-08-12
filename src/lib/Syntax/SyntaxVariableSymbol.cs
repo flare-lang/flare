@@ -19,5 +19,15 @@ namespace Flare.Syntax
             Definition = definition;
             Name = name;
         }
+
+        public override string ToString()
+        {
+            var name = Name;
+
+            if (Module != null)
+                name = $"{Module}.{name}";
+
+            return $"Variable({Kind}, {name})";
+        }
     }
 }
