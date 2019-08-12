@@ -8,6 +8,7 @@
     <OutputType>Exe</OutputType>
     <PackAsTool>true</PackAsTool>
     <RootNamespace>Flare.Cli</RootNamespace>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
