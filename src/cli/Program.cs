@@ -1,6 +1,7 @@
 using System;
 using System.CommandLine.Builder;
 using System.CommandLine.Invocation;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Flare.Cli.Commands;
@@ -9,6 +10,13 @@ namespace Flare.Cli
 {
     static class Program
     {
+        public static DirectoryInfo StartDirectory { get; }
+
+        static Program()
+        {
+            StartDirectory = new DirectoryInfo(Environment.CurrentDirectory);
+        }
+
         static async Task FallbackMiddleware(InvocationContext context, Func<InvocationContext, Task> next)
         {
             // Fall back to the implicit script command if no other command is matched.

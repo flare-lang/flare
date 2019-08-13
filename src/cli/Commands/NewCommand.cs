@@ -58,11 +58,11 @@ namespace Flare.Cli.Commands
 
                 if (!ok)
                 {
-                    Log.WarningLine("Could not create Git repository in '{0}':", git);
+                    Log.WarningLine("Could not create Git repository in '{0}':", ToRelative(git));
                     Log.WarningLine(output);
                 }
                 else
-                    Log.InfoLine("Created Git repository in '{0}'.", git);
+                    Log.InfoLine("Created Git repository in '{0}'.", ToRelative(git));
             }
 
             await WriteFileAsync(Path.Combine(dir.FullName, ".editorconfig"), async sw =>
@@ -159,7 +159,7 @@ namespace Flare.Cli.Commands
 
             await action(sw);
 
-            Log.InfoLine("Created '{0}'.", path);
+            Log.InfoLine("Created '{0}'.", ToRelative(path));
         }
     }
 }

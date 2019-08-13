@@ -2,6 +2,7 @@ using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.ComponentModel;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Flare.Syntax;
@@ -37,20 +38,30 @@ namespace Flare.Cli.Commands
             Handler = CommandHandler.Create(handler);
         }
 
+        protected static string ToRelative(string path)
+        {
+            return Path.GetRelativePath(Program.StartDirectory.FullName, path);
+        }
+
         protected static void LogDiagnostic(SyntaxDiagnostic diagnostic)
         {
+            var loc = diagnostic.Location;
+            var msg = $"{ToRelative(loc.FullPath)}({loc.Line},{loc.Column}): {diagnostic.Message}";
+
             switch (diagnostic.Severity)
             {
                 case SyntaxDiagnosticSeverity.Suggestion:
-                    Log.SuggestionLine("{0}", diagnostic);
+                    Log.SuggestionLine("{0}", msg);
                     break;
                 case SyntaxDiagnosticSeverity.Warning:
-                    Log.WarningLine("{0}", diagnostic);
+                    Log.WarningLine("{0}", msg);
                     break;
                 case SyntaxDiagnosticSeverity.Error:
-                    Log.ErrorLine("{0}", diagnostic);
+                    Log.ErrorLine("{0}", msg);
                     break;
             }
+
+            // TODO: Log diagnostic notes.
         }
 
         protected static async Task<(bool, string)> RunGitAsync(string args)
