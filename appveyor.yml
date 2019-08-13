@@ -45,4 +45,4 @@ test_script:
     - pwsh: |
           $ErrorActionPreference = "Stop"
           Set-StrictMode -Version 2.0
-          dotnet test -c $Env:CONFIGURATION
+          dotnet test -c $Env:CONFIGURATION -l Appveyor
