@@ -8,7 +8,7 @@ using Flare.Cli.Commands;
 
 namespace Flare.Cli
 {
-    static class Program
+    public static class Program
     {
         public static DirectoryInfo StartDirectory { get; }
 
