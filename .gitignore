@@ -6,4 +6,5 @@
 .vscode
 /src/*/bin
 /src/*/obj
+/src/*/TestResults
 /src/lib/Syntax/SyntaxTree.cs
