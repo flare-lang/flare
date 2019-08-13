@@ -68,7 +68,7 @@ namespace Flare.Cli.Commands
         {
             var result = new StringBuilder();
 
-            void write(string str)
+            void Write(string str)
             {
                 lock (result)
                     _ = result.AppendLine(str);
@@ -76,7 +76,10 @@ namespace Flare.Cli.Commands
 
             try
             {
-                return (await Process.ExecuteAsync("git", args, null, write, write) == 0, result.ToString());
+                var success = await Process.ExecuteAsync("git", args, null, Write, Write) == 0;
+
+                lock (result)
+                    return (success, result.ToString());
             }
             catch (Win32Exception)
             {
