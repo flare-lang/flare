@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace Flare.Cli
 {
@@ -6,7 +7,7 @@ namespace Flare.Cli
     {
         static readonly object _lock = new object();
 
-        static void Output(ConsoleColor? color, bool line, string format, object[] args)
+        static void Output(ConsoleColor? color, TextWriter writer, bool line, string format, object[] args)
         {
             lock (_lock)
             {
@@ -17,10 +18,10 @@ namespace Flare.Cli
                 {
                     var msg = args.Length != 0 ? string.Format(format, args) : format;
 
-                    Console.Write(msg);
+                    writer.Write(msg);
 
                     if (line)
-                        Console.WriteLine();
+                        writer.WriteLine();
                 }
                 finally
                 {
@@ -32,57 +33,52 @@ namespace Flare.Cli
 
         public static void Info(string format, params object[] args)
         {
-            Output(null, false, format, args);
+            Output(null, Console.Out, false, format, args);
         }
 
         public static void InfoLine(string format, params object[] args)
         {
-            Output(null, true, format, args);
+            Output(null, Console.Out, true, format, args);
         }
 
         public static void Suggestion(string format, params object[] args)
         {
-            Output(ConsoleColor.Green, false, format, args);
+            Output(ConsoleColor.Green, Console.Error, false, format, args);
         }
 
         public static void SuggestionLine(string format, params object[] args)
         {
-            Output(ConsoleColor.Green, true, format, args);
+            Output(ConsoleColor.Green, Console.Error, true, format, args);
         }
 
         public static void Warning(string format, params object[] args)
         {
-            Output(ConsoleColor.Yellow, false, format, args);
+            Output(ConsoleColor.Yellow, Console.Error, false, format, args);
         }
 
         public static void WarningLine(string format, params object[] args)
         {
-            Output(ConsoleColor.Yellow, true, format, args);
+            Output(ConsoleColor.Yellow, Console.Error, true, format, args);
         }
 
         public static void Error(string format, params object[] args)
         {
-            Output(ConsoleColor.Red, false, format, args);
+            Output(ConsoleColor.Red, Console.Error, false, format, args);
         }
 
         public static void ErrorLine(string format, params object[] args)
         {
-            Output(ConsoleColor.Red, true, format, args);
+            Output(ConsoleColor.Red, Console.Error, true, format, args);
         }
 
         public static void Debug(string format, params object[] args)
         {
-            Output(ConsoleColor.Cyan, false, format, args);
+            Output(ConsoleColor.Cyan, Console.Error, false, format, args);
         }
 
         public static void DebugLine(string format, params object[] args)
         {
-            Output(ConsoleColor.Cyan, true, format, args);
-        }
-
-        public static void Line()
-        {
-            Output(null, true, string.Empty, Array.Empty<object>());
+            Output(ConsoleColor.Cyan, Console.Error, true, format, args);
         }
     }
 }
