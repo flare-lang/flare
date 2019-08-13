@@ -1,0 +1,5 @@
+mod SimpleMain;
+
+pub fn main(_args, _env) {
+    nil;
+}
