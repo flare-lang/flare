@@ -30,7 +30,7 @@ namespace Flare.Runtime
                     ExternalDeclarationNode e => new External(this, e),
                     MacroDeclarationNode m => new Macro(this, m),
                     TestDeclarationNode t => new Test(this, t),
-                    _ => throw Assert.Unreachable(),
+                    _ => throw DebugAssert.Unreachable(),
                 });
             }
 

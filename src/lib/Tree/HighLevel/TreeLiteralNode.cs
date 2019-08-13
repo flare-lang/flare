@@ -20,7 +20,7 @@ namespace Flare.Tree.HighLevel
                     BigInteger _ => TreeType.Integer,
                     double _ => TreeType.Real,
                     ReadOnlyMemory<byte> _ => TreeType.String,
-                    _ => throw Assert.Unreachable(),
+                    _ => throw DebugAssert.Unreachable(),
                 };
             }
         }

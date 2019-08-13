@@ -17,7 +17,7 @@ namespace Flare.Syntax
             {
                 public Rune Current => _peeked ?? _enumerator.Current;
 
-                object? IEnumerator.Current => throw Assert.Unreachable();
+                object? IEnumerator.Current => throw DebugAssert.Unreachable();
 
                 readonly IEnumerator<Rune> _enumerator;
 
@@ -158,7 +158,7 @@ namespace Flare.Syntax
                     else if (c - 'a' <= 'z' - 'a')
                         digit = c - 'a' + 10;
                     else
-                        throw Assert.Unreachable();
+                        throw DebugAssert.Unreachable();
 
                     result = result * radix + digit;
                 }
@@ -751,7 +751,7 @@ namespace Flare.Syntax
                         kind = SyntaxTokenKind.BitwiseOperator;
                         break;
                     default:
-                        throw Assert.Unreachable();
+                        throw DebugAssert.Unreachable();
                 }
 
                 return (location, kind);

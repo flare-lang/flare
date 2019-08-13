@@ -324,7 +324,7 @@ namespace Flare.Syntax
                 {
                     SyntaxMode.Normal => (SyntaxNode)ParseProgram(),
                     SyntaxMode.Interactive => ParseInteractive(),
-                    _ => throw Assert.Unreachable(),
+                    _ => throw DebugAssert.Unreachable(),
                 };
 
                 var diags = Diagnostics(); // Discarded.

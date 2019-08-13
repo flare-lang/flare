@@ -87,7 +87,7 @@ namespace Flare.Cli
                     LanguageLinter.SuggestionSeverityName => SyntaxDiagnosticSeverity.Suggestion,
                     LanguageLinter.WarninngSeverityName => SyntaxDiagnosticSeverity.Warning,
                     LanguageLinter.ErrorSeverityName => SyntaxDiagnosticSeverity.Error,
-                    _ => throw Assert.Unreachable(),
+                    _ => throw DebugAssert.Unreachable(),
                 });
             }
 

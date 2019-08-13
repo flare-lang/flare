@@ -72,7 +72,7 @@ namespace Flare.Syntax.Lints
                 FunctionDeclarationNode _ => "function",
                 ExternalDeclarationNode _ => "function",
                 MacroDeclarationNode _ => "macro",
-                _ => throw Assert.Unreachable(),
+                _ => throw DebugAssert.Unreachable(),
             };
 
             var ident = node.NameToken;
