@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using Flare.Syntax;
+using Flare.Tree;
 
 namespace Flare.Runtime
 {
@@ -8,6 +9,8 @@ namespace Flare.Runtime
         public bool HasParameters => !Parameters.IsEmpty;
 
         public ImmutableArray<Parameter> Parameters { get; }
+
+        internal TreeContext Tree { get; }
 
         internal Function(Module module, FunctionDeclarationNode node)
             : base(module, node)
@@ -24,6 +27,7 @@ namespace Flare.Runtime
             }
 
             Parameters = parms;
+            Tree = TreeContext.CreateFunction(this);
         }
     }
 }

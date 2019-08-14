@@ -5,15 +5,18 @@ namespace Flare.Runtime
 {
     public sealed class Module : Metadata
     {
+        public ModuleLoader Loader { get; }
+
         public ModulePath Path { get; }
 
         public bool HasDeclarations => !Declarations.IsEmpty;
 
         public ImmutableArray<Declaration> Declarations { get; }
 
-        internal Module(ModulePath path, ProgramNode node)
+        internal Module(ModuleLoader loader, ModulePath path, ProgramNode node)
             : base(node.Attributes)
         {
+            Loader = loader;
             Path = path;
 
             var decls = ImmutableArray<Declaration>.Empty;

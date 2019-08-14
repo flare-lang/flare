@@ -79,7 +79,7 @@ namespace Flare.Runtime
                 if (GetModule(path) is Module existing)
                     throw new ModuleLoadException($"Module with path '{path}' was already loaded previously.");
 
-                var mod = new Module(path, tree);
+                var mod = new Module(this, path, tree);
 
                 _modules.Add(path, mod);
 
@@ -101,7 +101,7 @@ namespace Flare.Runtime
                 if (source == null)
                     throw new ModuleLoadException($"Source file for module path '{path}' could not be located.");
 
-                var mod = new Module(path, ParseModule(path, source, context));
+                var mod = new Module(this, path, ParseModule(path, source, context));
 
                 _modules.Add(path, mod);
 
