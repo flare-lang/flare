@@ -235,7 +235,7 @@ namespace Flare.Syntax
                                     $"Module alias '{name}' declared multiple times");
                         }
 
-                        if (!(LoadModule(node, node.Path.ComponentTokens.Tokens[0].Location, path) is Module mod))
+                        if (!(LoadModule(use, use.Path.ComponentTokens.Tokens[0].Location, path) is Module mod))
                             continue;
 
                         // Don't import symbols if the module is aliased.
