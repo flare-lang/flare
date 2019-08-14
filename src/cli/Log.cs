@@ -71,14 +71,44 @@ namespace Flare.Cli
             Output(ConsoleColor.Red, Console.Error, true, format, args);
         }
 
-        public static void Debug(string format, params object[] args)
+        public static void Note(string format, params object[] args)
+        {
+            Output(ConsoleColor.White, Console.Error, false, format, args);
+        }
+
+        public static void NoteLine(string format, params object[] args)
+        {
+            Output(ConsoleColor.White, Console.Error, true, format, args);
+        }
+
+        public static void Context(string format, params object[] args)
+        {
+            Output(null, Console.Error, false, format, args);
+        }
+
+        public static void ContextLine(string format, params object[] args)
+        {
+            Output(null, Console.Error, true, format, args);
+        }
+
+        public static void Marker(string format, params object[] args)
         {
             Output(ConsoleColor.Cyan, Console.Error, false, format, args);
         }
 
-        public static void DebugLine(string format, params object[] args)
+        public static void MarkerLine(string format, params object[] args)
         {
             Output(ConsoleColor.Cyan, Console.Error, true, format, args);
+        }
+
+        public static void Debug(string format, params object[] args)
+        {
+            Output(ConsoleColor.Magenta, Console.Error, false, format, args);
+        }
+
+        public static void DebugLine(string format, params object[] args)
+        {
+            Output(ConsoleColor.Magenta, Console.Error, true, format, args);
         }
     }
 }

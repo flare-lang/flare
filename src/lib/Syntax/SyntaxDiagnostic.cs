@@ -35,7 +35,7 @@ namespace Flare.Syntax
 
         public override string ToString()
         {
-            return $"{Location}: {Message}";
+            return $"{Location}: {Severity}: {Message}";
         }
     }
 }
