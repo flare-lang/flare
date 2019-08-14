@@ -11,7 +11,7 @@ using Flare.Cli;
 
 namespace Flare.Tests.TestAdapter
 {
-    sealed class FlareCliTest : FlareTest
+    sealed class FlareScriptTest : FlareTest
     {
         public FileInfo File { get; }
 
@@ -33,7 +33,7 @@ namespace Flare.Tests.TestAdapter
 
         static readonly FileInfo _exe;
 
-        static FlareCliTest()
+        static FlareScriptTest()
         {
 #if DEBUG
             const string cfg = "Debug";
@@ -46,10 +46,10 @@ namespace Flare.Tests.TestAdapter
                 "..", "..", "cli", "bin", cfg, Path.GetFileName(typeof(Program).Assembly.Location)!));
         }
 
-        public FlareCliTest(string name, FileInfo file, ImmutableArray<FlareTestFilter> filters,
+        public FlareScriptTest(string name, FileInfo file, ImmutableArray<FlareTestFilter> filters,
             ImmutableDictionary<string, string> variables, string arguments, bool succeed, string? stdout,
             string? stderr)
-            : base("cli", name)
+            : base("script", name)
         {
             File = file;
             Filters = filters;

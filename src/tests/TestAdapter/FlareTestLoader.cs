@@ -25,17 +25,17 @@ namespace Flare.Tests.TestAdapter
             var tests = new Dictionary<string, FlareTest>();
             var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "..", "..");
 
-            foreach (var test in LoadCliTests(path))
+            foreach (var test in LoadScriptTests(path))
                 tests.Add(test.FullName, test);
 
             Tests = tests.ToImmutableDictionary();
         }
 
-        static IEnumerable<FlareCliTest> LoadCliTests(string path)
+        static IEnumerable<FlareScriptTest> LoadScriptTests(string path)
         {
-            var cli = Path.Combine(path, "cli");
+            var script = Path.Combine(path, "script");
 
-            foreach (var file in new DirectoryInfo(cli).EnumerateFiles("*.fl"))
+            foreach (var file in new DirectoryInfo(script).EnumerateFiles("*.fl"))
             {
                 var name = Path.GetFileNameWithoutExtension(file.FullName)!;
 
@@ -44,7 +44,7 @@ namespace Flare.Tests.TestAdapter
                 var stdout = TryReadFile(Path.ChangeExtension(file.FullName, "out")!);
                 var stderr = TryReadFile(Path.ChangeExtension(file.FullName, "err")!);
 
-                yield return new FlareCliTest(name, file, filters, vars, args, succeed, stdout, stderr);
+                yield return new FlareScriptTest(name, file, filters, vars, args, succeed, stdout, stderr);
             }
         }
 
