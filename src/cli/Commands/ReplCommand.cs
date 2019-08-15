@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Flare.Runtime;
 using Flare.Syntax;
 
@@ -19,7 +18,7 @@ namespace Flare.Cli.Commands
             RegisterHandler<Options>(Run);
         }
 
-        async Task<int> Run(Options options)
+        int Run(Options options)
         {
             ReadLine.AutoCompletionHandler = null;
 
@@ -93,10 +92,10 @@ namespace Flare.Cli.Commands
                 i++;
             }
 
-            return await Task.FromResult(0);
+            return 0;
         }
 
-        static bool IsIncomplete(Syntax.ParseResult parse)
+        static bool IsIncomplete(ParseResult parse)
         {
             // TODO: The heuristics here could probably be better.
 

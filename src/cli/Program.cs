@@ -43,9 +43,9 @@ namespace Flare.Cli
                 await next(context);
         }
 
-        static async Task<int> Main(string[] args)
+        static int Main(string[] args)
         {
-            return await new CommandLineBuilder(new RootCommand())
+            return new CommandLineBuilder(new RootCommand())
                 .UseVersionOption()
                 .UseHelp()
                 .UseParseDirective()
@@ -58,7 +58,7 @@ namespace Flare.Cli
                 .UseMiddleware(FallbackMiddleware)
                 .UseMiddleware(ErrorMiddleware)
                 .Build()
-                .InvokeAsync(args);
+                .Invoke(args);
         }
     }
 }

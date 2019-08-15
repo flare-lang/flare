@@ -1,7 +1,6 @@
 using System;
 using System.CommandLine;
 using System.IO;
-using System.Threading.Tasks;
 using Flare.Runtime;
 using Flare.Syntax;
 
@@ -32,7 +31,7 @@ namespace Flare.Cli.Commands
             RegisterHandler<Options>(Run);
         }
 
-        async Task<int> Run(Options options)
+        int Run(Options options)
         {
             if (!ModulePath.IsValidComponent(options.Name))
             {
@@ -54,7 +53,7 @@ namespace Flare.Cli.Commands
 
             if (!Directory.Exists(git))
             {
-                var (ok, output) = await RunGitAsync($"init {dir.FullName}");
+                var (ok, output) = RunGit($"init {dir.FullName}");
 
                 if (!ok)
                 {
@@ -65,99 +64,98 @@ namespace Flare.Cli.Commands
                     Log.InfoLine("Created Git repository in '{0}'.", ToRelative(git));
             }
 
-            await WriteFileAsync(Path.Combine(dir.FullName, ".editorconfig"), async sw =>
+            WriteFileAsync(Path.Combine(dir.FullName, ".editorconfig"), sw =>
             {
-                await sw.WriteLineAsync("[*]");
-                await sw.WriteLineAsync("charset = utf-8");
-                await sw.WriteLineAsync("indent_size = 4");
-                await sw.WriteLineAsync("indent_style = space");
-                await sw.WriteLineAsync("insert_final_newline = true");
-                await sw.WriteLineAsync("max_line_length = off");
-                await sw.WriteLineAsync("tab_width = 4");
-                await sw.WriteLineAsync("trim_trailing_whitespace = true");
+                sw.WriteLine("[*]");
+                sw.WriteLine("charset = utf-8");
+                sw.WriteLine("indent_size = 4");
+                sw.WriteLine("indent_style = space");
+                sw.WriteLine("insert_final_newline = true");
+                sw.WriteLine("max_line_length = off");
+                sw.WriteLine("tab_width = 4");
+                sw.WriteLine("trim_trailing_whitespace = true");
             });
 
-            await WriteFileAsync(Path.Combine(dir.FullName, ".gitattributes"),
-                async sw => await sw.WriteLineAsync("* text"));
+            WriteFileAsync(Path.Combine(dir.FullName, ".gitattributes"), sw => sw.WriteLine("* text"));
 
-            await WriteFileAsync(Path.Combine(dir.FullName, ".gitignore"), async sw =>
+            WriteFileAsync(Path.Combine(dir.FullName, ".gitignore"), sw =>
             {
-                await sw.WriteLineAsync("/bin");
-                await sw.WriteLineAsync("/dep");
+                sw.WriteLine("/bin");
+                sw.WriteLine("/dep");
             });
 
-            await WriteFileAsync(Path.Combine(dir.FullName, Project.ProjectFileName), async sw =>
+            WriteFileAsync(Path.Combine(dir.FullName, Project.ProjectFileName), sw =>
             {
-                await sw.WriteLineAsync("[project]");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("# This can be `library` or `executable`.");
-                await sw.WriteLineAsync($"type = \"{options.Type.ToString().ToLowerInvariant()}\"");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("# This must be a valid module identifier. All modules in your project should");
-                await sw.WriteLineAsync("# start with this name. It must be unique in the package registry if the ");
-                await sw.WriteLineAsync("# package will be published.");
-                await sw.WriteLineAsync($"name = {options.Name}");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("# See: https://semver.org");
-                await sw.WriteLineAsync("version = \"0.1.0\"");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("# The following keys are only used for the package registry. You can leave");
-                await sw.WriteLineAsync("# them empty if the package will not be published.");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("# If you want to use a different license, set its SPDX identifier here.");
-                await sw.WriteLineAsync("license = \"ISC\"");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("# A brief description of what this project does.");
-                await sw.WriteLineAsync("description = \"TODO\"");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("# Project URL (e.g. https://flare-lang.org).");
-                await sw.WriteLineAsync("url = \"\"");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("# Project documentation URL, e.g. https://flare-lang.org/documentation.html.");
-                await sw.WriteLineAsync("url-doc = \"\"");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("# Project source URL (e.g. https://github.com/flare-lang/flare).");
-                await sw.WriteLineAsync("url-src = \"\"");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("[lints]");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("# You can use this section to configure lint severities (none, suggestion,");
-                await sw.WriteLineAsync("# warning, error) for `flare check`. Default severities are listed below.");
-                await sw.WriteLineAsync();
+                sw.WriteLine("[project]");
+                sw.WriteLine();
+                sw.WriteLine("# This can be `library` or `executable`.");
+                sw.WriteLine($"type = \"{options.Type.ToString().ToLowerInvariant()}\"");
+                sw.WriteLine();
+                sw.WriteLine("# This must be a valid module identifier. All modules in your project should");
+                sw.WriteLine("# start with this name. It must be unique in the package registry if the");
+                sw.WriteLine("# package will be published.");
+                sw.WriteLine($"name = {options.Name}");
+                sw.WriteLine();
+                sw.WriteLine("# See: https://semver.org");
+                sw.WriteLine("version = \"0.1.0\"");
+                sw.WriteLine();
+                sw.WriteLine("# The following keys are only used for the package registry. You can leave them");
+                sw.WriteLine("# empty if the package will not be published.");
+                sw.WriteLine();
+                sw.WriteLine("# If you want to use a different license, set its SPDX identifier here.");
+                sw.WriteLine("license = \"ISC\"");
+                sw.WriteLine();
+                sw.WriteLine("# A brief description of what this project does.");
+                sw.WriteLine("description = \"TODO\"");
+                sw.WriteLine();
+                sw.WriteLine("# Project URL (e.g. https://flare-lang.org).");
+                sw.WriteLine("url = \"\"");
+                sw.WriteLine();
+                sw.WriteLine("# Project documentation URL, e.g. https://flare-lang.org/documentation.html.");
+                sw.WriteLine("url-doc = \"\"");
+                sw.WriteLine();
+                sw.WriteLine("# Project source URL (e.g. https://github.com/flare-lang/flare).");
+                sw.WriteLine("url-src = \"\"");
+                sw.WriteLine();
+                sw.WriteLine("[lints]");
+                sw.WriteLine();
+                sw.WriteLine("# You can use this section to configure lint severities (none, suggestion,");
+                sw.WriteLine("# warning, error) for `flare check`. Default severities are listed below.");
+                sw.WriteLine();
 
                 foreach (var lint in LanguageLinter.Lints.Values)
-                    await sw.WriteLineAsync($"#{lint.Name} = \"{lint.DefaultSeverity.ToString().ToLowerInvariant()}\"");
+                    sw.WriteLine($"#{lint.Name} = \"{lint.DefaultSeverity.ToString().ToLowerInvariant()}\"");
             });
 
-            await WriteFileAsync(Path.Combine(dir.FullName, "README.md"), async sw =>
+            WriteFileAsync(Path.Combine(dir.FullName, "README.md"), sw =>
             {
-                await sw.WriteLineAsync($"# {options.Name}");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("TODO: Write a project description.");
+                sw.WriteLine($"# {options.Name}");
+                sw.WriteLine();
+                sw.WriteLine("TODO: Write a project description.");
             });
 
             var src = dir.CreateSubdirectory("src");
 
-            await WriteFileAsync(Path.Combine(src.FullName, Path.ChangeExtension(options.Name,
-                StandardModuleLoader.ModuleFileNameExtension)!), async sw =>
+            WriteFileAsync(Path.Combine(src.FullName, Path.ChangeExtension(options.Name,
+                StandardModuleLoader.ModuleFileNameExtension)!), sw =>
             {
-                await sw.WriteLineAsync($"mod {options.Name};");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("use Core;");
-                await sw.WriteLineAsync();
-                await sw.WriteLineAsync("pub fn main(_args, _env) {");
-                await sw.WriteLineAsync("    nil;");
-                await sw.WriteLineAsync("}");
+                sw.WriteLine($"mod {options.Name};");
+                sw.WriteLine();
+                sw.WriteLine("use Core;");
+                sw.WriteLine();
+                sw.WriteLine("pub fn main(_args, _env) {");
+                sw.WriteLine("    nil;");
+                sw.WriteLine("}");
             });
 
-            return await Task.FromResult(0);
+            return 0;
         }
 
-        static async Task WriteFileAsync(string path, Func<StreamWriter, Task> action)
+        static void WriteFileAsync(string path, Action<StreamWriter> action)
         {
             using var sw = new StreamWriter(path);
 
-            await action(sw);
+            action(sw);
 
             Log.InfoLine("Created '{0}'.", ToRelative(path));
         }

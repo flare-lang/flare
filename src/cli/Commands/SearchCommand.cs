@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace Flare.Cli.Commands
 {
     sealed class SearchCommand : BaseCommand
@@ -14,12 +12,12 @@ namespace Flare.Cli.Commands
             RegisterHandler<Options>(Run);
         }
 
-        async Task<int> Run(Options options)
+        int Run(Options options)
         {
             // TODO
             Log.WarningLine("This command is not yet implemented.");
 
-            return await Task.FromResult(0);
+            return 0;
         }
     }
 }

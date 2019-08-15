@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using Flare.Runtime;
 using Flare.Syntax;
 using Nett;
@@ -94,7 +93,7 @@ namespace Flare.Cli
             Lints = cfg;
         }
 
-        public async Task<ModuleLoader> LoadModules(ModuleLoaderMode mode, SyntaxContext context)
+        public ModuleLoader LoadModules(ModuleLoaderMode mode, SyntaxContext context)
         {
             var loader = new StandardModuleLoader(mode)
             {
@@ -115,7 +114,7 @@ namespace Flare.Cli
             {
                 try
                 {
-                    _ = loader.LoadModule(await StringSourceText.FromAsync(file.FullName, file.OpenRead()), context);
+                    _ = loader.LoadModule(StringSourceText.FromAsync(file.FullName, file.OpenRead()).Result, context);
                 }
                 catch (ModuleLoadException)
                 {

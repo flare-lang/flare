@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Flare.Syntax;
 
 namespace Flare.Cli.Commands
@@ -34,7 +33,7 @@ namespace Flare.Cli.Commands
             });
         }
 
-        protected void RegisterHandler<T>(Func<T, Task<int>> handler)
+        protected void RegisterHandler<T>(Func<T, int> handler)
         {
             Handler = CommandHandler.Create(handler);
         }
@@ -131,7 +130,7 @@ namespace Flare.Cli.Commands
                     PrintLine(ln, str);
         }
 
-        protected static async Task<(bool, string)> RunGitAsync(string args)
+        protected static (bool, string) RunGit(string args)
         {
             var result = new StringBuilder();
 
@@ -143,7 +142,7 @@ namespace Flare.Cli.Commands
 
             try
             {
-                var success = await Process.ExecuteAsync("git", args, null, Write, Write) == 0;
+                var success = Process.ExecuteAsync("git", args, null, Write, Write).Result == 0;
 
                 lock (result)
                     return (success, result.ToString());

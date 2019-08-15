@@ -1,5 +1,4 @@
 using System.CommandLine;
-using System.Threading.Tasks;
 using Flare.Runtime;
 using Flare.Syntax;
 
@@ -20,7 +19,7 @@ namespace Flare.Cli.Commands
             RegisterHandler<Options>(Run);
         }
 
-        async Task<int> Run(Options options)
+        int Run(Options options)
         {
             var project = Project.Instance;
 
@@ -38,7 +37,7 @@ namespace Flare.Cli.Commands
 
             var context = new SyntaxContext();
 
-            _ = await project.LoadModules(ModuleLoaderMode.Normal, context);
+            _ = project.LoadModules(ModuleLoaderMode.Normal, context);
 
             foreach (var diag in context.Diagnostics)
                 LogDiagnostic(diag);

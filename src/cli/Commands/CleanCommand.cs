@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace Flare.Cli.Commands
 {
     sealed class CleanCommand : BaseCommand
@@ -17,7 +15,7 @@ namespace Flare.Cli.Commands
             RegisterHandler<Options>(Run);
         }
 
-        async Task<int> Run(Options options)
+        int Run(Options options)
         {
             var project = Project.Instance;
 
@@ -33,7 +31,7 @@ namespace Flare.Cli.Commands
             if (options.Deps && project.DependencyDirectory.Exists)
                 project.DependencyDirectory.Delete();
 
-            return await Task.FromResult(0);
+            return 0;
         }
     }
 }

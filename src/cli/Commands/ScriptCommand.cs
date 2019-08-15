@@ -1,6 +1,5 @@
 using System.CommandLine;
 using System.IO;
-using System.Threading.Tasks;
 using Flare.Runtime;
 using Flare.Syntax;
 
@@ -26,7 +25,7 @@ namespace Flare.Cli.Commands
             RegisterHandler<Options>(Run);
         }
 
-        async Task<int> Run(Options options)
+        int Run(Options options)
         {
             var path = options.Module.FullName;
 
@@ -40,7 +39,7 @@ namespace Flare.Cli.Commands
 
             _ = loader.SearchPaths.Add(Path.GetDirectoryName(path)!);
 
-            var text = await StringSourceText.FromAsync(path, File.OpenRead(path));
+            var text = StringSourceText.FromAsync(path, File.OpenRead(path)).Result;
             var context = new SyntaxContext();
 
             try
