@@ -9,9 +9,9 @@ using System.Text;
 
 namespace Flare.Tests.TestAdapter
 {
-    sealed class FlareScriptTest : FlareTest
+    sealed class FlareCheckTest : FlareTest
     {
-        public FileInfo File { get; }
+        public DirectoryInfo Directory { get; }
 
         public ImmutableArray<FlareTestFilter> Filters { get; }
 
@@ -25,16 +25,16 @@ namespace Flare.Tests.TestAdapter
 
         public string? StandardError { get; }
 
-        public override string FullPath => File.FullName;
+        public override string FullPath => Directory.FullName;
 
         public override int LineNumber => 1;
 
-        public FlareScriptTest(string name, FileInfo file, ImmutableArray<FlareTestFilter> filters,
+        public FlareCheckTest(string name, DirectoryInfo directory, ImmutableArray<FlareTestFilter> filters,
             ImmutableDictionary<string, string> variables, string arguments, bool succeed, string? stdout,
             string? stderr)
-            : base("script", name)
+            : base("check", name)
         {
-            File = file;
+            Directory = directory;
             Filters = filters;
             Variables = variables;
             Arguments = arguments;
@@ -82,8 +82,8 @@ namespace Flare.Tests.TestAdapter
                     _ = builder.AppendLine(str);
             }
 
-            var outcome = Process.ExecuteAsync("dotnet", $"{Executable.FullName} {Arguments} {File.Name}",
-                File.DirectoryName, s => Write(stdout, s), s => Write(stderr, s),
+            var outcome = Process.ExecuteAsync("dotnet", $"{Executable.FullName} check {Arguments}",
+                Directory.FullName, s => Write(stdout, s), s => Write(stderr, s),
                 vars.Select(kvp => (kvp.Key, kvp.Value)).ToArray()).Result == 0 ? FlareTestOutcome.Passed :
                 FlareTestOutcome.Failed;
             var error = (string?)null;

@@ -1,0 +1,33 @@
+src/UndocumentedDeclarationLint.fl(1,5): Error: Module 'UndocumentedDeclarationLint' has public declarations but is undocumented
+ 1 | mod UndocumentedDeclarationLint;
+   |     ^
+ 2 | 
+ 3 | @[doc = "
+ 4 | The main entry point.
+src/UndocumentedDeclarationLint.fl(10,8): Error: Public function foo is undocumented
+ 7 |     nil;
+ 8 | }
+ 9 | 
+10 | pub fn foo() {
+   |        ^
+11 |     nil;
+12 | }
+13 | 
+src/UndocumentedDeclarationLint.fl(15,8): Warning: Public function bar is undocumented
+12 | }
+13 | 
+14 | @[lint_undocumented_declaration = "warning"]
+15 | pub fn bar() {
+   |        ^
+16 |     nil;
+17 | }
+18 | 
+src/UndocumentedDeclarationLint.fl(20,8): Suggestion: Public function baz is undocumented
+17 | }
+18 | 
+19 | @[lint_undocumented_declaration = "suggestion"]
+20 | pub fn baz() {
+   |        ^
+21 |     nil;
+22 | }
+23 | 

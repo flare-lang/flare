@@ -1,0 +1,32 @@
+mod UndocumentedDeclarationLint;
+
+@[doc = "
+The main entry point.
+"]
+pub fn main(_args, _env) {
+    nil;
+}
+
+pub fn foo() {
+    nil;
+}
+
+@[lint_undocumented_declaration = "warning"]
+pub fn bar() {
+    nil;
+}
+
+@[lint_undocumented_declaration = "suggestion"]
+pub fn baz() {
+    nil;
+}
+
+@[lint_undocumented_declaration = "none"]
+pub fn qux() {
+    nil;
+}
+
+@[doc = false]
+pub fn undocumented() {
+    nil;
+}

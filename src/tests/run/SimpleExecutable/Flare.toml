@@ -1,0 +1,4 @@
+[project]
+type = "executable"
+name = "SimpleExecutable"
+version = "0.1.0"

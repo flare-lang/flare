@@ -1,0 +1,7 @@
+[project]
+type = "library"
+name = "UndocumentedDeclarationLint"
+version = "0.0.0"
+
+[lints]
+undocumented_declaration = "error"
