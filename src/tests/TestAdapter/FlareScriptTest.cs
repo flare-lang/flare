@@ -21,17 +21,16 @@ namespace Flare.Tests.TestAdapter
 
         public bool ShouldSucceed { get; }
 
-        public string? StandardOut { get; }
+        public string StandardOut { get; }
 
-        public string? StandardError { get; }
+        public string StandardError { get; }
 
         public override string FullPath => File.FullName;
 
         public override int LineNumber => 1;
 
         public FlareScriptTest(string name, FileInfo file, ImmutableArray<FlareTestFilter> filters,
-            ImmutableDictionary<string, string> variables, string arguments, bool succeed, string? stdout,
-            string? stderr)
+            ImmutableDictionary<string, string> variables, string arguments, bool succeed, string stdout, string stderr)
             : base("script", name)
         {
             File = file;
@@ -102,13 +101,13 @@ namespace Flare.Tests.TestAdapter
             var stdout2 = stdout.ToString().Trim();
             var stderr2 = stderr.ToString().Trim();
 
-            if (StandardOut != null && stdout2 != StandardOut)
+            if (stdout2 != StandardOut)
             {
                 error = "Standard output text did not match the expected text.";
                 outcome = FlareTestOutcome.Failed;
             }
 
-            if (StandardError != null && stderr2 != StandardError)
+            if (stderr2 != StandardError)
             {
                 error = "Standard error text did not match the expected text.";
                 outcome = FlareTestOutcome.Failed;

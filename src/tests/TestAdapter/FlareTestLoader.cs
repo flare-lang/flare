@@ -120,7 +120,7 @@ namespace Flare.Tests.TestAdapter
            }
         }
 
-        static string? TryReadFile(string path)
+        static string TryReadFile(string path)
         {
             try
             {
@@ -128,7 +128,7 @@ namespace Flare.Tests.TestAdapter
             }
             catch (FileNotFoundException)
             {
-                return null;
+                return string.Empty;
             }
         }
     }
