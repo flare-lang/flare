@@ -31,9 +31,9 @@ namespace Flare.Cli
 
         public SemanticVersion Version { get; }
 
-        public string License { get; }
+        public string? License { get; }
 
-        public string Description { get; }
+        public string? Description { get; }
 
         public Uri? ProjectUri { get; }
 
@@ -69,25 +69,27 @@ namespace Flare.Cli
                 StandardModuleLoader.ModuleFileNameExtension)!));
             ExecutableFileName = table.TryGetValue("executable")?.Get<string>();
             Version = SemanticVersion.Parse(project.Get<string>("version"));
-            License = project.Get<string>("license");
-            Description = project.Get<string>("description");
+            License = project.TryGetValue("license")?.Get<string>();
+            Description = project.TryGetValue("description")?.Get<string>();
             ProjectUri = project.TryGetValue("url") is TomlObject o1 ? new Uri(o1.Get<string>()) : null;
             DocumentationUri = project.TryGetValue("url-doc") is TomlObject o2 ? new Uri(o2.Get<string>()) : null;
             SourceUri = project.TryGetValue("url-src") is TomlObject o3 ? new Uri(o3.Get<string>()) : null;
 
             var cfg = new SyntaxLintConfiguration();
-            var lints = (TomlTable)table.Get("lints");
 
-            foreach (var kvp in lints)
+            if (table.TryGetValue("lints") is TomlTable lints)
             {
-                cfg = cfg.Set(kvp.Key, kvp.Value.Get<string>().ToLowerInvariant() switch
+                foreach (var kvp in lints)
                 {
-                    LanguageLinter.NoneSeverityName => (SyntaxDiagnosticSeverity?)null,
-                    LanguageLinter.SuggestionSeverityName => SyntaxDiagnosticSeverity.Suggestion,
-                    LanguageLinter.WarninngSeverityName => SyntaxDiagnosticSeverity.Warning,
-                    LanguageLinter.ErrorSeverityName => SyntaxDiagnosticSeverity.Error,
-                    _ => throw DebugAssert.Unreachable(),
-                });
+                    cfg = cfg.Set(kvp.Key, kvp.Value.Get<string>().ToLowerInvariant() switch
+                    {
+                        LanguageLinter.NoneSeverityName => (SyntaxDiagnosticSeverity?)null,
+                        LanguageLinter.SuggestionSeverityName => SyntaxDiagnosticSeverity.Suggestion,
+                        LanguageLinter.WarninngSeverityName => SyntaxDiagnosticSeverity.Warning,
+                        LanguageLinter.ErrorSeverityName => SyntaxDiagnosticSeverity.Error,
+                        _ => throw DebugAssert.Unreachable(),
+                    });
+                }
             }
 
             Lints = cfg;
