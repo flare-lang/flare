@@ -43,7 +43,7 @@ namespace Flare.Tests.TestAdapter
 
         public TestCase Convert()
         {
-            return new TestCase(FullName, new Uri(FlareTestRunner.ExecutorUri), _source)
+            return new TestCase(FullName, new Uri(FlareTestExecutor.ExecutorUri), _source)
             {
                 CodeFilePath = FullPath,
                 LineNumber = LineNumber,

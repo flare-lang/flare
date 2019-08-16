@@ -5,25 +5,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
 namespace Flare.Tests.TestAdapter
 {
-    [DefaultExecutorUri(ExecutorUri)]
     [ExtensionUri(ExecutorUri)]
-    [FileExtension(".dll")]
-    public sealed class FlareTestRunner : ITestDiscoverer, ITestExecutor
+    public sealed class FlareTestExecutor : ITestExecutor
     {
-        public const string ExecutorUri = "executor://" + nameof(FlareTestRunner);
+        public const string ExecutorUri = "executor://" + nameof(FlareTestExecutor);
 
         readonly CancellationTokenSource _cts = new CancellationTokenSource();
-
-        public void DiscoverTests(IEnumerable<string> sources, IDiscoveryContext discoveryContext,
-            IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
-        {
-            foreach (var test in FlareTestLoader.Tests.Values)
-                discoverySink.SendTestCase(test.Convert());
-        }
 
         public void Cancel()
         {
