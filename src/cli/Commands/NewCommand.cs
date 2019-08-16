@@ -142,6 +142,10 @@ namespace Flare.Cli.Commands
                 sw.WriteLine($"mod {options.Name};");
                 sw.WriteLine();
                 sw.WriteLine("use Core;");
+
+                if (options.Type != ProjectType.Executable)
+                    return;
+
                 sw.WriteLine();
                 sw.WriteLine("pub fn main(_args, _env) {");
                 sw.WriteLine("    nil;");
