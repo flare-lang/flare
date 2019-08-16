@@ -125,10 +125,11 @@ namespace Flare.Syntax
 
                     public ImmutableArray<UseStatementNode> GetUses(int depth)
                     {
-                        var uses = _uses.Where(x => x.Item1 >= depth).Select(x => x.Item2).ToImmutableArray();
+                        var uses = ImmutableArray<UseStatementNode>.Empty;
 
-                        foreach (var use in uses)
-                            System.Console.WriteLine("disposing {0}", ((IdentifierPatternNode)use.Pattern).IdentifierToken);
+                        foreach (var use in _uses)
+                            if (use.Item1 >= depth)
+                                uses = uses.Add(use.Item2);
 
                         return uses;
                     }
@@ -688,8 +689,14 @@ namespace Flare.Syntax
                     // Unwrap the upvalue symbols by one level. Some of them could still be upvalue
                     // symbols after this, in the case of nested lambdas, and that's OK. The lowerer
                     // will handle both cases.
-                    node.SetAnnotation("Upvalues", scope.Upvalues.Values.OrderBy(x => x.Slot).Select(x => x.Symbol)
-                        .ToImmutableArray());
+                    var upvalues = ImmutableArray<SyntaxSymbol>.Empty;
+
+                    // Avoid LINQ allocations if there are no upvalues.
+                    if (scope.Upvalues.Count != 0)
+                        foreach (var upvalue in scope.Upvalues.Values.OrderBy(x => x.Slot))
+                            upvalues = upvalues.Add(upvalue.Symbol);
+
+                    node.SetAnnotation("Upvalues", upvalues);
 
                     PopScope();
                 }
