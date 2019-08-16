@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Flare.Runtime;
+using Flare.Metadata;
 
 namespace Flare.Syntax
 {

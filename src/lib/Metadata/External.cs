@@ -1,18 +1,15 @@
 using System.Collections.Immutable;
 using Flare.Syntax;
-using Flare.Tree;
 
-namespace Flare.Runtime
+namespace Flare.Metadata
 {
-    public sealed class Macro : Declaration
+    public sealed class External : Declaration
     {
         public bool HasParameters => !Parameters.IsEmpty;
 
         public ImmutableArray<Parameter> Parameters { get; }
 
-        internal TreeContext Tree { get; }
-
-        internal Macro(Module module, MacroDeclarationNode node)
+        internal External(Module module, ExternalDeclarationNode node)
             : base(module, node)
         {
             var parms = ImmutableArray<Parameter>.Empty;
@@ -20,13 +17,13 @@ namespace Flare.Runtime
 
             foreach (var param in node.ParameterList.Parameters.Nodes)
             {
-                parms = parms.Add(new Parameter(this, param.Attributes, param.NameToken.Text, i, false));
+                parms = parms.Add(new Parameter(this, param.Attributes, param.NameToken.Text, i,
+                    param.DotDotToken != null));
 
                 i++;
             }
 
             Parameters = parms;
-            Tree = TreeContext.CreateMacro(this);
         }
     }
 }

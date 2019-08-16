@@ -1,6 +1,6 @@
 using Flare.Syntax;
 
-namespace Flare.Runtime
+namespace Flare.Metadata
 {
     public sealed class Parameter : Metadata
     {

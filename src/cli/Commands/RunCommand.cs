@@ -1,5 +1,5 @@
 using System.CommandLine;
-using Flare.Runtime;
+using Flare.Metadata;
 using Flare.Syntax;
 
 namespace Flare.Cli.Commands

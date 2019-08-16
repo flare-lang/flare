@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using Flare.Runtime;
+using Flare.Metadata;
 
 namespace Flare.Tree
 {

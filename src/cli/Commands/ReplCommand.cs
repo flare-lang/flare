@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Text;
-using Flare.Runtime;
+using Flare.Metadata;
 using Flare.Syntax;
 
 namespace Flare.Cli.Commands

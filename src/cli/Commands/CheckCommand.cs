@@ -1,4 +1,4 @@
-using Flare.Runtime;
+using Flare.Metadata;
 using Flare.Syntax;
 using Flare.Syntax.Lints;
 

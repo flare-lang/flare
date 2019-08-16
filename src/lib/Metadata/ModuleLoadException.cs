@@ -1,6 +1,6 @@
 using System;
 
-namespace Flare.Runtime
+namespace Flare.Metadata
 {
     [Serializable]
     public sealed class ModuleLoadException : Exception

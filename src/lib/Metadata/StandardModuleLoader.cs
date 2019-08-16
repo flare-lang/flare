@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using Flare.Syntax;
 
-namespace Flare.Runtime
+namespace Flare.Metadata
 {
     public class StandardModuleLoader : ModuleLoader
     {

@@ -1,5 +1,5 @@
 using System.Collections.Immutable;
-using Flare.Runtime;
+using Flare.Metadata;
 
 namespace Flare.Syntax
 {

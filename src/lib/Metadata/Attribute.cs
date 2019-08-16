@@ -1,4 +1,4 @@
-namespace Flare.Runtime
+namespace Flare.Metadata
 {
     public sealed class Attribute
     {

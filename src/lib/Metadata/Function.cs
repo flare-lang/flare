@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using Flare.Syntax;
 using Flare.Tree;
 
-namespace Flare.Runtime
+namespace Flare.Metadata
 {
     public sealed class Function : Declaration
     {

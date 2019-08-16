@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Flare.Runtime
+namespace Flare.Metadata
 {
     public sealed class ModulePath : IEquatable<ModulePath>
     {

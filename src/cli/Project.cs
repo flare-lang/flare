@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using Flare.Runtime;
+using Flare.Metadata;
 using Flare.Syntax;
 using Nett;
 using NuGet.Versioning;

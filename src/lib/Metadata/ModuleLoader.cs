@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Flare.Syntax;
 
-namespace Flare.Runtime
+namespace Flare.Metadata
 {
     public abstract class ModuleLoader
     {
