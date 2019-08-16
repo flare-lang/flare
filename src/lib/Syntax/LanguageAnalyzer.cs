@@ -17,6 +17,8 @@ namespace Flare.Syntax
 
                     public FunctionScope? Function => this is FunctionScope s ? s : Previous?.Function;
 
+                    public BlockScope? Block => this is BlockScope s ? s : Previous?.Block;
+
                     protected Dictionary<string, SyntaxSymbol> Symbols { get; } =
                         new Dictionary<string, SyntaxSymbol>();
 
@@ -46,6 +48,12 @@ namespace Flare.Syntax
                 sealed class FunctionScope : Scope
                 {
                     public IReadOnlyDictionary<SyntaxSymbol, SyntaxUpvalueSymbol> Upvalues => _upvalues;
+
+                    readonly Dictionary<BlockExpressionNode, int> _depths = new Dictionary<BlockExpressionNode, int>();
+
+                    int _depth;
+
+                    readonly Stack<(int, UseStatementNode)> _uses = new Stack<(int, UseStatementNode)>();
 
                     readonly Stack<PrimaryExpressionNode> _loops = new Stack<PrimaryExpressionNode>();
 
@@ -90,6 +98,41 @@ namespace Flare.Syntax
                         return Symbols.TryGetValue(name, out var sym) ? sym.Kind == SyntaxSymbolKind.Mutable : false;
                     }
 
+                    public void Descend(BlockExpressionNode block)
+                    {
+                        _depths.Add(block, _depth++);
+                    }
+
+                    public void Ascend(BlockScope scope)
+                    {
+                        _depth--;
+
+                        for (var i = 0; i < scope.Uses; i++)
+                            _ = _uses.Pop();
+                    }
+
+                    public int GetDepth(BlockExpressionNode block)
+                    {
+                        return _depths[block];
+                    }
+
+                    public void PushUse(BlockScope scope, UseStatementNode use)
+                    {
+                        _uses.Push((GetDepth(scope.Node), use));
+
+                        scope.Uses++;
+                    }
+
+                    public ImmutableArray<UseStatementNode> GetUses(int depth)
+                    {
+                        var uses = _uses.Where(x => x.Item1 >= depth).Select(x => x.Item2).ToImmutableArray();
+
+                        foreach (var use in uses)
+                            System.Console.WriteLine("disposing {0}", ((IdentifierPatternNode)use.Pattern).IdentifierToken);
+
+                        return uses;
+                    }
+
                     public void PushLoop(PrimaryExpressionNode loop)
                     {
                         _loops.Push(loop);
@@ -103,6 +146,19 @@ namespace Flare.Syntax
                     public PrimaryExpressionNode? GetLoop()
                     {
                         return _loops.TryPeek(out var loop) ? loop : null;
+                    }
+                }
+
+                sealed class BlockScope : Scope
+                {
+                    public BlockExpressionNode Node { get; }
+
+                    public int Uses { get; set; }
+
+                    public BlockScope(Scope previous, BlockExpressionNode node)
+                        : base(previous)
+                    {
+                        Node = node;
                     }
                 }
 
@@ -185,9 +241,21 @@ namespace Flare.Syntax
                     return func;
                 }
 
+                void PushBlockScope(BlockExpressionNode node)
+                {
+                    _scope = new BlockScope(_scope, node);
+                    _scope.Function!.Descend(node);
+                }
+
                 void PopScope()
                 {
                     _scope = _scope.Previous!;
+                }
+
+                public void PopBlockScope()
+                {
+                    _scope.Function!.Ascend(_scope.Block!);
+                    PopScope();
                 }
 
                 void Error(SyntaxNode node, SyntaxDiagnosticKind kind, SourceLocation location, string message)
@@ -476,6 +544,8 @@ namespace Flare.Syntax
                     // introduced in the pattern.
                     Visit(node.Initializer);
                     Visit(node.Pattern);
+
+                    _scope.Function!.PushUse(_scope.Block!, node);
                 }
 
                 public override void Visit(AssignExpressionNode node)
@@ -703,11 +773,11 @@ namespace Flare.Syntax
 
                 public override void Visit(BlockExpressionNode node)
                 {
-                    PushScope();
+                    PushBlockScope(node);
 
                     base.Visit(node);
 
-                    PopScope();
+                    PopBlockScope();
                 }
 
                 public override void Visit(ConditionExpressionArmNode node)
@@ -725,7 +795,7 @@ namespace Flare.Syntax
 
                     base.Visit(node);
 
-                    _scope.Function!.PopLoop();
+                    _scope.Function.PopLoop();
                 }
 
                 public override void Visit(WhileExpressionNode node)
@@ -734,7 +804,7 @@ namespace Flare.Syntax
 
                     base.Visit(node);
 
-                    _scope.Function!.PopLoop();
+                    _scope.Function.PopLoop();
                 }
 
                 public override void Visit(LoopExpressionNode node)
@@ -743,8 +813,20 @@ namespace Flare.Syntax
 
                     if (!kw.IsMissing)
                     {
-                        if (_scope.Function!.GetLoop() is PrimaryExpressionNode loop)
+                        var func = _scope.Function!;
+
+                        if (func.GetLoop() is PrimaryExpressionNode loop)
+                        {
+                            var block = loop switch
+                            {
+                                ForExpressionNode f => f.Body,
+                                WhileExpressionNode w => w.Body,
+                                _ => throw DebugAssert.Unreachable(),
+                            };
+
                             node.SetAnnotation("Target", loop);
+                            node.SetAnnotation("Uses", func.GetUses(func.GetDepth(block)));
+                        }
                         else
                             Error(node, SyntaxDiagnosticKind.InvalidLoopTarget, kw.Location,
                                 "No enclosing 'while' or 'for' expression for this 'loop' expression");
@@ -759,12 +841,38 @@ namespace Flare.Syntax
 
                     if (!kw.IsMissing)
                     {
-                        if (_scope.Function!.GetLoop() is PrimaryExpressionNode loop)
+                        var func = _scope.Function!;
+
+                        if (func.GetLoop() is PrimaryExpressionNode loop)
+                        {
+                            var block = loop switch
+                            {
+                                ForExpressionNode f => f.Body,
+                                WhileExpressionNode w => w.Body,
+                                _ => throw DebugAssert.Unreachable(),
+                            };
+
                             node.SetAnnotation("Target", loop);
+                            node.SetAnnotation("Uses", func.GetUses(func.GetDepth(block)));
+                        }
                         else
                             Error(node, SyntaxDiagnosticKind.InvalidLoopTarget, kw.Location,
                                 "No enclosing 'while' or 'for' expression for this 'break' expression");
                     }
+
+                    base.Visit(node);
+                }
+
+                public override void Visit(RaiseExpressionNode node)
+                {
+                    node.SetAnnotation("Uses", _scope.Function!.GetUses(0));
+
+                    base.Visit(node);
+                }
+
+                public override void Visit(ReturnExpressionNode node)
+                {
+                    node.SetAnnotation("Uses", _scope.Function!.GetUses(0));
 
                     base.Visit(node);
                 }
