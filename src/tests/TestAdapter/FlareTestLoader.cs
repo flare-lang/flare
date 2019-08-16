@@ -47,11 +47,9 @@ namespace Flare.Tests.TestAdapter
                 ReadHeader(Path.Combine(dir.FullName, Project.ProjectFileName), '#', out var filters, out var vars,
                     out var args, out var succeed);
 
-                var stdout = TryReadFile(Path.Combine(dir.FullName, "check.out"));
-                var stderr = TryReadFile(Path.Combine(dir.FullName, "check.err"));
-
-                yield return new FlareCheckTest(Path.GetFileName(dir.FullName)!, dir, filters, vars, args, succeed, stdout,
-                    stderr);
+                yield return new FlareCheckTest(Path.GetFileName(dir.FullName)!, filters, vars, succeed,
+                    TryReadFile(Path.Combine(dir.FullName, "check.out")),
+                    TryReadFile(Path.Combine(dir.FullName, "check.err")), dir, args);
             }
         }
 
@@ -64,11 +62,9 @@ namespace Flare.Tests.TestAdapter
                 ReadHeader(Path.Combine(dir.FullName, Project.ProjectFileName), '#', out var filters, out var vars,
                     out var args, out var succeed);
 
-                var stdout = TryReadFile(Path.Combine(dir.FullName, "run.out"));
-                var stderr = TryReadFile(Path.Combine(dir.FullName, "run.err"));
-
-                yield return new FlareRunTest(Path.GetFileName(dir.FullName)!, dir, filters, vars, args, succeed, stdout,
-                    stderr);
+                yield return new FlareRunTest(Path.GetFileName(dir.FullName)!, filters, vars, succeed,
+                    TryReadFile(Path.Combine(dir.FullName, "run.out")),
+                    TryReadFile(Path.Combine(dir.FullName, "run.err")), dir, args);
             }
         }
 
@@ -80,11 +76,9 @@ namespace Flare.Tests.TestAdapter
             {
                 ReadHeader(file.FullName, '\'', out var filters, out var vars, out var args, out var succeed);
 
-                var stdout = TryReadFile(Path.ChangeExtension(file.FullName, "out")!);
-                var stderr = TryReadFile(Path.ChangeExtension(file.FullName, "err")!);
-
-                yield return new FlareScriptTest(Path.GetFileNameWithoutExtension(file.FullName)!, file, filters, vars,
-                    args, succeed, stdout, stderr);
+                yield return new FlareScriptTest(Path.GetFileNameWithoutExtension(file.FullName)!, filters, vars,
+                    succeed, TryReadFile(Path.ChangeExtension(file.FullName, "out")!),
+                    TryReadFile(Path.ChangeExtension(file.FullName, "err")!), file, args);
             }
         }
 
