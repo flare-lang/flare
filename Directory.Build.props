@@ -19,7 +19,6 @@
     <EmbedAllSources>true</EmbedAllSources>
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
-    <NullableContextOptions>enable</NullableContextOptions> <!-- TODO: Remove. -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
