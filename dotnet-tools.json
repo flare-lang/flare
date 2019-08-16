@@ -43,6 +43,12 @@
       "commands": [
         "t4"
       ]
+    },
+    "localappveyor": {
+      "version": "0.5.1",
+      "commands": [
+        "LocalAppVeyor"
+      ]
     }
   }
 }
