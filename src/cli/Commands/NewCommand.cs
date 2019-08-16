@@ -94,7 +94,7 @@ namespace Flare.Cli.Commands
                 sw.WriteLine("# This must be a valid module identifier. All modules in your project should");
                 sw.WriteLine("# start with this name. It must be unique in the package registry if the");
                 sw.WriteLine("# package will be published.");
-                sw.WriteLine($"name = {options.Name}");
+                sw.WriteLine($"name = \"{options.Name}\"");
                 sw.WriteLine();
                 sw.WriteLine("# See: https://semver.org");
                 sw.WriteLine("version = \"0.1.0\"");
