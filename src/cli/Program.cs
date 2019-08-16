@@ -3,12 +3,15 @@ using System.CommandLine.Builder;
 using System.CommandLine.Invocation;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Flare.Cli.Commands;
 
+[assembly: InternalsVisibleTo("flare-tests.TestAdapter")]
+
 namespace Flare.Cli
 {
-    public static class Program
+    static class Program
     {
         public static DirectoryInfo StartDirectory { get; }
 
