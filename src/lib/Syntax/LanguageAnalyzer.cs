@@ -321,7 +321,6 @@ namespace Flare.Syntax
                                 Constant _ => SyntaxSymbolKind.Constant,
                                 Function _ => SyntaxSymbolKind.Function,
                                 External _ => SyntaxSymbolKind.External,
-                                Macro _ => SyntaxSymbolKind.Macro,
                                 _ => (SyntaxSymbolKind?)null,
                             };
 
@@ -375,7 +374,6 @@ namespace Flare.Syntax
                             ConstantDeclarationNode _ => SyntaxSymbolKind.Constant,
                             FunctionDeclarationNode _ => SyntaxSymbolKind.Function,
                             ExternalDeclarationNode _ => SyntaxSymbolKind.External,
-                            MacroDeclarationNode _ => SyntaxSymbolKind.Macro,
                             _ => (SyntaxSymbolKind?)null,
                         };
 
@@ -495,42 +493,6 @@ namespace Flare.Syntax
                     base.Visit(node);
                 }
 
-                public override void Visit(MacroDeclarationNode node)
-                {
-                    _ = PushFunctionScope();
-
-                    foreach (var param in node.ParameterList.Parameters.Nodes)
-                    {
-                        var name = param.NameToken;
-
-                        if (name.IsMissing)
-                            continue;
-
-                        _scope.Define(SyntaxSymbolKind.Fragment, null, param, name.Text);
-
-                        var duplicate = false;
-
-                        foreach (var param2 in node.ParameterList.Parameters.Nodes)
-                        {
-                            if (param2 != param && param2.NameToken.Text == name.Text)
-                            {
-                                duplicate = true;
-                                break;
-                            }
-                        }
-
-                        if (!duplicate)
-                            continue;
-
-                        Error(param, SyntaxDiagnosticKind.DuplicateParameter, name.Location,
-                            $"Macro parameter '{name}' (of '{node.NameToken}') declared multiple times");
-                    }
-
-                    base.Visit(node);
-
-                    PopScope();
-                }
-
                 public override void Visit(LetStatementNode node)
                 {
                     // We need to visit the initializer first so that it can't refer to variables
@@ -597,7 +559,7 @@ namespace Flare.Syntax
                         {
                             var sym = _scope.Resolve(ident.Text);
 
-                            if (sym != null && sym.Kind != SyntaxSymbolKind.Macro)
+                            if (sym != null)
                                 node.SetAnnotation("Symbol", sym);
                             else
                                 Error(node, SyntaxDiagnosticKind.UnknownValueName, ident.Location,
@@ -606,48 +568,6 @@ namespace Flare.Syntax
                         else
                             Error(node, SyntaxDiagnosticKind.DiscardedVariableUsed, ident.Location,
                                 $"Use of discarded variable name '{ident}'");
-                    }
-
-                    base.Visit(node);
-                }
-
-                public override void Visit(MacroCallExpressionNode node)
-                {
-                    var ident = node.IdentifierToken;
-
-                    if (!ident.IsMissing)
-                    {
-                        var sym = _scope.Resolve(ident.Text);
-
-                        if (sym != null && sym.Kind == SyntaxSymbolKind.Macro)
-                            node.SetAnnotation("Symbol", sym);
-                        else
-                            Error(node, SyntaxDiagnosticKind.UnknownValueName, ident.Location,
-                                $"Unknown macro name '{ident}'");
-                    }
-
-                    base.Visit(node);
-                }
-
-                public override void Visit(FragmentExpressionNode node)
-                {
-                    var ident = node.IdentifierToken;
-
-                    if (!ident.IsMissing)
-                    {
-                        if (!ident.Text.StartsWith("$_"))
-                        {
-                            var sym = _scope.Resolve(ident.Text);
-
-                            if (sym != null)
-                                node.SetAnnotation("Symbol", sym);
-                            else
-                                Error(node, SyntaxDiagnosticKind.UnknownValueName, ident.Location,
-                                    $"Unknown fragment name '{ident}'");
-                        }
-                        else
-                            Error(node, SyntaxDiagnosticKind.DiscardedVariableUsed, ident.Location,
-                                $"Use of discarded fragment name '{ident}'");
                     }
 
                     base.Visit(node);

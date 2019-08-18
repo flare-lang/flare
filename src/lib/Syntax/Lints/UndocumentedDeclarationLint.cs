@@ -71,7 +71,6 @@ namespace Flare.Syntax.Lints
                 ConstantDeclarationNode _ => "constant",
                 FunctionDeclarationNode _ => "function",
                 ExternalDeclarationNode _ => "function",
-                MacroDeclarationNode _ => "macro",
                 _ => throw DebugAssert.Unreachable(),
             };
 

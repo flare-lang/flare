@@ -398,9 +398,6 @@ namespace Flare.Syntax
                             case '}':
                                 (location, kind) = LexDelimiter(SyntaxTokenKind.CloseBrace, _location);
                                 break;
-                            case '$':
-                                (location, kind) = LexIdentifier(SyntaxTokenKind.FragmentIdentifier, _location, false);
-                                break;
                             case ':':
                                 (location, kind) = LexDelimiterOrAtom(SyntaxTokenKind.Colon, _location);
                                 break;
@@ -781,10 +778,6 @@ namespace Flare.Syntax
                 {
                     switch (PeekNext()?.Value)
                     {
-                        case '$':
-                            _ = LexIdentifier(SyntaxTokenKind.FragmentIdentifier, location, false);
-                            kind = SyntaxTokenKind.AtomLiteral;
-                            break;
                         case ':':
                             ConsumeNext();
                             kind = SyntaxTokenKind.ColonColon;
@@ -938,7 +931,6 @@ namespace Flare.Syntax
 
                         break;
                     case SyntaxTokenKind.ValueIdentifier:
-                    case SyntaxTokenKind.FragmentIdentifier:
                         var count = 0;
 
                         while (PeekNext() is Rune cur)
@@ -991,10 +983,6 @@ namespace Flare.Syntax
 
                             break;
                         }
-
-                        if (kind == SyntaxTokenKind.FragmentIdentifier && count == 0)
-                            Error(SyntaxDiagnosticKind.IncompleteFragmentIdentifier, _location,
-                                $"Expected fragment identifier, but found {(PeekNext() is Rune r ? $"'{r}'" : "end of input")}");
 
                         break;
                 }
@@ -1289,7 +1277,6 @@ namespace Flare.Syntax
                 ["in"] = SyntaxTokenKind.InKeyword,
                 ["let"] = SyntaxTokenKind.LetKeyword,
                 ["loop"] = SyntaxTokenKind.LoopKeyword,
-                ["macro"] = SyntaxTokenKind.MacroKeyword,
                 ["match"] = SyntaxTokenKind.MatchKeyword,
                 ["mod"] = SyntaxTokenKind.ModKeyword,
                 ["mut"] = SyntaxTokenKind.MutKeyword,
@@ -1311,6 +1298,7 @@ namespace Flare.Syntax
                 ["await"] = SyntaxTokenKind.AwaitKeyword,
                 ["do"] = SyntaxTokenKind.DoKeyword,
                 ["goto"] = SyntaxTokenKind.GotoKeyword,
+                ["macro"] = SyntaxTokenKind.MacroKeyword,
                 ["pragma"] = SyntaxTokenKind.PragmaKeyword,
                 ["quote"] = SyntaxTokenKind.QuoteKeyword,
                 ["super"] = SyntaxTokenKind.SuperKeyword,

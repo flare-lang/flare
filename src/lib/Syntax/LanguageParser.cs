@@ -61,7 +61,6 @@ namespace Flare.Syntax
                         case SyntaxTokenKind.ConstKeyword:
                         case SyntaxTokenKind.ExternKeyword:
                         case SyntaxTokenKind.FnKeyword:
-                        case SyntaxTokenKind.MacroKeyword:
                         case SyntaxTokenKind.PrivKeyword:
                         case SyntaxTokenKind.PubKeyword:
                         case SyntaxTokenKind.TestKeyword:
@@ -116,7 +115,6 @@ namespace Flare.Syntax
                         case SyntaxTokenKind.WhileKeyword:
                         case SyntaxTokenKind.ModuleIdentifier:
                         case SyntaxTokenKind.ValueIdentifier:
-                        case SyntaxTokenKind.FragmentIdentifier:
                         case SyntaxTokenKind.NilLiteral:
                         case SyntaxTokenKind.BooleanLiteral:
                         case SyntaxTokenKind.AtomLiteral:
@@ -446,8 +444,6 @@ namespace Flare.Syntax
                         return ParseExternalDeclaration(attrs, vis);
                     case SyntaxTokenKind.FnKeyword:
                         return ParseFunctionDeclaration(attrs, vis);
-                    case SyntaxTokenKind.MacroKeyword:
-                        return ParseMacroDeclaration(attrs, vis);
                     default:
                         var skipped = Skipped();
                         var diags = Diagnostics();
@@ -590,67 +586,6 @@ namespace Flare.Syntax
 
                 return new FunctionDeclarationNode(Skipped(), diags, List(attributes), visibility, fn, name, parms,
                     body);
-            }
-
-            MacroDeclarationNode ParseMacroDeclaration(ImmutableArray<AttributeNode> attributes,
-                SyntaxToken? visibility)
-            {
-                var diags = Diagnostics();
-
-                var macro = Expect(SyntaxTokenKind.MacroKeyword, "'macro' keyword", ref diags);
-                var name = Expect(SyntaxTokenKind.ValueIdentifier, "value identifier", ref diags);
-                var parms = ParseMacroParameterList();
-                var body = ParseBlockExpression();
-
-                return new MacroDeclarationNode(Skipped(), diags, List(attributes), visibility, macro, name, parms,
-                    body);
-            }
-
-            MacroParameterListNode ParseMacroParameterList()
-            {
-                var diags = Diagnostics();
-
-                var open = Expect(SyntaxTokenKind.OpenParen, "'('", ref diags);
-                var parms = ImmutableArray<MacroParameterNode>.Empty;
-                var seps = ImmutableArray<SyntaxToken>.Empty;
-                var first = true;
-
-                while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseParen)
-                {
-                    if (!first)
-                    {
-                        if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
-                            break;
-
-                        seps = seps.Add(_stream.Move());
-                    }
-
-                    var param = ParseMacroParameter();
-                    var stop = param.NameToken.IsMissing && _stream.Peek().Kind != SyntaxTokenKind.Comma;
-
-                    if (first && stop)
-                        break;
-
-                    parms = parms.Add(param);
-                    first = false;
-
-                    if (stop)
-                        break;
-                }
-
-                var close = Expect(SyntaxTokenKind.CloseParen, "')'", ref diags);
-
-                return new MacroParameterListNode(Skipped(), diags, open, List(parms, seps), close);
-            }
-
-            MacroParameterNode ParseMacroParameter()
-            {
-                var diags = Diagnostics();
-
-                var attrs = ParseAttributes();
-                var name = Expect(SyntaxTokenKind.FragmentIdentifier, "fragment identifier", ref diags);
-
-                return new MacroParameterNode(Skipped(), diags, List(attrs), name);
             }
 
             StatementNode ParseStatement()
@@ -996,10 +931,7 @@ namespace Flare.Syntax
                         expr = ParseModuleExpression();
                         break;
                     case SyntaxTokenKind.ValueIdentifier:
-                        expr = ParseIdentifierOrMacroCallExpression();
-                        break;
-                    case SyntaxTokenKind.FragmentIdentifier:
-                        expr = ParseFragmentExpression();
+                        expr = ParseIdentifierExpression();
                         break;
                     case SyntaxTokenKind.NilLiteral:
                     case SyntaxTokenKind.BooleanLiteral:
@@ -1583,67 +1515,13 @@ namespace Flare.Syntax
                 return new ModuleExpressionNode(Skipped(), Diagnostics(), path);
             }
 
-            PrimaryExpressionNode ParseIdentifierOrMacroCallExpression()
+            PrimaryExpressionNode ParseIdentifierExpression()
             {
                 var diags = Diagnostics();
 
                 var ident = Expect(SyntaxTokenKind.ValueIdentifier, "value identifier", ref diags);
 
-                if (_stream.Peek().Kind == SyntaxTokenKind.Exclamation)
-                {
-                    var bang = _stream.Move();
-                    var args = ParseMacroArgumentList();
-
-                    return new MacroCallExpressionNode(Skipped(), diags, ident, bang, args);
-                }
-
                 return new IdentifierExpressionNode(Skipped(), diags, ident);
-            }
-
-            MacroArgumentListNode ParseMacroArgumentList()
-            {
-                var diags = Diagnostics();
-
-                var open = Expect(SyntaxTokenKind.OpenParen, "'('", ref diags);
-                var args = ImmutableArray<ExpressionNode>.Empty;
-                var seps = ImmutableArray<SyntaxToken>.Empty;
-                var first = true;
-
-                while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseParen)
-                {
-                    if (!first)
-                    {
-                        if (_stream.Peek().Kind != SyntaxTokenKind.Comma)
-                            break;
-
-                        seps = seps.Add(_stream.Move());
-                    }
-
-                    var arg = ParseExpression();
-                    var stop = arg is MissingExpressionNode && _stream.Peek().Kind != SyntaxTokenKind.Comma;
-
-                    if (first && stop)
-                        break;
-
-                    args = args.Add(arg);
-                    first = false;
-
-                    if (stop)
-                        break;
-                }
-
-                var close = Expect(SyntaxTokenKind.CloseParen, "')'", ref diags);
-
-                return new MacroArgumentListNode(Skipped(), diags, open, List(args, seps), close);
-            }
-
-            FragmentExpressionNode ParseFragmentExpression()
-            {
-                var diags = Diagnostics();
-
-                var ident = Expect(SyntaxTokenKind.FragmentIdentifier, "fragment identifier", ref diags);
-
-                return new FragmentExpressionNode(Skipped(), diags, ident);
             }
 
             LiteralExpressionNode ParseLiteralExpression()

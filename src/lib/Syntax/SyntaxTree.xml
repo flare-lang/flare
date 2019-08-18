@@ -136,26 +136,6 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
             <token name="Semicolon" />
         </node>
 
-        <node name="MacroDeclaration" base="NamedDeclaration">
-            <children name="Attributes" type="Attribute" override="true" />
-            <token name="VisibilityKeyword" optional="true" override="true" />
-            <token name="Keyword" override="true" />
-            <token name="Name" override="true" />
-            <child name="ParameterList" type="MacroParameterList" />
-            <child name="Body" type="BlockExpression" />
-        </node>
-
-        <node name="MacroParameterList">
-            <token name="OpenParen" />
-            <children name="Parameters" type="MacroParameter" separated="true" />
-            <token name="CloseParen" />
-        </node>
-
-        <node name="MacroParameter">
-            <children name="Attributes" type="Attribute" />
-            <token name="Name" />
-        </node>
-
         <!-- Statements -->
 
         <node name="Statement" abstract="true">
@@ -345,22 +325,6 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
         </node>
 
         <node name="IdentifierExpression" base="PrimaryExpression">
-            <token name="Identifier" />
-        </node>
-
-        <node name="MacroCallExpression" base="PrimaryExpression">
-            <token name="Identifier" />
-            <token name="Exclamation" />
-            <child name="ArgumentList" type="MacroArgumentList" />
-        </node>
-
-        <node name="MacroArgumentList">
-            <token name="OpenParen" />
-            <children name="Arguments" type="Expression" separated="true" />
-            <token name="CloseParen" />
-        </node>
-
-        <node name="FragmentExpression" base="PrimaryExpression">
             <token name="Identifier" />
         </node>
 

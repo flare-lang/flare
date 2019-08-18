@@ -52,16 +52,6 @@ namespace Flare.Tree
             return new TreeContext(function, parms, variadic);
         }
 
-        public static TreeContext CreateMacro(Macro macro)
-        {
-            var parms = ImmutableArray<TreeParameter>.Empty;
-
-            foreach (var param in macro.Parameters)
-                parms = parms.Add(new TreeParameter(param));
-
-            return new TreeContext(macro, parms, null);
-        }
-
         public static TreeContext CreateTest(Test test)
         {
             return new TreeContext(test, ImmutableArray<TreeParameter>.Empty, null);

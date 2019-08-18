@@ -171,7 +171,7 @@ namespace Flare.Syntax
 
                     if (!(decl is ConstantDeclarationNode) &&
                         !(decl is FunctionDeclarationNode) &&
-                        !(decl is MacroDeclarationNode))
+                        !(decl is TestDeclarationNode))
                         break;
 
                     _walker.Configuration = cfg;

@@ -5,9 +5,7 @@ namespace Flare.Syntax
         Constant,
         Function,
         External,
-        Macro,
         Immutable,
         Mutable,
-        Fragment,
     }
 }

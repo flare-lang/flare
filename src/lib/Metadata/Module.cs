@@ -31,7 +31,6 @@ namespace Flare.Metadata
                     ConstantDeclarationNode c => (Declaration)new Constant(this, c),
                     FunctionDeclarationNode f => new Function(this, f),
                     ExternalDeclarationNode e => new External(this, e),
-                    MacroDeclarationNode m => new Macro(this, m),
                     TestDeclarationNode t => new Test(this, t),
                     _ => throw DebugAssert.Unreachable(),
                 });
