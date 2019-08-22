@@ -1166,7 +1166,7 @@ namespace Flare.Syntax
                     arms = arms.Add(arm);
 
                     if (arm.Condition is MissingExpressionNode && arm.ArrowToken.IsMissing &&
-                        arm.Body is MissingExpressionNode)
+                        arm.Body is MissingExpressionNode && arm.SemicolonToken.IsMissing)
                         break;
                 }
                 while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBrace);
@@ -1183,8 +1183,9 @@ namespace Flare.Syntax
                 var cond = ParseExpression();
                 var arrow = Expect(SyntaxTokenKind.EqualsCloseAngle, "'=>'", ref diags);
                 var body = ParseExpression();
+                var semi = Expect(SyntaxTokenKind.Semicolon, "';'", ref diags);
 
-                return new ConditionExpressionArmNode(Skipped(), diags, cond, arrow, body);
+                return new ConditionExpressionArmNode(Skipped(), diags, cond, arrow, body, semi);
             }
 
             ExceptionExpressionNode ParseExceptionExpression()
@@ -1370,7 +1371,7 @@ namespace Flare.Syntax
                     arms = arms.Add(arm);
 
                     if (arm.Pattern is MissingPatternNode && arm.ArrowToken.IsMissing &&
-                        arm.Body is MissingExpressionNode)
+                        arm.Body is MissingExpressionNode && arm.SemicolonToken.IsMissing)
                         break;
                 }
                 while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBrace);
@@ -1388,8 +1389,9 @@ namespace Flare.Syntax
                 var guard = _stream.Peek().Kind == SyntaxTokenKind.IfKeyword ? ParsePatternArmGuard() : null;
                 var arrow = Expect(SyntaxTokenKind.EqualsCloseAngle, "'=>'", ref diags);
                 var body = ParseExpression();
+                var semi = Expect(SyntaxTokenKind.Semicolon, "';'", ref diags);
 
-                return new PatternArmNode(Skipped(), diags, pat, guard, arrow, body);
+                return new PatternArmNode(Skipped(), diags, pat, guard, arrow, body, semi);
             }
 
             PatternArmGuardNode ParsePatternArmGuard()
@@ -1466,7 +1468,7 @@ namespace Flare.Syntax
                     arms = arms.Add(arm);
 
                     if (arm.Pattern is MissingPatternNode && arm.ArrowToken.IsMissing &&
-                        arm.Body is MissingExpressionNode)
+                        arm.Body is MissingExpressionNode && arm.SemicolonToken.IsMissing)
                         break;
                 }
                 while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBrace);
@@ -1596,7 +1598,7 @@ namespace Flare.Syntax
                     arms = arms.Add(arm);
 
                     if (arm.Pattern is MissingPatternNode && arm.ArrowToken.IsMissing &&
-                        arm.Body is MissingExpressionNode)
+                        arm.Body is MissingExpressionNode && arm.SemicolonToken.IsMissing)
                         break;
                 }
                 while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBrace);

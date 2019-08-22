@@ -278,6 +278,7 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
             <child name="Guard" type="PatternArmGuard" optional="true" />
             <token name="Arrow" />
             <child name="Body" type="Expression" />
+            <token name="Semicolon" />
         </node>
 
         <node name="PatternArmGuard">
@@ -441,6 +442,7 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
             <child name="Condition" type="Expression" />
             <token name="Arrow" />
             <child name="Body" type="Expression" />
+            <token name="Semicolon" />
         </node>
 
         <node name="MatchExpression" base="PrimaryExpression">
