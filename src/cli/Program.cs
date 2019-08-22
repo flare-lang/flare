@@ -22,17 +22,15 @@ namespace Flare.Cli
 
         static async Task FallbackMiddleware(InvocationContext context, Func<InvocationContext, Task> next)
         {
+            var result = context.ParseResult;
+
             // Fall back to the implicit script command if no other command is matched.
-            if (context.ParseResult.CommandResult.Command is RootCommand cmd)
+            if (result.CommandResult.Command is RootCommand cmd)
             {
-                var scmd = new ScriptCommand();
+                var parser = result.Parser;
 
-                // TODO: It would be nice if we could just add this ahead of time and retrieve it
-                // from the context somehow.
-                cmd.AddCommand(scmd);
-
-                context.ParseResult = context.Parser.Parse(new[] { scmd.Name }.Concat(
-                    context.ParseResult.Tokens.Select(x => x.Value)).ToArray());
+                context.ParseResult = parser.Parse(parser.Configuration.RootCommand.Children.OfType<ScriptCommand>()
+                    .Select(x => x.Name).Concat(result.Tokens.Select(x => x.Value)).ToArray());
             }
 
             await next(context);

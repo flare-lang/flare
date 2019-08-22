@@ -14,6 +14,7 @@ namespace Flare.Cli.Commands
             AddCommand(new ReplCommand());
             AddCommand(new RestoreCommand());
             AddCommand(new RunCommand());
+            AddCommand(new ScriptCommand());
             AddCommand(new SearchCommand());
             AddCommand(new TestCommand());
             AddCommand(new UninstallCommand());
