@@ -38,5 +38,10 @@ namespace Flare.Metadata
 
             Declarations = decls;
         }
+
+        public override string ToString()
+        {
+            return Path.ToString();
+        }
     }
 }

@@ -24,5 +24,10 @@ namespace Flare.Metadata
             Name = node.NameToken.Text;
             IsPublic = node.VisibilityKeywordToken?.Kind == SyntaxTokenKind.PubKeyword;
         }
+
+        public override string ToString()
+        {
+            return $"{Module}.{Name}";
+        }
     }
 }

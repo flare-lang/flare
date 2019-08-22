@@ -21,5 +21,10 @@ namespace Flare.Metadata
             Position = position;
             IsVariadic = variadic;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
