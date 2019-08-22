@@ -21,6 +21,7 @@ namespace Flare.Syntax
         DiscardedVariableUsed,
         DuplicateExpressionField,
         InvalidLoopTarget,
+        InvalidFreezeOperand,
         DuplicatePatternField,
         ModuleLoadFailed,
         InvalidLintAttribute,

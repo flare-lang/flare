@@ -41,7 +41,9 @@ namespace Flare.Syntax
                     public void Define(SyntaxSymbolKind kind, ModulePath? module, SyntaxNode? definition, string name)
                     {
                         // This method is used to shadow variables, too.
-                        Symbols[name] = new SyntaxVariableSymbol(kind, module, definition, name);
+                        var sym = Symbols[name] = new SyntaxVariableSymbol(kind, module, definition, name);
+
+                        definition?.SetAnnotation("Symbol", sym);
                     }
                 }
 
@@ -540,6 +542,16 @@ namespace Flare.Syntax
                     base.Visit(node);
                 }
 
+                public override void Visit(CallTryNode node)
+                {
+                    // If there are no catch clauses, this is a propagating try. In that case, we
+                    // must deal with active use statements, just like a plain raise expression.
+                    if (node.Catch == null)
+                        node.SetAnnotation("Uses", _scope.Function!.GetUses(0));
+
+                    base.Visit(node);
+                }
+
                 public override void Visit(PatternArmNode node)
                 {
                     PushScope();
@@ -793,6 +805,35 @@ namespace Flare.Syntax
                 public override void Visit(RaiseExpressionNode node)
                 {
                     node.SetAnnotation("Uses", _scope.Function!.GetUses(0));
+
+                    base.Visit(node);
+                }
+
+                public override void Visit(FreezeExpressionNode node)
+                {
+                    var kw = node.FreezeKeywordToken;
+
+                    // The operand of a freeze in expression can be any expression, but a simple
+                    // freeze expression only accepts a small subset.
+                    if (!kw.IsMissing && node.InKeywordToken == null)
+                    {
+                        switch (node.Operand)
+                        {
+                            case FieldAccessExpressionNode _:
+                                break;
+                            case IdentifierExpressionNode inode:
+                                var ident = inode.IdentifierToken;
+
+                                if (!ident.IsMissing && !_scope.IsMutable(ident.Text))
+                                    Error(node, SyntaxDiagnosticKind.InvalidFreezeOperand, kw.Location,
+                                        $"'{ident}' does not represent a mutable variable");
+                                break;
+                            default:
+                                Error(node, SyntaxDiagnosticKind.InvalidFreezeOperand, kw.Location,
+                                    "'freeze' operand must be a field access or identifier expression");
+                                break;
+                        }
+                    }
 
                     base.Visit(node);
                 }
