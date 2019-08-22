@@ -1688,12 +1688,12 @@ namespace Flare.Syntax
             {
                 var diags = Diagnostics();
 
-                var open = Expect(SyntaxTokenKind.OpenParen, "'('", ref diags);
+                var open = Expect(SyntaxTokenKind.OpenBracket, "'['", ref diags);
                 var idxs = ImmutableArray<IndexNode>.Empty;
                 var seps = ImmutableArray<SyntaxToken>.Empty;
                 var first = true;
 
-                while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseParen)
+                while (_stream.Peek() is var tok && !tok.IsEndOfInput && tok.Kind != SyntaxTokenKind.CloseBracket)
                 {
                     if (!first)
                     {
@@ -1716,7 +1716,7 @@ namespace Flare.Syntax
                         break;
                 }
 
-                var close = Expect(SyntaxTokenKind.CloseParen, "')'", ref diags);
+                var close = Expect(SyntaxTokenKind.CloseBracket, "']'", ref diags);
 
                 return new IndexListNode(Skipped(), diags, open, List(idxs, seps), close);
             }
