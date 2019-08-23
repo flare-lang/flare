@@ -428,7 +428,7 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
 
         <node name="IfExpressionElse">
             <token name="ElseKeyword" />
-            <child name="ElseBody" type="PrimaryExpression" />
+            <child name="ElseBody" type="BlockExpression" />
         </node>
 
         <node name="ConditionExpression" base="PrimaryExpression">

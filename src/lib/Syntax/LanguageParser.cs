@@ -1339,8 +1339,7 @@ namespace Flare.Syntax
                 var diags = Diagnostics();
 
                 var @else = Expect(SyntaxTokenKind.ElseKeyword, "'else' keyword", ref diags);
-                var body = _stream.Peek().Kind == SyntaxTokenKind.IfKeyword ?
-                    ParseIfExpression() : (PrimaryExpressionNode)ParseBlockExpression();
+                var body = ParseBlockExpression();
 
                 return new IfExpressionElseNode(Skipped(), diags, @else, body);
             }
