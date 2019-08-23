@@ -618,15 +618,12 @@ namespace Flare.Syntax
 
                     base.Visit(node);
 
-                    // Unwrap the upvalue symbols by one level. Some of them could still be upvalue
-                    // symbols after this, in the case of nested lambdas, and that's OK. The lowerer
-                    // will handle both cases.
-                    var upvalues = ImmutableArray<SyntaxSymbol>.Empty;
+                    var upvalues = ImmutableArray<SyntaxUpvalueSymbol>.Empty;
 
                     // Avoid LINQ allocations if there are no upvalues.
                     if (scope.Upvalues.Count != 0)
                         foreach (var upvalue in scope.Upvalues.Values.OrderBy(x => x.Slot))
-                            upvalues = upvalues.Add(upvalue.Symbol);
+                            upvalues = upvalues.Add(upvalue);
 
                     node.SetAnnotation("Upvalues", upvalues);
 
