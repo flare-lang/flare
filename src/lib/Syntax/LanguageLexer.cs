@@ -631,13 +631,12 @@ namespace Flare.Syntax
                 if (c1 == '!')
                 {
                     if (c2 == '=')
-                    {
                         ConsumeNext();
+                    else
+                        Error(SyntaxDiagnosticKind.IncompleteOperator, _location,
+                            $"Expected '=', but found {(r2 != null ? $"'{r2}'" : "end of input")}");
 
-                        return (location, SyntaxTokenKind.ExclamationEquals);
-                    }
-
-                    return (location, SyntaxTokenKind.Exclamation);
+                    return (location, SyntaxTokenKind.ExclamationEquals);
                 }
 
                 if (c1 == '<' && c2 == '=')

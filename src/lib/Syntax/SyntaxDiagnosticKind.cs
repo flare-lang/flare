@@ -3,6 +3,7 @@ namespace Flare.Syntax
     public enum SyntaxDiagnosticKind
     {
         UnrecognizedCharacter,
+        IncompleteOperator,
         IncompleteIntegerLiteral,
         IncompleteRealLiteral,
         IncompleteStringLiteral,
