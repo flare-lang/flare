@@ -66,6 +66,8 @@ namespace Flare.Syntax
 
             readonly List<Rune> _runes = new List<Rune>();
 
+            readonly List<Rune> _trivia = new List<Rune>();
+
             readonly List<Rune> _string = new List<Rune>();
 
             byte[] _buffer8 = new byte[1024];
@@ -99,7 +101,7 @@ namespace Flare.Syntax
                 return _enumerator.Peek();
             }
 
-            Rune? MoveNext()
+            Rune? MoveNext(List<Rune>? runes = null)
             {
                 if (!_enumerator.MoveNext())
                     return null;
@@ -110,14 +112,14 @@ namespace Flare.Syntax
                 var column = nl ? 1 : _location.Column + 1;
 
                 _location = new SourceLocation(_location.FullPath, line, column);
-                _runes.Add(cur);
+                (runes ?? _runes).Add(cur);
 
                 return cur;
             }
 
-            void ConsumeNext()
+            void ConsumeNext(List<Rune>? runes = null)
             {
-                _ = MoveNext();
+                _ = MoveNext(runes);
             }
 
             static BigInteger CreateInteger(string value)
@@ -273,16 +275,17 @@ namespace Flare.Syntax
 
             SyntaxTrivia Trivia(SourceLocation location, SyntaxTriviaKind kind)
             {
-                var trivia = new SyntaxTrivia(location, kind, RunesToUtf16(_runes));
+                var trivia = new SyntaxTrivia(location, kind, RunesToUtf16(_trivia));
 
-                _runes.Clear();
+                _trivia.Clear();
 
                 return trivia;
             }
 
-            SyntaxToken Token(string text, SourceLocation location, SyntaxTokenKind kind)
+            SyntaxToken Token(SourceLocation location, SyntaxTokenKind kind)
             {
                 var hasDiags = _currentDiagnostics.Count != 0;
+                var text = RunesToUtf16(_runes);
                 var value = _value;
 
                 if (!hasDiags)
@@ -312,6 +315,7 @@ namespace Flare.Syntax
 
                 _value = null;
 
+                _runes.Clear();
                 _leading.Clear();
                 _trailing.Clear();
 
@@ -342,7 +346,6 @@ namespace Flare.Syntax
                 {
                     LexTrivia(_leading, false);
 
-                    string text;
                     SourceLocation location;
                     SyntaxTokenKind kind;
 
@@ -486,21 +489,16 @@ namespace Flare.Syntax
                                 break;
                         }
 
-                        text = RunesToUtf16(_runes);
-
                         LexTrivia(_trailing, true);
                     }
                     else
                     {
                         // The EOI token gets any remaining trivia in the input as leading trivia.
-                        text = string.Empty;
                         location = _location;
                         kind = SyntaxTokenKind.EndOfInput;
                     }
 
-                    yield return Token(text, location, kind);
-
-                    _runes.Clear();
+                    yield return Token(location, kind);
 
                     if (kind == SyntaxTokenKind.EndOfInput)
                         break;
@@ -509,8 +507,8 @@ namespace Flare.Syntax
 
             SyntaxTrivia? LexShebangLine(SourceLocation location)
             {
-                var r1 = MoveNext();
-                var r2 = MoveNext();
+                var r1 = MoveNext(_trivia);
+                var r2 = MoveNext(_trivia);
 
                 if (r1?.Value == '#' && r2?.Value == '!')
                 {
@@ -522,7 +520,7 @@ namespace Flare.Syntax
                             case '\r':
                                 break;
                             default:
-                                ConsumeNext();
+                                ConsumeNext(_trivia);
                                 continue;
                         }
 
@@ -535,7 +533,7 @@ namespace Flare.Syntax
                 // No shebang line. Reset state since we probably just ate two tokens.
                 _enumerator.Reset();
                 _location = new SourceLocation(_location.FullPath, 1, 1);
-                _runes.Clear();
+                _trivia.Clear();
 
                 return null;
             }
@@ -571,7 +569,7 @@ namespace Flare.Syntax
 
             void LexComment(SourceLocation location, List<SyntaxTrivia> list)
             {
-                ConsumeNext();
+                ConsumeNext(_trivia);
 
                 while (PeekNext() is Rune cur)
                 {
@@ -581,7 +579,7 @@ namespace Flare.Syntax
                         case '\r':
                             break;
                         default:
-                            ConsumeNext();
+                            ConsumeNext(_trivia);
                             continue;
                     }
 
@@ -593,15 +591,15 @@ namespace Flare.Syntax
 
             void LexNewLine(SourceLocation location, List<SyntaxTrivia> list)
             {
-                if (((Rune)MoveNext()!).Value == '\r' && PeekNext()?.Value == '\n')
-                    ConsumeNext();
+                if (((Rune)MoveNext(_trivia)!).Value == '\r' && PeekNext()?.Value == '\n')
+                    ConsumeNext(_trivia);
 
                 list.Add(Trivia(location, SyntaxTriviaKind.NewLine));
             }
 
             void LexWhiteSpace(SourceLocation location, List<SyntaxTrivia> list)
             {
-                ConsumeNext();
+                ConsumeNext(_trivia);
 
                 while (PeekNext() is Rune cur)
                 {
@@ -609,7 +607,7 @@ namespace Flare.Syntax
                     {
                         case '\t':
                         case ' ':
-                            ConsumeNext();
+                            ConsumeNext(_trivia);
                             continue;
                         default:
                             break;
@@ -995,7 +993,7 @@ namespace Flare.Syntax
                     kind = kind2;
 
                     if (kind == SyntaxTokenKind.BooleanLiteral)
-                        _value = bool.Parse(text);
+                        _value = text == "true";
                 }
 
                 return (location, kind);
