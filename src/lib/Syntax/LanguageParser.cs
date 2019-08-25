@@ -1671,7 +1671,7 @@ namespace Flare.Syntax
                 var arrow = Expect(SyntaxTokenKind.MinusCloseAngle, "'->'", ref diags);
                 var name = Expect(SyntaxTokenKind.ValueIdentifier, "value identifier", ref diags);
                 var args = ParseArgumentList();
-                var @try = ParseCallTry();
+                var @try = _stream.Peek().Kind == SyntaxTokenKind.Question ? ParseCallTry() : null;
 
                 return new MethodCallExpressionNode(Skipped(), diags, subject, arrow, name, args, @try);
             }
