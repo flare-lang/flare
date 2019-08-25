@@ -59,6 +59,8 @@ namespace Flare.Syntax
 
                     readonly Stack<PrimaryExpressionNode> _loops = new Stack<PrimaryExpressionNode>();
 
+                    readonly List<SyntaxSymbol> _freezes = new List<SyntaxSymbol>();
+
                     readonly Dictionary<SyntaxSymbol, SyntaxUpvalueSymbol> _upvalues =
                         new Dictionary<SyntaxSymbol, SyntaxUpvalueSymbol>();
 
@@ -149,6 +151,16 @@ namespace Flare.Syntax
                     public PrimaryExpressionNode? GetLoop()
                     {
                         return _loops.TryPeek(out var loop) ? loop : null;
+                    }
+
+                    public void AddFreeze(SyntaxSymbol symbol)
+                    {
+                        _freezes.Add(symbol);
+                    }
+
+                    public ImmutableHashSet<SyntaxSymbol> GetFreezes()
+                    {
+                        return _freezes.ToImmutableHashSet();
                     }
                 }
 
@@ -420,18 +432,31 @@ namespace Flare.Syntax
                     base.Visit(node);
                 }
 
-                public override void Visit(ConstantDeclarationNode node)
+                public override void Visit(TestDeclarationNode node)
                 {
-                    _ = PushFunctionScope();
+                    var scope = PushFunctionScope();
 
                     base.Visit(node);
+
+                    node.SetAnnotation("Freezes", scope.GetFreezes());
+
+                    PopScope();
+                }
+
+                public override void Visit(ConstantDeclarationNode node)
+                {
+                    var scope = PushFunctionScope();
+
+                    base.Visit(node);
+
+                    node.SetAnnotation("Freezes", scope.GetFreezes());
 
                     PopScope();
                 }
 
                 public override void Visit(FunctionDeclarationNode node)
                 {
-                    _ = PushFunctionScope();
+                    var scope = PushFunctionScope();
 
                     foreach (var param in node.ParameterList.Parameters.Nodes)
                     {
@@ -461,6 +486,8 @@ namespace Flare.Syntax
                     }
 
                     base.Visit(node);
+
+                    node.SetAnnotation("Freezes", scope.GetFreezes());
 
                     PopScope();
                 }
@@ -617,6 +644,8 @@ namespace Flare.Syntax
                     }
 
                     base.Visit(node);
+
+                    node.SetAnnotation("Freezes", scope.GetFreezes());
 
                     var upvalues = ImmutableArray<SyntaxUpvalueSymbol>.Empty;
 
@@ -821,9 +850,15 @@ namespace Flare.Syntax
                             case IdentifierExpressionNode inode:
                                 var ident = inode.IdentifierToken;
 
-                                if (!ident.IsMissing && !_scope.IsMutable(ident.Text))
-                                    Error(node, SyntaxDiagnosticKind.InvalidFreezeOperand, kw.Location,
-                                        $"'{ident}' does not represent a mutable variable");
+                                if (!ident.IsMissing && _scope.Resolve(ident.Text) is SyntaxSymbol sym)
+                                {
+                                    if (sym.Kind != SyntaxSymbolKind.Mutable)
+                                        Error(node, SyntaxDiagnosticKind.InvalidFreezeOperand, kw.Location,
+                                            $"'{ident}' does not represent a mutable variable");
+
+                                    _scope.Function!.AddFreeze(sym);
+                                }
+
                                 break;
                             default:
                                 Error(node, SyntaxDiagnosticKind.InvalidFreezeOperand, kw.Location,
