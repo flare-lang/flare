@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace Alkahest.Core
+namespace Flare
 {
     static class Bits
     {
