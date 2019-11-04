@@ -138,7 +138,7 @@ namespace Flare.Tests.TestAdapter
 
             static string Normalize(StringBuilder output)
             {
-                return _paths.Replace(output.ToString().Trim(),
+                return _paths.Replace(output.ToString().Trim().Replace("\r\n", "\n"),
                     m => m.Groups[1].Value.Replace("\\", "/") + m.Groups[2].Value);
             }
 

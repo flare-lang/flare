@@ -118,7 +118,7 @@ namespace Flare.Tests.TestAdapter
         {
             try
             {
-                return File.ReadAllText(path).Trim();
+                return File.ReadAllText(path).Trim().Replace("\r\n", "\n");
             }
             catch (FileNotFoundException)
             {
