@@ -25,14 +25,12 @@ build_script:
           {
               dotnet publish -c $Env:CONFIGURATION -p:PublishSingleFile=true -p:PublishTrimmed=true -r $rid
           }
-image: Visual Studio 2019 Preview
+image: Visual Studio 2019
 install:
     - pwsh: |
           $ErrorActionPreference = "Stop"
           Set-StrictMode -Version 2.0
           npm install markdownlint-cli -g
-          Invoke-WebRequest https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
-          ./dotnet-install.ps1 -i "C:\Program Files\dotnet" -v 3.0.100
 configuration:
     - Debug
     - Release
