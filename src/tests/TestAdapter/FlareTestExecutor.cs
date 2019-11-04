@@ -33,7 +33,7 @@ namespace Flare.Tests.TestAdapter
 
         void RunTests((FlareTest, TestCase)[] tests, IFrameworkHandle frameworkHandle)
         {
-            Task.Factory.StartNew(() =>
+            Task.Run(() =>
             {
                 foreach (var (tc, vstc) in tests)
                 {
@@ -75,7 +75,7 @@ namespace Flare.Tests.TestAdapter
 
                     frameworkHandle.RecordResult(vstr);
                 }
-            }, _cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default).Wait();
+            }, _cts.Token).Wait();
         }
     }
 }

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using Flare.Cli;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
@@ -15,6 +16,9 @@ namespace Flare.Tests.TestAdapter
     abstract class FlareTest
     {
         static readonly string _source = Assembly.GetExecutingAssembly().Location;
+
+        static readonly Regex _paths = new Regex("^(.*)(.fl\\(\\d+,\\d+\\): .*: .*)",
+            RegexOptions.Compiled | RegexOptions.Multiline);
 
         public static FileInfo Executable { get; }
 
@@ -132,8 +136,14 @@ namespace Flare.Tests.TestAdapter
                 outcome = FlareTestOutcome.Failed;
             }
 
-            var stdout2 = stdout.ToString().Trim();
-            var stderr2 = stderr.ToString().Trim();
+            static string Normalize(StringBuilder output)
+            {
+                return _paths.Replace(output.ToString().Trim(),
+                    m => m.Groups[1].Value.Replace("\\", "/") + m.Groups[2].Value);
+            }
+
+            var stdout2 = Normalize(stdout);
+            var stderr2 = Normalize(stderr);
 
             if (stdout2 != StandardOut)
             {
