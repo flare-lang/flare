@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "benchmarkdotnet.tool": {
-      "version": "0.11.5",
+      "version": "0.12.0",
       "commands": [
         "dotnet-benchmark"
       ]
@@ -15,25 +15,25 @@
       ]
     },
     "dotnet-script": {
-      "version": "0.30.0",
+      "version": "0.50.1",
       "commands": [
         "dotnet-script"
       ]
     },
     "dotnet-sos": {
-      "version": "3.0.0-preview8.19412.1",
+      "version": "3.0.52901",
       "commands": [
         "dotnet-sos"
       ]
     },
     "dotnet-symbol": {
-      "version": "1.0.5",
+      "version": "1.0.52901",
       "commands": [
         "dotnet-symbol"
       ]
     },
     "dotnet-trace": {
-      "version": "3.0.0-preview8.19412.1",
+      "version": "3.0.52901",
       "commands": [
         "dotnet-trace"
       ]
