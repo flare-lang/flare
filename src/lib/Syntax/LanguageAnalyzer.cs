@@ -895,7 +895,8 @@ namespace Flare.Syntax
                     var alias = node.Alias;
 
                     if (alias != null && !alias.NameToken.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
+                        _scope.Define(alias.MutKeywordToken != null ? SyntaxSymbolKind.Mutable :
+                            SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(LiteralPatternNode node)
@@ -905,7 +906,8 @@ namespace Flare.Syntax
                     var alias = node.Alias;
 
                     if (alias != null && !alias.NameToken.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
+                        _scope.Define(alias.MutKeywordToken != null ? SyntaxSymbolKind.Mutable :
+                            SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(ModulePatternNode node)
@@ -927,7 +929,8 @@ namespace Flare.Syntax
                     var alias = node.Alias;
 
                     if (alias != null && !alias.NameToken.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
+                        _scope.Define(alias.MutKeywordToken != null ? SyntaxSymbolKind.Mutable :
+                            SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(TuplePatternNode node)
@@ -937,7 +940,8 @@ namespace Flare.Syntax
                     var alias = node.Alias;
 
                     if (alias != null && !alias.NameToken.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
+                        _scope.Define(alias.MutKeywordToken != null ? SyntaxSymbolKind.Mutable :
+                            SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(RecordPatternNode node)
@@ -972,7 +976,8 @@ namespace Flare.Syntax
                     var alias = node.Alias;
 
                     if (alias != null && !alias.NameToken.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
+                        _scope.Define(alias.MutKeywordToken != null ? SyntaxSymbolKind.Mutable :
+                            SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(ExceptionPatternNode node)
@@ -1007,7 +1012,8 @@ namespace Flare.Syntax
                     var alias = node.Alias;
 
                     if (alias != null && !alias.NameToken.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
+                        _scope.Define(alias.MutKeywordToken != null ? SyntaxSymbolKind.Mutable :
+                            SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(ArrayPatternNode node)
@@ -1017,7 +1023,8 @@ namespace Flare.Syntax
                     var alias = node.Alias;
 
                     if (alias != null && !alias.NameToken.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
+                        _scope.Define(alias.MutKeywordToken != null ? SyntaxSymbolKind.Mutable :
+                            SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(SetPatternNode node)
@@ -1027,7 +1034,8 @@ namespace Flare.Syntax
                     var alias = node.Alias;
 
                     if (alias != null && !alias.NameToken.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
+                        _scope.Define(alias.MutKeywordToken != null ? SyntaxSymbolKind.Mutable :
+                            SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
                 }
 
                 public override void Visit(MapPatternNode node)
@@ -1037,7 +1045,8 @@ namespace Flare.Syntax
                     var alias = node.Alias;
 
                     if (alias != null && !alias.NameToken.IsMissing)
-                        _scope.Define(SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
+                        _scope.Define(alias.MutKeywordToken != null ? SyntaxSymbolKind.Mutable :
+                            SyntaxSymbolKind.Immutable, null, alias, alias.NameToken.Text);
                 }
             }
 
