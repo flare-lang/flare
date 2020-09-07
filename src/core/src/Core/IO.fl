@@ -1,5 +1,23 @@
 mod Core::IO;
 
+@[doc = "
+Prints a message formatted according to `format` and `args` to standard out.
+"]
 pub extern print(format, .. args);
 
+@[doc = "
+Prints a message formatted according to `format` and `args`, followed by a
+platform-specific newline character, to standard out.
+"]
 pub extern println(format, .. args);
+
+@[doc = "
+Prints a message formatted according to `format` and `args` to standard error.
+"]
+pub extern eprint(format, .. args);
+
+@[doc = "
+Prints a message formatted according to `format` and `args`, followed by a
+platform-specific newline character, to standard error.
+"]
+pub extern eprintln(format, .. args);

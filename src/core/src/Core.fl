@@ -1,15 +1,52 @@
 mod Core;
 
+@[doc = "
+Triggers an unrecoverable panic within the currently executing agent,
+effectively killing it. This function is meant to be used for cases where a
+logic error on the part of the programmer is detected, and continuing execution
+could lead to largely unpredictable results.
+
+The error message for the panic is formatted according to `format` and `args`.
+"]
 pub extern panic(format, .. args);
 
+@[doc = "
+Halts the entire runtime system and returns `code` as the status code for the
+native OS process.
+
+This function may not be available in embedding scenarios, in which case it will
+trigger a panic.
+"]
 pub extern halt(code);
 
+@[doc = "
+Creates a new reference.
+
+References are globally unique, opaque values. They are backed by at least 20
+bytes of randomly generated data, making them practically unforgeable and
+non-repeatable within a program's lifetime.
+"]
 pub extern new_ref();
 
+@[doc = "
+Wraps a call to `function` in a record with a `__drop__` method. This is meant
+to be used in conjunction with the `use` expression. For example:
+
+```
+{
+    use _ = defer(fn() => some_cleanup());
+
+    some_work();
+}
+```
+
+This ensures that `some_cleanup` is invoked when the current scope is exited, no
+matter how it happens (`return`, `raise`, etc).
+"]
 pub fn defer(function) {
     rec {
         function = function,
 
-        __drop__ = fn(self) => self.function()?
+        __drop__ = fn(self) => self.function()
     };
 }

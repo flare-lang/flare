@@ -1,14 +1,19 @@
 mod Core::Agent;
 
+@[doc = "
+Returns the currently executing agent.
+"]
 pub extern self();
 
-pub extern get_all();
+@[doc = "
+Returns the agent-local storage map for the currently executing agent.
+"]
+pub extern get_map();
 
-pub extern get(key);
-
-pub extern set(key, value);
-
-pub extern remove(key);
+@[doc = "
+Sets the agent-local storage map for the currently executing agent to `map`.
+"]
+pub extern set_map(map);
 
 pub extern sleep(duration);
 

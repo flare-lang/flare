@@ -1,3 +1,6 @@
 mod Core::GC;
 
+@[doc = "
+Performs a garbage collection within the currently executing agent.
+"]
 pub extern collect();
