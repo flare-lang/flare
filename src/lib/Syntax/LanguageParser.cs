@@ -1840,20 +1840,9 @@ namespace Flare.Syntax
                 }
 
                 var close = Expect(SyntaxTokenKind.CloseBrace, "'}'", ref diags);
-                var remain = _stream.Peek().Kind == SyntaxTokenKind.ColonColon ? ParsePatternRemainder() : null;
                 var alias = _stream.Peek().Kind == SyntaxTokenKind.AsKeyword ? ParsePatternAlias() : null;
 
-                return new SetPatternNode(Skipped(), diags, hash, open, List(elems, seps), close, remain, alias);
-            }
-
-            PatternRemainderNode ParsePatternRemainder()
-            {
-                var diags = Diagnostics();
-
-                var colonColon = Expect(SyntaxTokenKind.ColonColon, "'::'", ref diags);
-                var pat = ParsePattern();
-
-                return new PatternRemainderNode(Skipped(), diags, colonColon, pat);
+                return new SetPatternNode(Skipped(), diags, hash, open, List(elems, seps), close, alias);
             }
 
             MapPatternNode ParseMapPattern()
@@ -1890,10 +1879,9 @@ namespace Flare.Syntax
                 }
 
                 var close = Expect(SyntaxTokenKind.CloseBracket, "']'", ref diags);
-                var remain = _stream.Peek().Kind == SyntaxTokenKind.ColonColon ? ParsePatternRemainder() : null;
                 var alias = _stream.Peek().Kind == SyntaxTokenKind.AsKeyword ? ParsePatternAlias() : null;
 
-                return new MapPatternNode(Skipped(), diags, hash, open, List(elems, seps), close, remain, alias);
+                return new MapPatternNode(Skipped(), diags, hash, open, List(elems, seps), close, alias);
             }
 
             MapPatternPairNode ParseMapPatternPair()
@@ -1980,10 +1968,20 @@ namespace Flare.Syntax
                 }
 
                 var close = Expect(SyntaxTokenKind.CloseBracket, "']'", ref diags);
-                var remain = _stream.Peek().Kind == SyntaxTokenKind.ColonColon ? ParsePatternRemainder() : null;
+                var remain = _stream.Peek().Kind == SyntaxTokenKind.ColonColon ? ParseArrayPatternRemainder() : null;
                 var alias = _stream.Peek().Kind == SyntaxTokenKind.AsKeyword ? ParsePatternAlias() : null;
 
                 return new ArrayPatternNode(Skipped(), diags, open, List(elems, seps), close, remain, alias);
+            }
+
+            ArrayPatternRemainderNode ParseArrayPatternRemainder()
+            {
+                var diags = Diagnostics();
+
+                var colonColon = Expect(SyntaxTokenKind.ColonColon, "'::'", ref diags);
+                var pat = ParsePattern();
+
+                return new ArrayPatternRemainderNode(Skipped(), diags, colonColon, pat);
             }
 
             ExceptionPatternNode ParseExceptionPattern()

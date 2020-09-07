@@ -572,11 +572,11 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
             <token name="OpenBracket" />
             <children name="Elements" type="Pattern" separated="true" />
             <token name="CloseBracket" />
-            <child name="Remainder" type="PatternRemainder" optional="true" />
+            <child name="Remainder" type="ArrayPatternRemainder" optional="true" />
             <child name="Alias" type="PatternAlias" optional="true" override="true" />
         </node>
 
-        <node name="PatternRemainder">
+        <node name="ArrayPatternRemainder">
             <token name="ColonColon" />
             <child name="Pattern" type="Pattern" />
         </node>
@@ -586,7 +586,6 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
             <token name="OpenBrace" />
             <children name="Elements" type="Expression" separated="true" />
             <token name="CloseBrace" />
-            <child name="Remainder" type="PatternRemainder" optional="true" />
             <child name="Alias" type="PatternAlias" optional="true" override="true" />
         </node>
 
@@ -595,7 +594,6 @@ The abstract syntax tree (AST) types are generated from this file by SyntaxTree.
             <token name="OpenBracket" />
             <children name="Pairs" type="MapPatternPair" separated="true" />
             <token name="CloseBracket" />
-            <child name="Remainder" type="PatternRemainder" optional="true" />
             <child name="Alias" type="PatternAlias" optional="true" override="true" />
         </node>
 
