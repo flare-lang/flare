@@ -756,18 +756,25 @@ namespace Flare.Syntax
 
                 public override void Visit(ForExpressionNode node)
                 {
+                    // We need to visit the collection first so that it can't refer to variables
+                    // introduced in the pattern.
+                    Visit(node.Collection);
+                    Visit(node.Pattern);
+
                     _scope.Function!.PushLoop(node);
 
-                    base.Visit(node);
+                    Visit(node.Body);
 
                     _scope.Function.PopLoop();
                 }
 
                 public override void Visit(WhileExpressionNode node)
                 {
+                    Visit(node.Condition);
+
                     _scope.Function!.PushLoop(node);
 
-                    base.Visit(node);
+                    Visit(node.Body);
 
                     _scope.Function.PopLoop();
                 }
