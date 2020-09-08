@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace Flare
 {
     static class Extensions
     {
+        [SuppressMessage("Microsoft.Usage", "CA1801", Justification = "Unused in Release builds.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Check<T>(this T value, string name)
             where T : Enum
@@ -19,6 +21,7 @@ namespace Flare
             return value;
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA1801", Justification = "Unused in Release builds.")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T CheckFlags<T>(this T value, string name)
             where T : Enum
