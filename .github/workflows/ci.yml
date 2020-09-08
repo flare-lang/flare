@@ -60,3 +60,8 @@ jobs:
             - name: Test project
               run: |
                   dotnet test -c ${{ matrix.configuration }} --no-build
+            - name: Notify Discord
+              if: (cancelled() || failure()) && github.event_name == 'push' && github.repository == 'flare-lang/flare'
+              uses: sarisia/actions-status-discord@v1.7.0
+              with:
+                  webhook: ${{ secrets.DISCORD_BUILDS_WEBHOOK }}
