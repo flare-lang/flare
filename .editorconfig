@@ -105,17 +105,5 @@ dotnet_style_qualification_for_property = false : error
 dotnet_style_readonly_field = true : error
 dotnet_style_require_accessibility_modifiers = omit_if_default : error
 
-[*.csproj]
-indent_size = 2
-
-[*.json]
-indent_size = 2
-
-[*.props]
-indent_size = 2
-
-[*.targets]
-indent_size = 2
-
 [*.sln]
 indent_style = tab
