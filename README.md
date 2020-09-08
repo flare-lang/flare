@@ -3,7 +3,7 @@
 [![Latest Release](https://img.shields.io/github/release/flare-lang/flare/all.svg)](https://github.com/flare-lang/flare/releases)
 [![NuGet Package](https://img.shields.io/nuget/v/flare.svg)](https://www.nuget.org/packages/flare)
 [![NuGet Package](https://img.shields.io/nuget/v/libflare.svg)](https://www.nuget.org/packages/libflare)
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/flare-lang/flare?svg=true)](https://ci.appveyor.com/project/flare-lang/flare)
+[![Build Status](https://github.com/flare-lang/flare/workflows/CI/badge.svg)](https://github.com/flare-lang/flare/actions?query=workflow%3ACI)
 [![Discord Server](https://discordapp.com/api/guilds/473031281396023317/widget.png)](https://discord.gg/EWXVkJ2)
 
 **Flare** is a dynamic, expression-oriented programming language featuring
