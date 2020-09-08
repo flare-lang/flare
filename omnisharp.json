@@ -1,3 +1,5 @@
+// Reference: https://github.com/OmniSharp/omnisharp-roslyn/wiki/Configuration-Options
+
 {
     "FormattingOptions": {
         "EnableEditorConfigSupport": true
