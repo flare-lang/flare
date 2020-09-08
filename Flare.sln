@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.28721.148
+VisualStudioVersion = 16.0.29403.142
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cli", "src\cli\cli.csproj", "{AAEAB225-A965-431E-9D6B-A5452983453A}"
 EndProject
@@ -29,5 +29,8 @@ Global
 		{BCD07909-ED8F-4E64-A044-197B24C3EB67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCD07909-ED8F-4E64-A044-197B24C3EB67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCD07909-ED8F-4E64-A044-197B24C3EB67}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {10DFA621-64F4-4A3C-AAF0-367E4BF38C4A}
 	EndGlobalSection
 EndGlobal
