@@ -7,7 +7,6 @@
         "src/*/dep": true,
         "src/*/obj": true,
         "src/*/TestResults": true,
-        "src/lib/Syntax/SyntaxTree.cs": true,
         "**/*.user": true,
         "**/*.vs": true
     }
