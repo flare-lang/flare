@@ -1,22 +1,22 @@
+using System;
 using Flare.Metadata;
 using Flare.Syntax;
-using Flare.Syntax.Lints;
 
 namespace Flare.Cli.Commands
 {
     sealed class CheckCommand : BaseCommand
     {
-        sealed class Options
+        sealed class CheckOptions
         {
         }
 
         public CheckCommand()
             : base("check", "Run syntax and lint checks on a project.")
         {
-            RegisterHandler<Options>(Run);
+            RegisterHandler<CheckOptions>(Run);
         }
 
-        int Run(Options options)
+        int Run(CheckOptions options)
         {
             var project = Project.Instance;
 
@@ -37,13 +37,10 @@ namespace Flare.Cli.Commands
             {
                 // TODO: This check is a bit brittle. It works fine for the current module loader
                 // setup, but might not in the future.
-                if (!path.StartsWith(project.SourceDirectory.FullName))
+                if (!path.StartsWith(project.SourceDirectory.FullName, StringComparison.InvariantCulture))
                     continue;
 
-                var lint = LanguageLinter.Lint(parse, project.Lints, new SyntaxLint[]
-                {
-                    new UndocumentedDeclarationLint(),
-                });
+                var lint = LanguageLinter.Lint(parse, project.Lints, LanguageLinter.Lints.Values);
 
                 foreach (var diag in lint.Diagnostics)
                     LogDiagnostic(diag);

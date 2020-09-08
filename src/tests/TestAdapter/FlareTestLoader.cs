@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -95,7 +96,7 @@ namespace Flare.Tests.TestAdapter
                 if (!line.StartsWith(prefix))
                     break;
 
-                var directive = line.Substring(1);
+                var directive = line[1..];
 
                 Match m;
 
@@ -118,7 +119,7 @@ namespace Flare.Tests.TestAdapter
         {
             try
             {
-                return File.ReadAllText(path).Trim().Replace("\r\n", "\n");
+                return File.ReadAllText(path).Trim().Replace("\r\n", "\n", StringComparison.InvariantCulture);
             }
             catch (FileNotFoundException)
             {

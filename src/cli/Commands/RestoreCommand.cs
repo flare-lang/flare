@@ -2,17 +2,17 @@ namespace Flare.Cli.Commands
 {
     sealed class RestoreCommand : BaseCommand
     {
-        sealed class Options
+        sealed class RestoreOptions
         {
         }
 
         public RestoreCommand()
             : base("restore", "Restore remote dependencies of a project. [NYI]")
         {
-            RegisterHandler<Options>(Run);
+            RegisterHandler<RestoreOptions>(Run);
         }
 
-        int Run(Options options)
+        int Run(RestoreOptions options)
         {
             var project = Project.Instance;
 

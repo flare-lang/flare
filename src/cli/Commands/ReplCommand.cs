@@ -8,17 +8,17 @@ namespace Flare.Cli.Commands
 {
     sealed class ReplCommand : BaseCommand
     {
-        sealed class Options
+        sealed class ReplOptions
         {
         }
 
         public ReplCommand()
             : base("repl", "Run an interactive evaluator.")
         {
-            RegisterHandler<Options>(Run);
+            RegisterHandler<ReplOptions>(Run);
         }
 
-        int Run(Options options)
+        int Run(ReplOptions options)
         {
             ReadLine.AutoCompletionHandler = null;
 
@@ -39,7 +39,7 @@ namespace Flare.Cli.Commands
                 {
                     var input = ReadLine.Read();
 
-                    if (input != string.Empty)
+                    if (input.Length != 0)
                         ReadLine.AddHistory(input);
 
                     var broken = false;
@@ -49,6 +49,7 @@ namespace Flare.Cli.Commands
                         quit = true;
                         break;
                     }
+
                     if (continued && input == "'repl:break")
                         broken = true;
                     else

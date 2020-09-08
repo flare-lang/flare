@@ -62,19 +62,11 @@ namespace Flare.Syntax
 
             readonly PeekableRuneEnumerator _enumerator;
 
-            SourceLocation _location;
-
             readonly List<Rune> _runes = new List<Rune>();
 
             readonly List<Rune> _trivia = new List<Rune>();
 
             readonly List<Rune> _string = new List<Rune>();
-
-            byte[] _buffer8 = new byte[1024];
-
-            char[] _buffer16 = new char[1024];
-
-            object? _value;
 
             readonly List<SyntaxTrivia> _leading = new List<SyntaxTrivia>();
 
@@ -83,6 +75,14 @@ namespace Flare.Syntax
             readonly List<SyntaxDiagnostic> _currentDiagnostics = new List<SyntaxDiagnostic>();
 
             readonly List<SyntaxDiagnostic> _allDiagnostics = new List<SyntaxDiagnostic>();
+
+            SourceLocation _location;
+
+            byte[] _buffer8 = new byte[1024];
+
+            char[] _buffer16 = new char[1024];
+
+            object? _value;
 
             public Lexer(SourceText source)
             {
@@ -126,18 +126,18 @@ namespace Flare.Syntax
             {
                 var radix = 10;
 
-                if (value.StartsWith("0B") || value.StartsWith("0b"))
+                if (value.StartsWith("0b", StringComparison.InvariantCultureIgnoreCase))
                     radix = 2;
-                else if (value.StartsWith("0O") || value.StartsWith("0o"))
+                else if (value.StartsWith("0o", StringComparison.InvariantCultureIgnoreCase))
                     radix = 8;
-                else if (value.StartsWith("0X") || value.StartsWith("0x"))
+                else if (value.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase))
                     radix = 16;
 
                 var str = value.AsSpan();
 
                 // Strip base prefix.
                 if (radix != 10)
-                    str = str.Slice(2);
+                    str = str[2..];
 
                 // Avoid BigInteger allocations/calculations for some very common cases.
 
@@ -174,6 +174,8 @@ namespace Flare.Syntax
 
                 // Strip double quotes.
                 using var enumerator = _runes.Skip(1).SkipLast(1).GetEnumerator();
+
+                Span<char> hex = stackalloc char[UnicodeEscapeLength];
 
                 while (enumerator.MoveNext())
                 {
@@ -215,12 +217,10 @@ namespace Flare.Syntax
                             break;
                         case 'U':
                         case 'u':
-                            Span<char> hex = stackalloc char[UnicodeEscapeLength];
-
                             for (var i = 0; i < UnicodeEscapeLength; i++)
                             {
                                 _ = enumerator.MoveNext();
-                                _ = enumerator.Current.EncodeToUtf16(hex.Slice(i));
+                                _ = enumerator.Current.EncodeToUtf16(hex[i..]);
                             }
 
                             code = new Rune(int.Parse(hex, NumberStyles.AllowHexSpecifier,
@@ -249,7 +249,7 @@ namespace Flare.Syntax
                 var offset = 0;
 
                 foreach (var rune in runes)
-                    offset += rune.EncodeToUtf8(_buffer8.AsSpan().Slice(offset));
+                    offset += rune.EncodeToUtf8(_buffer8.AsSpan()[offset..]);
 
                 return new ReadOnlyMemory<byte>(_buffer8, 0, count).ToArray();
             }
@@ -268,7 +268,7 @@ namespace Flare.Syntax
                 var offset = 0;
 
                 foreach (var rune in runes)
-                    offset += rune.EncodeToUtf16(_buffer16.AsSpan().Slice(offset));
+                    offset += rune.EncodeToUtf16(_buffer16.AsSpan()[offset..]);
 
                 return new string(_buffer16, 0, count);
             }
@@ -293,7 +293,7 @@ namespace Flare.Syntax
                     switch (kind)
                     {
                         case SyntaxTokenKind.AtomLiteral:
-                            value = text.Substring(1);
+                            value = text[1..];
                             break;
                         case SyntaxTokenKind.IntegerLiteral:
                             value = CreateInteger(text);
@@ -619,7 +619,7 @@ namespace Flare.Syntax
                 list.Add(Trivia(location, SyntaxTriviaKind.WhiteSpace));
             }
 
-            (SourceLocation, SyntaxTokenKind) LexOperator(SourceLocation location)
+            (SourceLocation Location, SyntaxTokenKind Kind) LexOperator(SourceLocation location)
             {
                 var c1 = ((Rune)MoveNext()!).Value;
                 var r2 = PeekNext();
@@ -720,38 +720,20 @@ namespace Flare.Syntax
                         break;
                 }
 
-                SyntaxTokenKind kind;
-
                 // At this point, it's definitely a custom operator, so determine the category.
-                switch (c1)
+                var kind = c1 switch
                 {
-                    case '%':
-                    case '*':
-                    case '/':
-                        kind = SyntaxTokenKind.MultiplicativeOperator;
-                        break;
-                    case '+':
-                    case '-':
-                    case '~':
-                        kind = SyntaxTokenKind.AdditiveOperator;
-                        break;
-                    case '<':
-                    case '>':
-                        kind = SyntaxTokenKind.ShiftOperator;
-                        break;
-                    case '&':
-                    case '^':
-                    case '|':
-                        kind = SyntaxTokenKind.BitwiseOperator;
-                        break;
-                    default:
-                        throw DebugAssert.Unreachable();
-                }
+                    '%' or '*' or '/' => SyntaxTokenKind.MultiplicativeOperator,
+                    '+' or '-' or '~' => SyntaxTokenKind.AdditiveOperator,
+                    '<' or '>' => SyntaxTokenKind.ShiftOperator,
+                    '&' or '^' or '|' => SyntaxTokenKind.BitwiseOperator,
+                    _ => throw DebugAssert.Unreachable(),
+                };
 
                 return (location, kind);
             }
 
-            (SourceLocation, SyntaxTokenKind) LexDelimiter(SyntaxTokenKind kind, SourceLocation location)
+            (SourceLocation Location, SyntaxTokenKind Kind) LexDelimiter(SyntaxTokenKind kind, SourceLocation location)
             {
                 ConsumeNext();
 
@@ -766,7 +748,8 @@ namespace Flare.Syntax
                 return (location, kind);
             }
 
-            (SourceLocation, SyntaxTokenKind) LexDelimiterOrAtom(SyntaxTokenKind kind, SourceLocation location)
+            (SourceLocation Location, SyntaxTokenKind Kind) LexDelimiterOrAtom(SyntaxTokenKind kind,
+                SourceLocation location)
             {
                 ConsumeNext();
 
@@ -844,7 +827,8 @@ namespace Flare.Syntax
                 return (location, kind);
             }
 
-            (SourceLocation, SyntaxTokenKind) LexIdentifier(SyntaxTokenKind kind, SourceLocation location, bool keyword)
+            (SourceLocation Location, SyntaxTokenKind Kind) LexIdentifier(SyntaxTokenKind kind, SourceLocation location,
+                bool keyword)
             {
                 ConsumeNext();
 
@@ -998,7 +982,7 @@ namespace Flare.Syntax
                 return (location, kind);
             }
 
-            (SourceLocation, SyntaxTokenKind) LexNumberLiteral(SourceLocation location)
+            (SourceLocation Location, SyntaxTokenKind Kind) LexNumberLiteral(SourceLocation location)
             {
                 var c = ((Rune)MoveNext()!).Value;
                 var radix = 10;
@@ -1120,7 +1104,7 @@ namespace Flare.Syntax
                         $"Expected digit, but found {(PeekNext() is Rune r ? $"'{r}'" : "end of input")}");
 
                 // Do we have an exponent part?
-                if (!(PeekNext() is Rune exp) || (exp.Value != 'E' && exp.Value != 'e'))
+                if (PeekNext() is not Rune exp || (exp.Value != 'E' && exp.Value != 'e'))
                     return (_location, SyntaxTokenKind.RealLiteral);
 
                 ConsumeNext();
@@ -1161,7 +1145,7 @@ namespace Flare.Syntax
                 return (_location, SyntaxTokenKind.RealLiteral);
             }
 
-            (SourceLocation, SyntaxTokenKind) LexStringLiteral(SourceLocation location)
+            (SourceLocation Location, SyntaxTokenKind Kind) LexStringLiteral(SourceLocation location)
             {
                 ConsumeNext();
 

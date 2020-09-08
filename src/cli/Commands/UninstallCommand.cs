@@ -2,17 +2,17 @@ namespace Flare.Cli.Commands
 {
     sealed class UninstallCommand : BaseCommand
     {
-        sealed class Options
+        sealed class UninstallOptions
         {
         }
 
         public UninstallCommand()
             : base("uninstall", "Uninstall an executable project. [NYI]")
         {
-            RegisterHandler<Options>(Run);
+            RegisterHandler<UninstallOptions>(Run);
         }
 
-        int Run(Options options)
+        int Run(UninstallOptions options)
         {
             var project = Project.Instance;
 

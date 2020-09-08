@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Flare.Metadata;
 using Flare.Syntax;
@@ -51,6 +52,7 @@ namespace Flare.Cli
                 Instance = new Project(path);
         }
 
+        [SuppressMessage("Microsoft.Globalization", "CA1308", Justification = "Values are well-known.")]
         Project(string path)
         {
             ProjectDirectory = new DirectoryInfo(Path.GetDirectoryName(path)!);

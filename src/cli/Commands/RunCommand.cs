@@ -6,7 +6,7 @@ namespace Flare.Cli.Commands
 {
     sealed class RunCommand : BaseCommand
     {
-        sealed class Options
+        sealed class RunOptions
         {
             public string[] Arguments { get; set; } = null!;
         }
@@ -16,10 +16,10 @@ namespace Flare.Cli.Commands
         {
             AddArgument<string[]>("arguments", "Arguments to be passed to the program.", ArgumentArity.ZeroOrMore);
 
-            RegisterHandler<Options>(Run);
+            RegisterHandler<RunOptions>(Run);
         }
 
-        int Run(Options options)
+        int Run(RunOptions options)
         {
             var project = Project.Instance;
 

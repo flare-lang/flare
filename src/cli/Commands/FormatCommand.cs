@@ -2,17 +2,17 @@ namespace Flare.Cli.Commands
 {
     sealed class FormatCommand : BaseCommand
     {
-        sealed class Options
+        sealed class FormatOptions
         {
         }
 
         public FormatCommand()
             : base("format", "Format source text files of a project. [NYI]")
         {
-            RegisterHandler<Options>(Run);
+            RegisterHandler<FormatOptions>(Run);
         }
 
-        int Run(Options options)
+        int Run(FormatOptions options)
         {
             var project = Project.Instance;
 

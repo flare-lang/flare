@@ -37,6 +37,7 @@ csharp_space_after_colon_in_inheritance_clause = true
 csharp_space_after_comma = true
 csharp_space_after_dot = false
 csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_after_semicolon_in_for_statement = true
 csharp_space_around_binary_operators = before_and_after
 csharp_space_around_declaration_statements = false
 csharp_space_before_colon_in_inheritance_clause = true
@@ -104,6 +105,45 @@ dotnet_style_qualification_for_method = false : error
 dotnet_style_qualification_for_property = false : error
 dotnet_style_readonly_field = true : error
 dotnet_style_require_accessibility_modifiers = omit_if_default : error
+
+# Reference: https://docs.microsoft.com/en-us/visualstudio/code-quality/code-analysis-warnings-for-managed-code-by-checkid
+[*.cs]
+dotnet_diagnostic.CA1032.severity = none
+dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.CA1065.severity = none
+dotnet_diagnostic.CA1716.severity = none
+dotnet_diagnostic.CA1724.severity = none
+dotnet_diagnostic.CA1810.severity = none
+dotnet_diagnostic.CA1812.severity = none # TODO: Enable later.
+dotnet_diagnostic.CA2229.severity = none
+
+# Reference: https://github.com/DotNetAnalyzers/StyleCopAnalyzers/tree/master/documentation
+[*.cs]
+dotnet_diagnostic.SA0001.severity = none
+dotnet_diagnostic.SA1101.severity = none
+dotnet_diagnostic.SA1116.severity = none
+dotnet_diagnostic.SA1117.severity = none
+dotnet_diagnostic.SA1118.severity = none
+dotnet_diagnostic.SA1200.severity = none
+dotnet_diagnostic.SA1201.severity = none
+dotnet_diagnostic.SA1202.severity = none
+dotnet_diagnostic.SA1204.severity = none
+dotnet_diagnostic.SA1309.severity = none
+dotnet_diagnostic.SA1400.severity = none
+dotnet_diagnostic.SA1407.severity = none
+dotnet_diagnostic.SA1503.severity = none
+dotnet_diagnostic.SA1512.severity = none
+dotnet_diagnostic.SA1519.severity = none
+dotnet_diagnostic.SA1520.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1601.severity = none
+dotnet_diagnostic.SA1602.severity = none
+dotnet_diagnostic.SA1633.severity = none
+
+[*.cs]
+dotnet_diagnostic.IDE0011.severity = none
+dotnet_diagnostic.IDE0045.severity = silent
+dotnet_diagnostic.IDE0046.severity = silent
 
 [*.sln]
 indent_style = tab

@@ -2,17 +2,17 @@ namespace Flare.Cli.Commands
 {
     sealed class DocCommand : BaseCommand
     {
-        sealed class Options
+        sealed class DocOptions
         {
         }
 
         public DocCommand()
             : base("doc", "Build documentation for a project. [NYI]")
         {
-            RegisterHandler<Options>(Run);
+            RegisterHandler<DocOptions>(Run);
         }
 
-        int Run(Options options)
+        int Run(DocOptions options)
         {
             var project = Project.Instance;
 

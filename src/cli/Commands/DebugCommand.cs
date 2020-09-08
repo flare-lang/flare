@@ -2,17 +2,17 @@ namespace Flare.Cli.Commands
 {
     sealed class DebugCommand : BaseCommand
     {
-        sealed class Options
+        sealed class DebugOptions
         {
         }
 
         public DebugCommand()
             : base("debug", "Interactively debug a project. [NYI]")
         {
-            RegisterHandler<Options>(Run);
+            RegisterHandler<DebugOptions>(Run);
         }
 
-        int Run(Options options)
+        int Run(DebugOptions options)
         {
             var project = Project.Instance;
 

@@ -7,7 +7,7 @@ namespace Flare.Cli.Commands
 {
     sealed class ScriptCommand : BaseCommand
     {
-        sealed class Options
+        sealed class ScriptOptions
         {
             public FileInfo Module { get; set; } = null!;
 
@@ -22,10 +22,10 @@ namespace Flare.Cli.Commands
             AddArgument<FileInfo>("module", "Entry point module.", ArgumentArity.ExactlyOne);
             AddArgument<string[]>("arguments", "Arguments to be passed to the program.", ArgumentArity.ZeroOrMore);
 
-            RegisterHandler<Options>(Run);
+            RegisterHandler<ScriptOptions>(Run);
         }
 
-        int Run(Options options)
+        int Run(ScriptOptions options)
         {
             var path = options.Module.FullName;
 
@@ -39,7 +39,9 @@ namespace Flare.Cli.Commands
 
             _ = loader.SearchPaths.Add(Path.GetDirectoryName(path)!);
 
-            var text = StringSourceText.FromAsync(path, File.OpenRead(path)).Result;
+            using var file = File.OpenRead(path);
+
+            var text = StringSourceText.FromAsync(path, file).Result;
             var context = new SyntaxContext();
 
             try

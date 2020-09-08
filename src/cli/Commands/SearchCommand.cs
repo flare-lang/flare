@@ -2,17 +2,17 @@ namespace Flare.Cli.Commands
 {
     sealed class SearchCommand : BaseCommand
     {
-        sealed class Options
+        sealed class SearchOptions
         {
         }
 
         public SearchCommand()
             : base("search", "Search the package registry. [NYI]")
         {
-            RegisterHandler<Options>(Run);
+            RegisterHandler<SearchOptions>(Run);
         }
 
-        int Run(Options options)
+        int Run(SearchOptions options)
         {
             // TODO
             Log.WarningLine("This command is not yet implemented.");

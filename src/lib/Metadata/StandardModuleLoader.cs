@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using Flare.Syntax;
@@ -22,7 +23,7 @@ namespace Flare.Metadata
         {
             var loc = Assembly.GetExecutingAssembly().Location;
 
-            _assemblyPath = loc != string.Empty ? loc : "<libflare>";
+            _assemblyPath = loc.Length != 0 ? loc : "<libflare>";
         }
 
         public StandardModuleLoader(ModuleLoaderMode mode)
@@ -30,6 +31,7 @@ namespace Flare.Metadata
         {
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031", Justification = "TODO")]
         static SourceText? TryLoadSourceText(string directory, string path)
         {
             var full = Path.GetFullPath(Path.Combine(directory, Path.ChangeExtension(path, ModuleFileNameExtension)!));
@@ -45,7 +47,7 @@ namespace Flare.Metadata
             }
         }
 
-        string[] GetSearchPaths(EnvironmentVariableTarget target)
+        static string[] GetSearchPaths(EnvironmentVariableTarget target)
         {
             var value = Environment.GetEnvironmentVariable(EnvironmentVariableName, target);
 

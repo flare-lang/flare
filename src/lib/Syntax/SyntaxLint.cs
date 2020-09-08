@@ -11,32 +11,32 @@ namespace Flare.Syntax
 
         public virtual SyntaxDiagnosticSeverity DefaultSeverity => SyntaxDiagnosticSeverity.Warning;
 
-        public virtual IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(ProgramNode node)
+        public virtual IEnumerable<(SyntaxNode Node, SyntaxDiagnostic Diagnostic)> Run(ProgramNode node)
         {
             return Array.Empty<(SyntaxNode, SyntaxDiagnostic)>();
         }
 
-        public virtual IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(DeclarationNode node)
+        public virtual IEnumerable<(SyntaxNode Node, SyntaxDiagnostic Diagnostic)> Run(DeclarationNode node)
         {
             return Array.Empty<(SyntaxNode, SyntaxDiagnostic)>();
         }
 
-        public virtual IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(NamedDeclarationNode node)
+        public virtual IEnumerable<(SyntaxNode Node, SyntaxDiagnostic Diagnostic)> Run(NamedDeclarationNode node)
         {
             return Array.Empty<(SyntaxNode, SyntaxDiagnostic)>();
         }
 
-        public virtual IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(StatementNode node)
+        public virtual IEnumerable<(SyntaxNode Node, SyntaxDiagnostic Diagnostic)> Run(StatementNode node)
         {
             return Array.Empty<(SyntaxNode, SyntaxDiagnostic)>();
         }
 
-        public virtual IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(ExpressionNode node)
+        public virtual IEnumerable<(SyntaxNode Node, SyntaxDiagnostic Diagnostic)> Run(ExpressionNode node)
         {
             return Array.Empty<(SyntaxNode, SyntaxDiagnostic)>();
         }
 
-        public virtual IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(PatternNode node)
+        public virtual IEnumerable<(SyntaxNode Node, SyntaxDiagnostic Diagnostic)> Run(PatternNode node)
         {
             return Array.Empty<(SyntaxNode, SyntaxDiagnostic)>();
         }

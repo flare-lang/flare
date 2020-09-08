@@ -1,31 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>flare-tests.TestAdapter</AssemblyName>
-    <RootNamespace>Flare.Tests</RootNamespace>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\cli\cli.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Appveyor.TestLogger">
-      <Version>2.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk">
-      <Version>16.3.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub">
-      <PrivateAssets>all</PrivateAssets>
-      <Version>1.0.0-beta2-19367-01</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.TestPlatform.ObjectModel">
-      <Version>16.3.0</Version>
-    </PackageReference>
-    <PackageReference Include="xunit">
-      <Version>2.4.1</Version>
-    </PackageReference>
-    <PackageReference Include="xunit.runner.visualstudio">
-      <Version>2.4.1</Version>
-    </PackageReference>
-  </ItemGroup>
+    <PropertyGroup>
+        <AssemblyName>flare-tests.TestAdapter</AssemblyName>
+        <RootNamespace>Flare.Tests</RootNamespace>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\cli\cli.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk">
+            <Version>$(MicrosoftNETTestSdkVersion)</Version>
+        </PackageReference>
+        <PackageReference Include="Microsoft.TestPlatform.ObjectModel">
+            <Version>$(MicrosoftTestPlatformObjectModelVersion)</Version>
+        </PackageReference>
+        <PackageReference Include="xunit">
+            <Version>$(xunitVersion)</Version>
+        </PackageReference>
+        <PackageReference Include="xunit.runner.visualstudio">
+            <Version>$(xunitrunnervisualstudioVersion)</Version>
+        </PackageReference>
+    </ItemGroup>
 </Project>

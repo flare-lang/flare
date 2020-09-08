@@ -2,17 +2,17 @@ namespace Flare.Cli.Commands
 {
     sealed class InstallCommand : BaseCommand
     {
-        sealed class Options
+        sealed class InstallOptions
         {
         }
 
         public InstallCommand()
             : base("install", "Install an executable project. [NYI]")
         {
-            RegisterHandler<Options>(Run);
+            RegisterHandler<InstallOptions>(Run);
         }
 
-        int Run(Options options)
+        int Run(InstallOptions options)
         {
             var project = Project.Instance;
 

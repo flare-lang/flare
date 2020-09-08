@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 namespace Flare.Tests.TestAdapter
 {
     [ExtensionUri(ExecutorUri)]
+    [SuppressMessage("Microsoft.Design", "CA1001", Justification = "Executor would not be disposed by the test host.")]
     public sealed class FlareTestExecutor : ITestExecutor
     {
         public const string ExecutorUri = "executor://" + nameof(FlareTestExecutor);

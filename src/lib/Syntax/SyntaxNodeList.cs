@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Flare.Syntax
 {
+    [SuppressMessage("Microsoft.Performance", "CA1815", Justification = "Unnecessary.")]
     public readonly struct SyntaxNodeList<T> : IReadOnlyList<T>
         where T : SyntaxNode
     {

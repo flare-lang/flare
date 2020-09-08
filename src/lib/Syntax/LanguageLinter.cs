@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Flare.Syntax.Lints;
 
@@ -65,6 +66,7 @@ namespace Flare.Syntax
                 _diagnostics.Add(diag);
             }
 
+            [SuppressMessage("Microsoft.Globalization", "CA1308", Justification = "Values are well-known.")]
             SyntaxLintConfiguration Configure(SyntaxNodeList<AttributeNode> attributes,
                 SyntaxLintConfiguration configuration)
             {
@@ -72,12 +74,12 @@ namespace Flare.Syntax
                 {
                     var ident = attr.NameToken.Text;
 
-                    if (!ident.StartsWith(AttributePrefix))
+                    if (!ident.StartsWith(AttributePrefix, StringComparison.InvariantCulture))
                         continue;
 
-                    var name = ident.Substring(AttributePrefix.Length);
+                    var name = ident[AttributePrefix.Length..];
 
-                    if (name == string.Empty)
+                    if (name.Length == 0)
                         continue;
 
                     var value = attr.ValueToken;
@@ -85,7 +87,7 @@ namespace Flare.Syntax
                     if (value.IsMissing)
                         continue;
 
-                    if (!(value.Value is ReadOnlyMemory<byte> str))
+                    if (value.Value is not ReadOnlyMemory<byte> str)
                     {
                         Warning(attr, value.Location,
                             "Lint severity level is not a string literal; ignoring attribute");
@@ -120,7 +122,7 @@ namespace Flare.Syntax
             }
 
             void RunLints(SyntaxLintContexts context, SyntaxLintConfiguration configuration,
-                Func<SyntaxLint, IEnumerable<(SyntaxNode, SyntaxDiagnostic)>> runner)
+                Func<SyntaxLint, IEnumerable<(SyntaxNode Node, SyntaxDiagnostic Diagnostic)>> runner)
             {
                 foreach (var lint in _lints)
                 {
@@ -192,7 +194,7 @@ namespace Flare.Syntax
 
         public const string ErrorSeverityName = "error";
 
-        public static ImmutableDictionary<string, SyntaxLint> Lints = new SyntaxLint[]
+        public static readonly ImmutableDictionary<string, SyntaxLint> Lints = new SyntaxLint[]
         {
             new UndocumentedDeclarationLint(),
         }.ToImmutableDictionary(x => x.Name);

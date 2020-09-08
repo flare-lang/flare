@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 
 namespace Flare.Cli
@@ -16,7 +17,7 @@ namespace Flare.Cli
 
                 try
                 {
-                    var msg = args.Length != 0 ? string.Format(format, args) : format;
+                    var msg = args.Length != 0 ? string.Format(CultureInfo.InvariantCulture, format, args) : format;
 
                     writer.Write(msg);
 

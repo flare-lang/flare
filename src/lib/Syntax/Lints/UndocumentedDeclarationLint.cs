@@ -24,7 +24,7 @@ namespace Flare.Syntax.Lints
                     $"The value of the 'doc' attribute must be a string literal or the 'false' Boolean literal") : null;
         }
 
-        public override IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(ProgramNode node)
+        public override IEnumerable<(SyntaxNode Node, SyntaxDiagnostic Diagnostic)> Run(ProgramNode node)
         {
             foreach (var comp in node.Path.ComponentTokens.Tokens)
                 if (comp.IsMissing)
@@ -34,7 +34,7 @@ namespace Flare.Syntax.Lints
 
             foreach (var decl in node.Declarations)
             {
-                if (!(decl is NamedDeclarationNode named) || decl is MissingNamedDeclarationNode)
+                if (decl is not NamedDeclarationNode named || decl is MissingNamedDeclarationNode)
                     continue;
 
                 if (named.VisibilityKeywordToken?.Kind == SyntaxTokenKind.PubKeyword)
@@ -61,7 +61,7 @@ namespace Flare.Syntax.Lints
                 yield return (node, diag);
         }
 
-        public override IEnumerable<(SyntaxNode, SyntaxDiagnostic)> Run(NamedDeclarationNode node)
+        public override IEnumerable<(SyntaxNode Node, SyntaxDiagnostic Diagnostic)> Run(NamedDeclarationNode node)
         {
             if (node.VisibilityKeywordToken?.Kind != SyntaxTokenKind.PubKeyword)
                 yield break;

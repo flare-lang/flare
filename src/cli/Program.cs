@@ -1,6 +1,7 @@
 using System;
 using System.CommandLine.Builder;
 using System.CommandLine.Invocation;
+using System.CommandLine.Parsing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -33,7 +34,7 @@ namespace Flare.Cli
                     .Select(x => x.Name).Concat(result.Tokens.Select(x => x.Value)).ToArray());
             }
 
-            await next(context);
+            await next(context).ConfigureAwait(false);
         }
 
         static async Task ErrorMiddleware(InvocationContext context, Func<InvocationContext, Task> next)
@@ -41,7 +42,7 @@ namespace Flare.Cli
             if (context.ParseResult.Errors.Count != 0)
                 context.InvocationResult = new ParseErrorResult();
             else
-                await next(context);
+                await next(context).ConfigureAwait(false);
         }
 
         static int Main(string[] args)

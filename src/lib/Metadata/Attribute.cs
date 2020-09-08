@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Numerics;
 using System.Text;
 
@@ -23,8 +24,8 @@ namespace Flare.Metadata
                 null => "nil",
                 bool b => b ? "true" : "false",
                 string a => $":{a}",
-                BigInteger i => i.ToString(),
-                double d => d.ToString(),
+                BigInteger i => i.ToString(CultureInfo.InvariantCulture),
+                double d => d.ToString(CultureInfo.InvariantCulture),
                 ReadOnlyMemory<byte> s => $"\"{Encoding.UTF8.GetString(s.Span)}\"",
                 _ => throw DebugAssert.Unreachable(),
             };

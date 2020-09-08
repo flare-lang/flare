@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Flare.Syntax
 {
+    [SuppressMessage("Microsoft.Performance", "CA1815", Justification = "Unnecessary.")]
     public readonly struct SeparatedSyntaxNodeList<T>
         where T : SyntaxNode
     {

@@ -2,7 +2,7 @@ namespace Flare.Cli.Commands
 {
     sealed class CleanCommand : BaseCommand
     {
-        sealed class Options
+        sealed class CleanOptions
         {
             public bool Deps { get; set; }
         }
@@ -12,10 +12,10 @@ namespace Flare.Cli.Commands
         {
             AddOption<bool>("-d", "--deps", "Clean locally restored dependencies.");
 
-            RegisterHandler<Options>(Run);
+            RegisterHandler<CleanOptions>(Run);
         }
 
-        int Run(Options options)
+        int Run(CleanOptions options)
         {
             var project = Project.Instance;
 

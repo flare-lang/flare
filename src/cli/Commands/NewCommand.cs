@@ -1,5 +1,6 @@
 using System;
 using System.CommandLine;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Flare.Metadata;
 using Flare.Syntax;
@@ -8,7 +9,7 @@ namespace Flare.Cli.Commands
 {
     sealed class NewCommand : BaseCommand
     {
-        sealed class Options
+        sealed class NewOptions
         {
             public ProjectType Type { get; set; }
 
@@ -28,10 +29,11 @@ namespace Flare.Cli.Commands
 
             AddOption<bool>("-f", "--force", "Proceed even if existing files would be overwritten.");
 
-            RegisterHandler<Options>(Run);
+            RegisterHandler<NewOptions>(Run);
         }
 
-        int Run(Options options)
+        [SuppressMessage("Microsoft.Globalization", "CA1308", Justification = "Values are well-known.")]
+        int Run(NewOptions options)
         {
             if (!ModulePath.IsValidComponent(options.Name))
             {

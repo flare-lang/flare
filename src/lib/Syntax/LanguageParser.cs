@@ -291,7 +291,7 @@ namespace Flare.Syntax
                 return false;
             }
 
-            ImmutableArray<SyntaxToken> Skipped()
+            static ImmutableArray<SyntaxToken> Skipped()
             {
                 return ImmutableArray<SyntaxToken>.Empty;
             }
@@ -301,7 +301,7 @@ namespace Flare.Syntax
                 skipped = skipped.Add(_stream.Move());
             }
 
-            ImmutableArray<SyntaxDiagnostic> Diagnostics()
+            static ImmutableArray<SyntaxDiagnostic> Diagnostics()
             {
                 return ImmutableArray<SyntaxDiagnostic>.Empty;
             }

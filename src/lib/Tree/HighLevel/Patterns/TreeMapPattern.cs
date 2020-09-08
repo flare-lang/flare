@@ -2,13 +2,13 @@ using System.Collections.Immutable;
 
 namespace Flare.Tree.HighLevel.Patterns
 {
-    sealed class TreeMapNode : TreePattern
+    sealed class TreeMapPattern : TreePattern
     {
         public ImmutableArray<TreeMapPatternPair> Pairs { get; }
 
         public TreePattern? Remainder { get; }
 
-        public TreeMapNode(TreeLocal? alias, ImmutableArray<TreeMapPatternPair> pairs, TreePattern? remainder)
+        public TreeMapPattern(TreeLocal? alias, ImmutableArray<TreeMapPatternPair> pairs, TreePattern? remainder)
             : base(alias)
         {
             Pairs = pairs;

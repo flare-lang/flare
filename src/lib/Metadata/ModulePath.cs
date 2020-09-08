@@ -39,7 +39,7 @@ namespace Flare.Metadata
         {
             var first = true;
 
-            foreach (var c in name.AsSpan().Slice(1))
+            foreach (var c in name.AsSpan()[1..])
             {
                 if (!(c >= 'A' || c <= 'Z') && (first || (!(c >= '0' || c <= '9') && !(c >= 'a' || c <= 'z'))))
                     return false;

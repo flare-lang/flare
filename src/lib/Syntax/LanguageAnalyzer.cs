@@ -53,8 +53,6 @@ namespace Flare.Syntax
 
                     readonly Dictionary<BlockExpressionNode, int> _depths = new Dictionary<BlockExpressionNode, int>();
 
-                    int _depth;
-
                     readonly Stack<(int, UseStatementNode)> _uses = new Stack<(int, UseStatementNode)>();
 
                     readonly Stack<PrimaryExpressionNode> _loops = new Stack<PrimaryExpressionNode>();
@@ -63,6 +61,8 @@ namespace Flare.Syntax
 
                     readonly Dictionary<SyntaxSymbol, SyntaxUpvalueSymbol> _upvalues =
                         new Dictionary<SyntaxSymbol, SyntaxUpvalueSymbol>();
+
+                    int _depth;
 
                     int _slot;
 
@@ -99,7 +99,7 @@ namespace Flare.Syntax
                     public override bool IsMutable(string name)
                     {
                         // Lambdas can't mutate upvalues.
-                        return Symbols.TryGetValue(name, out var sym) ? sym.Kind == SyntaxSymbolKind.Mutable : false;
+                        return Symbols.TryGetValue(name, out var sym) && sym.Kind == SyntaxSymbolKind.Mutable;
                     }
 
                     public void Descend(BlockExpressionNode block)
@@ -185,9 +185,9 @@ namespace Flare.Syntax
 
                 readonly SyntaxContext _context;
 
-                ModulePath? _path;
-
                 readonly Dictionary<string, ModulePath> _aliases = new Dictionary<string, ModulePath>();
+
+                ModulePath? _path;
 
                 Scope _scope = new Scope(null);
 
@@ -288,7 +288,7 @@ namespace Flare.Syntax
 
                     foreach (var decl in node.Declarations)
                     {
-                        if (!(decl is UseDeclarationNode use))
+                        if (decl is not UseDeclarationNode use)
                             continue;
 
                         var path = CreateCorrectPath(use.Path);
@@ -318,7 +318,7 @@ namespace Flare.Syntax
                                     $"Module alias '{name}' declared multiple times");
                         }
 
-                        if (!(LoadModule(use, use.Path.ComponentTokens.Tokens[0].Location, path) is Module mod))
+                        if (LoadModule(use, use.Path.ComponentTokens.Tokens[0].Location, path) is not Module mod)
                             continue;
 
                         // Don't import symbols if the module is aliased.
@@ -345,7 +345,7 @@ namespace Flare.Syntax
 
                     foreach (var decl in node.Declarations)
                     {
-                        if (!(decl is NamedDeclarationNode named) || decl is MissingNamedDeclarationNode)
+                        if (decl is not NamedDeclarationNode named || decl is MissingNamedDeclarationNode)
                             continue;
 
                         var name = named.NameToken;
@@ -364,7 +364,7 @@ namespace Flare.Syntax
 
                         foreach (var decl2 in node.Declarations)
                         {
-                            if (decl2 == decl || !(decl2 is NamedDeclarationNode named2) ||
+                            if (decl2 == decl || decl2 is not NamedDeclarationNode named2 ||
                                 decl2 is MissingNamedDeclarationNode)
                                 continue;
 
@@ -397,7 +397,7 @@ namespace Flare.Syntax
 
                     foreach (var decl in node.Declarations)
                     {
-                        if (!(decl is TestDeclarationNode test))
+                        if (decl is not TestDeclarationNode test)
                             continue;
 
                         var name = test.NameToken;

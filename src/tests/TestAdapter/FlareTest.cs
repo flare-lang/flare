@@ -138,8 +138,8 @@ namespace Flare.Tests.TestAdapter
 
             static string Normalize(StringBuilder output)
             {
-                return _paths.Replace(output.ToString().Trim().Replace("\r\n", "\n"),
-                    m => m.Groups[1].Value.Replace("\\", "/") + m.Groups[2].Value);
+                return _paths.Replace(output.ToString().Trim().Replace("\r\n", "\n", StringComparison.InvariantCulture),
+                    m => m.Groups[1].Value.Replace("\\", "/", StringComparison.InvariantCulture) + m.Groups[2].Value);
             }
 
             var stdout2 = Normalize(stdout);

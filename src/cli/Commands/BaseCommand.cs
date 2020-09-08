@@ -2,6 +2,8 @@ using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -71,6 +73,7 @@ namespace Flare.Cli.Commands
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031", Justification = "TODO")]
         static void LogCaretMarker(SourceLocation location)
         {
             string[] lines;
@@ -87,7 +90,6 @@ namespace Flare.Cli.Commands
                 return;
             }
 
-
             var indexed = lines.Select((str, ln) => (ln: ln + 1, str));
             var actual = indexed.Where(x => x.ln == location.Line).Select(x => x.str).SingleOrDefault();
 
@@ -98,11 +100,11 @@ namespace Flare.Cli.Commands
 
             var lead = indexed.Where(x => x.ln >= location.Line - context && x.ln < location.Line);
             var trail = indexed.Where(x => x.ln > location.Line && x.ln <= location.Line + context);
-            var llen = indexed.Last().ln.ToString().Length;
+            var llen = indexed.Last().ln.ToString(CultureInfo.InvariantCulture).Length;
 
             void PrintLine(int line, string text)
             {
-                Log.Marker("{0} | ", line.ToString().PadLeft(llen));
+                Log.Marker("{0} | ", line.ToString(CultureInfo.InvariantCulture).PadLeft(llen));
                 Log.ContextLine("{0}", text);
             }
 
@@ -130,7 +132,7 @@ namespace Flare.Cli.Commands
                     PrintLine(ln, str);
         }
 
-        protected static (bool, string) RunGit(string args)
+        protected static (bool Result, string Output) RunGit(string args)
         {
             var result = new StringBuilder();
 

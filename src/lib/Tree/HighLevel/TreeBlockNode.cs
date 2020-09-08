@@ -7,7 +7,7 @@ namespace Flare.Tree.HighLevel
     {
         public ImmutableArray<TreeReference> Expressions { get; }
 
-        public override TreeType Type => Expressions[Expressions.Length - 1].Value.Type;
+        public override TreeType Type => Expressions[^1].Value.Type;
 
         public TreeBlockNode(TreeContext context, SourceLocation location, ImmutableArray<TreeReference> expressions)
             : base(context, location)

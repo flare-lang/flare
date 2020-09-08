@@ -25,7 +25,7 @@ namespace Flare.Tests.TestAdapter
         protected override void GetArguments(out string arguments, out string directory)
         {
             arguments = $"{File.Name} {Arguments}";
-            directory = File.DirectoryName;
+            directory = File.DirectoryName!;
         }
     }
 }

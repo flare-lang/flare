@@ -5,17 +5,17 @@ namespace Flare.Cli.Commands
 {
     sealed class TestCommand : BaseCommand
     {
-        sealed class Options
+        sealed class TestOptions
         {
         }
 
         public TestCommand()
             : base("test", "Run unit tests of a project.")
         {
-            RegisterHandler<Options>(Run);
+            RegisterHandler<TestOptions>(Run);
         }
 
-        int Run(Options options)
+        int Run(TestOptions options)
         {
             var project = Project.Instance;
 

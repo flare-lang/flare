@@ -46,7 +46,7 @@ namespace Flare.Syntax
             if (self)
                 yield return this;
 
-            SyntaxNode? current = this;
+            var current = this;
 
             while ((current = current.Parent) != null)
                 yield return current;
@@ -105,7 +105,7 @@ namespace Flare.Syntax
         {
             var result = _annotations.TryGetValue(name, out var obj);
 
-            value = result ? (T)obj : default!;
+            value = (result ? (T)obj : default)!;
 
             return result;
         }
