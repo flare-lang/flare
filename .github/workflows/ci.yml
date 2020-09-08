@@ -52,7 +52,7 @@ jobs:
               run: |
                   rids="linux-arm linux-arm64 linux-x64 osx-x64 win-arm win-arm64 win-x64 win-x86"
                   for rid in $rids; do
-                      dotnet publish -c ${{ matrix.configuration }} -r $rid --no-build
+                      dotnet publish -c ${{ matrix.configuration }} -r $rid -p:PublishSingleFile=true --no-build
                   done
             - name: Test project
               run: |
