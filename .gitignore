@@ -1,13 +1,10 @@
 # Reference: https://git-scm.com/docs/gitignore
 
-*.user
-.flare
-.vs
-.vscode
+/pkg
 /src/*/bin
 /src/*/dep
 /src/*/obj
 /src/*/TestResults
 /src/lib/Syntax/SyntaxTree.cs
-/src/tests/project/*/bin
-/src/tests/project/*/dep
+*.user
+.vs
