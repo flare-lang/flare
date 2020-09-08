@@ -5,6 +5,5 @@
 /src/*/dep
 /src/*/obj
 /src/*/TestResults
-/src/lib/Syntax/SyntaxTree.cs
 *.user
 .vs

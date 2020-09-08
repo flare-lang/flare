@@ -45,7 +45,6 @@ jobs:
                   markdownlint *.md
             - name: Build project
               run: |
-                  DOTNET_ROLL_FORWARD=LatestMajor dotnet t4 src/lib/Syntax/SyntaxTree.tt
                   dotnet build -c ${{ matrix.configuration }} --no-restore
             - name: Pack project
               run: |
