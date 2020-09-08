@@ -1,4 +1,4 @@
-# <img src="https://raw.githubusercontent.com/flare-lang/flare-lang.github.io/source/Flare.svg" width="32"> Flare Programming Language
+# <img src="https://github.com/flare-lang/flare-lang.github.io/raw/master/Flare.svg" width="32"> Flare Programming Language
 
 [![Latest Release](https://img.shields.io/github/release/flare-lang/flare/all.svg)](https://github.com/flare-lang/flare/releases)
 [![NuGet Package](https://img.shields.io/nuget/v/flare.svg)](https://www.nuget.org/packages/flare)
