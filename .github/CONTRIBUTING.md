@@ -18,7 +18,10 @@ Please respect the following points when posting on the issue tracker:
   [GitHub's Acceptable Use terms](https://help.github.com/articles/github-terms-of-service#c-acceptable-use).
 * Do not post off-topic comments or otherwise derail a discussion.
 
-Issues violating these rules will be closed. Comments doing so may be deleted.
+Issues and/or comments violating these rules may be deleted. Repeated violations
+may lead to
+[interaction limits](https://docs.github.com/en/github/building-a-strong-community/limiting-interactions-in-your-organization)
+being enacted.
 
 ### Labels
 
@@ -115,7 +118,7 @@ While pull requests to clean up messy/hacky code (i.e. refactoring) are welcome,
 we are not likely to accept pull requests that just change code style. Further,
 please make sure that any code you contribute adheres to the style of the
 surrounding code. The [EditorConfig](../.editorconfig) file in the project
-should be helpful for this, as should the `dotnet-format` command.
+should be helpful for this, as should the `dotnet format` command.
 
 Please try to keep your pull request free of unrelated changes. If you need to
 fix another bug in order to make your pull request work, please submit that bug
