@@ -39,7 +39,7 @@ jobs:
             - name: Upload GitHub packages
               if: github.repository == 'flare-lang/flare'
               run: |
-                  dotnet gpr push src/*/bin/Release/*.{nupkg,snupkg} -k ${{ secrets.GITHUB_TOKEN }}
+                  dotnet gpr push src/*/bin/Release/*.nupkg -k ${{ secrets.GITHUB_TOKEN }}
             - name: Upload NuGet packages
               if: github.repository == 'flare-lang/flare'
               run: |
