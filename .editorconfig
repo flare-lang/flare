@@ -115,6 +115,7 @@ dotnet_diagnostic.CA1716.severity = none
 dotnet_diagnostic.CA1724.severity = none
 dotnet_diagnostic.CA1810.severity = none
 dotnet_diagnostic.CA1812.severity = none # TODO: Enable later.
+dotnet_diagnostic.CA2100.severity = none # Work around a crash.
 dotnet_diagnostic.CA2229.severity = none
 
 # Reference: https://github.com/DotNetAnalyzers/StyleCopAnalyzers/tree/master/documentation
