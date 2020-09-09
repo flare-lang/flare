@@ -13,8 +13,6 @@ namespace Flare.Tests.TestAdapter
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 os = "windows";
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
-                os = "freebsd";
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
                 RuntimeInformation.IsOSPlatform(OSPlatform.Android))
                 os = "linux";
