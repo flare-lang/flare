@@ -10,17 +10,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk">
-            <Version>$(MicrosoftNETTestSdkVersion)</Version>
-        </PackageReference>
-        <PackageReference Include="Microsoft.TestPlatform.ObjectModel">
-            <Version>$(MicrosoftTestPlatformObjectModelVersion)</Version>
-        </PackageReference>
-        <PackageReference Include="xunit">
-            <Version>$(xunitVersion)</Version>
-        </PackageReference>
-        <PackageReference Include="xunit.runner.visualstudio">
-            <Version>$(xunitrunnervisualstudioVersion)</Version>
-        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="Microsoft.TestPlatform.ObjectModel" />
+        <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.runner.visualstudio" />
     </ItemGroup>
 </Project>

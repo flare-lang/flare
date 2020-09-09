@@ -29,18 +29,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Nett">
-            <Version>$(NettVersion)</Version>
-        </PackageReference>
-        <PackageReference Include="NuGet.Versioning">
-            <Version>$(NuGetVersioningVersion)</Version>
-        </PackageReference>
-        <PackageReference Include="ReadLine">
-            <Version>$(ReadLineVersion)</Version>
-        </PackageReference>
-        <PackageReference Include="System.CommandLine.Rendering">
-            <Version>$(SystemCommandLineRenderingVersion)</Version>
-        </PackageReference>
+        <PackageReference Include="Nett" />
+        <PackageReference Include="NuGet.Versioning" />
+        <PackageReference Include="ReadLine" />
+        <PackageReference Include="System.CommandLine.Rendering" />
     </ItemGroup>
 
     <Target AfterTargets="Publish" Condition="'$(PublishSingleFile)' == 'true'" Name="ZipSingleFile">
