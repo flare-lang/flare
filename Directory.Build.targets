@@ -10,6 +10,9 @@
         <PackageReference Update="BenchmarkDotNet">
             <Version>0.12.1</Version>
         </PackageReference>
+        <PackageReference Update="Microsoft.CodeAnalysis">
+            <Version>3.8.0-3.final</Version>
+        </PackageReference>
         <PackageReference Update="Microsoft.CodeAnalysis.FxCopAnalyzers">
             <Version>3.3.0</Version>
             <PrivateAssets>all</PrivateAssets>
@@ -40,6 +43,13 @@
         <PackageReference Update="StyleCop.Analyzers">
             <Version>1.2.0-beta.205</Version>
             <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <!-- TODO: Remove in final .NET 5.0 release. -->
+        <PackageReference Update="System.Collections.Immutable">
+            <Version>5.0.0-rc.1.20451.14</Version>
+        </PackageReference>
+        <PackageReference Update="System.Reflection.Metadata">
+            <Version>5.0.0-rc.1.20451.14</Version>
         </PackageReference>
         <PackageReference Update="System.CommandLine">
             <Version>2.0.0-beta1.20371.2</Version>

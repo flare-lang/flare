@@ -125,6 +125,10 @@ dotnet_diagnostic.IDE0045.severity = silent
 dotnet_diagnostic.IDE0046.severity = silent
 dotnet_diagnostic.IDE0050.severity = none
 
+# Reference: https://github.com/dotnet/roslyn-analyzers/blob/master/src/Microsoft.CodeAnalysis.Analyzers/Microsoft.CodeAnalysis.Analyzers.md
+[*.cs]
+dotnet_diagnostic.RS2008.severity = none
+
 # Reference: https://github.com/DotNetAnalyzers/StyleCopAnalyzers/tree/master/documentation
 [*.cs]
 dotnet_diagnostic.SA0001.severity = none

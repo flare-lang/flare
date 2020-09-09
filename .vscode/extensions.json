@@ -11,7 +11,6 @@
         "GitHub.vscode-pull-request-github",
         "hashhar.gitattributes",
         "ms-dotnettools.csharp",
-        "redhat.vscode-yaml",
-        "zbecknell.t4-support"
+        "redhat.vscode-yaml"
     ]
 }

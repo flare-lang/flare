@@ -15,6 +15,17 @@
     </ItemGroup>
 
     <ItemGroup>
+        <AdditionalFiles Include="Syntax\SyntaxTree.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
         <EmbeddedResource Include="..\core\src\**\*.fl" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\gen\gen.csproj">
+            <OutputItemType>Analyzer</OutputItemType>
+            <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+        </ProjectReference>
     </ItemGroup>
 </Project>
