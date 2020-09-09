@@ -56,6 +56,12 @@
                 "gpr"
             ]
         },
+        "nbgv": {
+            "version": "3.2.31",
+            "commands": [
+                "nbgv"
+            ]
+        },
         "sourcelink": {
             "version": "3.1.1",
             "commands": [

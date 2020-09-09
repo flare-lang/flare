@@ -7,12 +7,6 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <AssemblyVersion>0.1.0</AssemblyVersion>
-        <FileVersion>0.1.0</FileVersion>
-        <Version>0.1.0</Version>
-    </PropertyGroup>
-
-    <PropertyGroup>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
@@ -43,6 +37,7 @@
         <MicrosoftNETTestSdkVersion>16.8.0-preview-20200812-03</MicrosoftNETTestSdkVersion>
         <MicrosoftSourceLinkGitHubVersion>1.1.0-beta-20204-02</MicrosoftSourceLinkGitHubVersion>
         <MicrosoftTestPlatformObjectModelVersion>16.8.0-preview-20200812-03</MicrosoftTestPlatformObjectModelVersion>
+        <NerdbankGitVersioningVersion>3.2.31</NerdbankGitVersioningVersion>
         <NettVersion>0.15.0</NettVersion>
         <NuGetVersioningVersion>5.8.0-preview.2.6776</NuGetVersioningVersion>
         <ReadLineVersion>2.0.1</ReadLineVersion>
@@ -59,6 +54,10 @@
         </PackageReference>
         <PackageReference Include="Microsoft.SourceLink.GitHub">
             <Version>$(MicrosoftSourceLinkGitHubVersion)</Version>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Nerdbank.GitVersioning">
+            <Version>$(NerdbankGitVersioningVersion)</Version>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="StyleCop.Analyzers">

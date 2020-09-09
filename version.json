@@ -1,0 +1,22 @@
+// Reference: https://github.com/dotnet/Nerdbank.GitVersioning/blob/master/doc/versionJson.md
+
+{
+    "$schema": "https://raw.githubusercontent.com/dotnet/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json",
+    "version": "0.1-dev",
+    "publicReleaseRefSpec": [
+        "^refs/heads/v\\d+\\.\\d+$"
+    ],
+    "release": {
+        "firstUnstableTag": "dev"
+    },
+    "nugetPackageVersion": {
+        "semVer": 2
+    },
+    "cloudBuild": {
+        "buildNumber": {
+            "enabled": true,
+            "setVersionVariables": true,
+            "setAllVariables": true
+        }
+    }
+}
