@@ -65,7 +65,7 @@ jobs:
             - name: Upload GitHub packages
               if: github.event_name == 'push' && github.repository == 'flare-lang/flare' && github.ref == 'refs/heads/master' && matrix.os == 'windows-latest' && matrix.cfg == 'Release'
               run: |
-                  dotnet gpr push src/*/bin/Release/*.{nupkg,snupkg} -k ${{ secrets.GITHUB_TOKEN }}
+                  DOTNET_ROLL_FORWARD=LatestMajor dotnet gpr push src/*/bin/Release/*.{nupkg,snupkg} -k ${{ secrets.GITHUB_TOKEN }}
             - name: Notify Discord
               if: (cancelled() || failure()) && github.event_name == 'push' && github.repository == 'flare-lang/flare'
               uses: sarisia/actions-status-discord@v1.7.0
