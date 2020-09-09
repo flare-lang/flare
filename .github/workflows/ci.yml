@@ -67,7 +67,7 @@ jobs:
               run: |
                   DOTNET_ROLL_FORWARD=LatestMajor dotnet gpr push src/*/bin/Release/*.nupkg -k ${{ secrets.GITHUB_TOKEN }}
             - name: Notify Discord
-              if: (cancelled() || failure()) && github.event_name == 'push' && github.repository == 'flare-lang/flare'
+              if: failure() && github.event_name == 'push' && github.repository == 'flare-lang/flare'
               uses: sarisia/actions-status-discord@v1.7.0
               with:
                   webhook: ${{ secrets.DISCORD_BUILDS_WEBHOOK }}
