@@ -34,11 +34,15 @@ jobs:
                   for rid in $rids; do
                       dotnet publish -c Release -r $rid -p:PublishSingleFile=true
                   done
+            - name: Upload GitHub packages
+              if: github.repository == 'flare-lang/flare'
+              run: |
+                  dotnet gpr push src/*/bin/Release/*.{nupkg,snupkg} -k ${{ secrets.GITHUB_TOKEN }}
             - name: Upload NuGet packages
               if: github.repository == 'flare-lang/flare'
               run: |
                   dotnet nuget push src/*/bin/Release/*.{nupkg,snupkg} -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
-            - name: Upload GitHub packages
+            - name: Upload GitHub release
               uses: svenstaro/upload-release-action@v2
               with:
                   repo-token: ${{ secrets.GITHUB_TOKEN }}

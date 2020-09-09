@@ -23,7 +23,7 @@ jobs:
                     - macos-latest
                     - ubuntu-latest
                     - windows-latest
-                configuration:
+                cfg:
                     - Debug
                     - Release
         runs-on: ${{ matrix.os }}
@@ -47,19 +47,23 @@ jobs:
                   markdownlint *.md
             - name: Build project
               run: |
-                  dotnet build -c ${{ matrix.configuration }} --no-restore
+                  dotnet build -c ${{ matrix.cfg }} --no-restore
             - name: Pack project
               run: |
-                  dotnet pack -c ${{ matrix.configuration }} --no-build
+                  dotnet pack -c ${{ matrix.cfg }} --no-build
             - name: Publish project
               run: |
                   rids="linux-arm linux-arm64 linux-x64 osx-x64 win-arm win-arm64 win-x64 win-x86"
                   for rid in $rids; do
-                      dotnet publish -c ${{ matrix.configuration }} -r $rid -p:PublishSingleFile=true
+                      dotnet publish -c ${{ matrix.cfg }} -r $rid -p:PublishSingleFile=true
                   done
             - name: Test project
               run: |
-                  dotnet test -c ${{ matrix.configuration }} --no-build
+                  dotnet test -c ${{ matrix.cfg }} --no-build
+            - name: Upload GitHub packages
+              if: github.event_name == 'push' && github.repository == 'flare-lang/flare' && github.ref == 'refs/heads/master' && matrix.os == 'windows-latest' && matrix.cfg == 'Release'
+              run: |
+                  dotnet gpr push src/*/bin/Release/*.{nupkg,snupkg} -k ${{ secrets.GITHUB_TOKEN }}
             - name: Notify Discord
               if: (cancelled() || failure()) && github.event_name == 'push' && github.repository == 'flare-lang/flare'
               uses: sarisia/actions-status-discord@v1.7.0
