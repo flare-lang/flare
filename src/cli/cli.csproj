@@ -13,6 +13,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="flare-tests.TestAdapter" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Include="..\..\LICENSE.md; ..\..\README.md">
             <Pack>true</Pack>
             <PackagePath>%(Filename)%(Extension)</PackagePath>
