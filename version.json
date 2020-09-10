@@ -4,9 +4,10 @@
     "$schema": "https://raw.githubusercontent.com/dotnet/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json",
     "version": "0.1-dev",
     "publicReleaseRefSpec": [
-        "^refs/heads/v\\d+\\.\\d+$"
+        "^refs/heads/release/.*$"
     ],
     "release": {
+        "branchName": "release/v{version}",
         "firstUnstableTag": "dev"
     },
     "nugetPackageVersion": {
