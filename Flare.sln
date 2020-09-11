@@ -2,6 +2,8 @@
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29403.142
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bench", "src\bench\bench.csproj", "{9A0D72AD-1392-40E3-AB87-0278CE4893AE}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cli", "src\cli\cli.csproj", "{AAEAB225-A965-431E-9D6B-A5452983453A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lib", "src\lib\lib.csproj", "{A9E171A5-3748-468E-9440-CAB8BDE70F35}"
@@ -17,6 +19,10 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A0D72AD-1392-40E3-AB87-0278CE4893AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A0D72AD-1392-40E3-AB87-0278CE4893AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A0D72AD-1392-40E3-AB87-0278CE4893AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A0D72AD-1392-40E3-AB87-0278CE4893AE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AAEAB225-A965-431E-9D6B-A5452983453A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AAEAB225-A965-431E-9D6B-A5452983453A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAEAB225-A965-431E-9D6B-A5452983453A}.Release|Any CPU.ActiveCfg = Release|Any CPU

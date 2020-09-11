@@ -4,6 +4,7 @@
 /src/*/bin
 /src/*/dep
 /src/*/obj
-/src/*/TestResults
+**/BenchmarkDotNet.Artifacts
+**/TestResults
 *.user
 .vs

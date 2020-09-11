@@ -7,6 +7,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Update="BenchmarkDotNet">
+            <Version>0.12.1</Version>
+        </PackageReference>
         <PackageReference Update="Microsoft.CodeAnalysis.FxCopAnalyzers">
             <Version>3.3.0</Version>
             <PrivateAssets>all</PrivateAssets>
@@ -37,6 +40,9 @@
         <PackageReference Update="StyleCop.Analyzers">
             <Version>1.2.0-beta.205</Version>
             <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Update="System.CommandLine">
+            <Version>2.0.0-beta1.20371.2</Version>
         </PackageReference>
         <PackageReference Update="System.CommandLine.Rendering">
             <Version>0.3.0-alpha.20427.1</Version>

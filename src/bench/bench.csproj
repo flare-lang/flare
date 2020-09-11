@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <ApplicationIcon>..\..\Flare.ico</ApplicationIcon>
+        <AssemblyName>flare-bench</AssemblyName>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>Flare.Benchmarks</RootNamespace>
+        <ServerGarbageCollection>true</ServerGarbageCollection>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\lib\lib.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BenchmarkDotNet" />
+        <PackageReference Include="System.CommandLine" />
+    </ItemGroup>
+</Project>

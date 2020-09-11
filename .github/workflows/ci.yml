@@ -62,6 +62,7 @@ jobs:
             - name: Test project
               run: |
                   dotnet test -c ${{ matrix.cfg }} --no-build
+                  dotnet run -p src/bench -c ${{ matrix.cfg }} -- -t
             - name: Upload GitHub packages
               if: github.event_name == 'push' && github.repository == 'flare-lang/flare' && github.ref == 'refs/heads/master' && matrix.os == 'windows-latest' && matrix.cfg == 'Release'
               run: |

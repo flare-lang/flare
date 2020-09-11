@@ -6,7 +6,8 @@
         "src/*/bin": true,
         "src/*/dep": true,
         "src/*/obj": true,
-        "src/*/TestResults": true,
+        "**/BenchmarkDotNet.Artifacts": true,
+        "**/TestResults": true,
         "**/*.user": true,
         "**/*.vs": true
     }
