@@ -4,7 +4,6 @@ using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Flare.Cli.Commands;
 
@@ -35,14 +34,6 @@ namespace Flare.Cli
             await next(context).ConfigureAwait(false);
         }
 
-        static async Task ErrorMiddleware(InvocationContext context, Func<InvocationContext, Task> next)
-        {
-            if (context.ParseResult.Errors.Count != 0)
-                context.InvocationResult = new ParseErrorResult();
-            else
-                await next(context).ConfigureAwait(false);
-        }
-
         static int Main(string[] args)
         {
             return new CommandLineBuilder(new RootCommand())
@@ -53,10 +44,10 @@ namespace Flare.Cli
                 .UseSuggestDirective()
                 .RegisterWithDotnetSuggest()
                 .UseTypoCorrections()
+                .UseParseErrorReporting()
                 .UseExceptionHandler()
                 .CancelOnProcessTermination()
-                .UseMiddleware(FallbackMiddleware)
-                .UseMiddleware(ErrorMiddleware)
+                .UseMiddleware(FallbackMiddleware, MiddlewareOrder.ErrorReporting - 1)
                 .Build()
                 .Invoke(args);
         }
