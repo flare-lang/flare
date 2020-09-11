@@ -111,12 +111,18 @@ dotnet_style_require_accessibility_modifiers = omit_if_default : error
 dotnet_diagnostic.CA1032.severity = none
 dotnet_diagnostic.CA1062.severity = none
 dotnet_diagnostic.CA1065.severity = none
+dotnet_diagnostic.CA1303.severity = none
 dotnet_diagnostic.CA1716.severity = none
 dotnet_diagnostic.CA1724.severity = none
 dotnet_diagnostic.CA1810.severity = none
 dotnet_diagnostic.CA1812.severity = none # TODO: Enable later.
 dotnet_diagnostic.CA2100.severity = none # Work around a crash.
 dotnet_diagnostic.CA2229.severity = none
+
+[*.cs]
+dotnet_diagnostic.IDE0011.severity = none
+dotnet_diagnostic.IDE0045.severity = silent
+dotnet_diagnostic.IDE0046.severity = silent
 
 # Reference: https://github.com/DotNetAnalyzers/StyleCopAnalyzers/tree/master/documentation
 [*.cs]
@@ -140,11 +146,6 @@ dotnet_diagnostic.SA1600.severity = none
 dotnet_diagnostic.SA1601.severity = none
 dotnet_diagnostic.SA1602.severity = none
 dotnet_diagnostic.SA1633.severity = none
-
-[*.cs]
-dotnet_diagnostic.IDE0011.severity = none
-dotnet_diagnostic.IDE0045.severity = silent
-dotnet_diagnostic.IDE0046.severity = silent
 
 [*.sln]
 indent_style = tab
