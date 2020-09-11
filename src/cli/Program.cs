@@ -40,7 +40,9 @@ namespace Flare.Cli
                 .UseVersionOption()
                 .UseHelp()
                 .UseParseDirective()
+#if DEBUG
                 .UseDebugDirective()
+#endif
                 .UseSuggestDirective()
                 .RegisterWithDotnetSuggest()
                 .UseTypoCorrections()
