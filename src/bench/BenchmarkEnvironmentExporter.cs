@@ -22,7 +22,6 @@ namespace Flare.Benchmarks
                 Hardware = new
                 {
                     Architecture = host.Architecture,
-                    ProcessorName = cpu.ProcessorName,
                     PhysicalProcessorCount = cpu.PhysicalProcessorCount,
                     PhysicalCoreCount = cpu.PhysicalCoreCount,
                     LogicalCoreCount = cpu.LogicalCoreCount,
