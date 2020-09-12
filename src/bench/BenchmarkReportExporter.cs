@@ -78,6 +78,7 @@ namespace Flare.Benchmarks
             }, new JsonSerializerOptions
             {
                 NumberHandling = JsonNumberHandling.WriteAsString | JsonNumberHandling.AllowNamedFloatingPointLiterals,
+                WriteIndented = true,
             }));
         }
 
