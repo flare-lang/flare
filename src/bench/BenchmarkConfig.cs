@@ -2,7 +2,6 @@ using BenchmarkDotNet.Analysers;
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Engines;
-using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Filters;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Loggers;
@@ -24,14 +23,8 @@ namespace Flare.Benchmarks
             if (options.Filter is string filter)
                 _ = AddFilter(new GlobFilter(new[] { filter }));
 
-            if (options.Json)
-                _ = AddExporter(DefaultExporters.JsonFull);
-
-            if (options.Xml)
-                _ = AddExporter(DefaultExporters.XmlFull);
-
-            if (options.Plots)
-                _ = AddExporter(DefaultExporters.RPlot);
+            if (options.Export)
+                _ = AddExporter(new BenchmarkEnvironmentExporter(), new BenchmarkReportExporter());
 
             _ = WithOptions(ConfigOptions.JoinSummary | ConfigOptions.StopOnFirstError)
                 .AddAnalyser(
@@ -61,6 +54,7 @@ namespace Flare.Benchmarks
                     StatisticColumn.Min,
                     StatisticColumn.Median,
                     StatisticColumn.Max,
+                    StatisticColumn.Iterations,
                     StatisticColumn.OperationsPerSecond)
                 .AddLogger(ConsoleLogger.Unicode)
                 .AddJob(job);

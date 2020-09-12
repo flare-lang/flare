@@ -6,10 +6,6 @@ namespace Flare.Benchmarks
 
         public bool Test { get; private set; }
 
-        public bool Json { get; private set; }
-
-        public bool Xml { get; private set; }
-
-        public bool Plots { get; private set; }
+        public bool Export { get; private set; }
     }
 }

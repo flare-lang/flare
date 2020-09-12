@@ -18,9 +18,7 @@ namespace Flare.Benchmarks
                     Arity = ArgumentArity.ZeroOrOne,
                 },
                 new Option<bool>(new[] { "-t", "--test" }, "Run in test mode."),
-                new Option<bool>(new[] { "-j", "--json" }, "Export JSON data."),
-                new Option<bool>(new[] { "-x", "--xml" }, "Export XML data."),
-                new Option<bool>(new[] { "-p", "--plots" }, "Export R plots."),
+                new Option<bool>(new[] { "-e", "--export" }, "Export JSON data."),
             };
 
             root.Handler = CommandHandler.Create<BenchmarkOptions>(opts =>
