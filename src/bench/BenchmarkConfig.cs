@@ -27,6 +27,7 @@ namespace Flare.Benchmarks
                 _ = AddExporter(new BenchmarkEnvironmentExporter(), new BenchmarkReportExporter());
 
             _ = WithOptions(ConfigOptions.JoinSummary | ConfigOptions.StopOnFirstError)
+                .WithSummaryStyle(new BenchmarkSummaryStyle(true))
                 .AddAnalyser(
                     EnvironmentAnalyser.Default,
                     MinIterationTimeAnalyser.Default,

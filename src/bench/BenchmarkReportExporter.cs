@@ -1,6 +1,5 @@
 using System;
 using System.CommandLine.Invocation;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,14 +15,6 @@ namespace Flare.Benchmarks
 {
     sealed class BenchmarkReportExporter : ExporterBase
     {
-        sealed class ExportSummaryStyle : SummaryStyle
-        {
-            public ExportSummaryStyle()
-                : base(CultureInfo.InvariantCulture, false, null, null, false)
-            {
-            }
-        }
-
         protected override string FileExtension => "json";
 
         protected override string FileCaption => "report";
@@ -56,7 +47,7 @@ namespace Flare.Benchmarks
                 {
                     var bench = r.BenchmarkCase;
                     var stats = r.ResultStatistics;
-                    var style = new ExportSummaryStyle();
+                    var style = new BenchmarkSummaryStyle(false);
 
                     return new
                     {
