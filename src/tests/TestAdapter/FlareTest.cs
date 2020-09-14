@@ -15,6 +15,8 @@ namespace Flare.Tests.TestAdapter
 {
     abstract class FlareTest
     {
+        static readonly string _namespace = typeof(FlareTest).Namespace!;
+
         static readonly string _source = Assembly.GetExecutingAssembly().Location;
 
         static readonly Regex _paths = new Regex("^(.*)(.fl\\(\\d+,\\d+\\): .*: .*)",
@@ -69,7 +71,7 @@ namespace Flare.Tests.TestAdapter
 
         public TestCase Convert()
         {
-            return new TestCase(FullName, new Uri(FlareTestExecutor.ExecutorUri), _source)
+            return new TestCase($"{_namespace}.{FullName}", new Uri(FlareTestExecutor.ExecutorUri), _source)
             {
                 CodeFilePath = FullPath,
                 LineNumber = LineNumber,

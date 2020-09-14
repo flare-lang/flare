@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <AssemblyName>flare-tests.TestAdapter</AssemblyName>
+        <AssemblyName>Flare.Tests.TestAdapter</AssemblyName>
         <RootNamespace>Flare.Tests</RootNamespace>
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>

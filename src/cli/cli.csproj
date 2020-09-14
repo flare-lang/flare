@@ -14,7 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="flare-tests.TestAdapter" />
+        <InternalsVisibleTo Include="Flare.Tests.TestAdapter" />
     </ItemGroup>
 
     <ItemGroup>
