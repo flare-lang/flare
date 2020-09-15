@@ -24,7 +24,6 @@
         <Authors>$(Company)</Authors>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <IncludeSource>true</IncludeSource>
-        <IncludeSymbolsInSingleFile>true</IncludeSymbolsInSingleFile>
         <IsPackable>false</IsPackable>
         <IsPublishable>false</IsPublishable>
         <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
