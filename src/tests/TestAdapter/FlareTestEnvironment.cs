@@ -13,13 +13,9 @@ namespace Flare.Tests.TestAdapter
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 os = "windows";
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
-                RuntimeInformation.IsOSPlatform(OSPlatform.Android))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 os = "linux";
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.macOS) ||
-                RuntimeInformation.IsOSPlatform(OSPlatform.iOS) ||
-                RuntimeInformation.IsOSPlatform(OSPlatform.tvOS) ||
-                RuntimeInformation.IsOSPlatform(OSPlatform.watchOS))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 os = "darwin";
 
             var (arch, bits) = RuntimeInformation.ProcessArchitecture switch
