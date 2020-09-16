@@ -45,7 +45,6 @@ namespace Flare.Benchmarks
                     Version = host.RuntimeVersion,
                     IsServerGC = host.IsServerGC,
                     IsConcurrentGC = host.IsConcurrentGC,
-                    GCAllocationQuantum = host.GCAllocationQuantum,
                 },
             }, new JsonSerializerOptions
             {
