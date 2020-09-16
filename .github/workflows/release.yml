@@ -37,7 +37,7 @@ jobs:
             - name: Publish project
               run: |
                   for rid in $(jq .[] runtimes.json -r); do
-                      dotnet publish -c Release -r $rid -p:PublishSingleFile=true
+                      dotnet publish -c Release -r ${rid//[[:space:]]/} -p:PublishSingleFile=true
                   done
             - name: Upload GitHub packages
               if: github.repository == 'flare-lang/flare'

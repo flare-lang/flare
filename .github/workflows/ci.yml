@@ -60,7 +60,7 @@ jobs:
             - name: Publish project
               run: |
                   for rid in $(jq .[] runtimes.json -r); do
-                      dotnet publish -c ${{ matrix.cfg }} -r $rid -p:PublishSingleFile=true
+                      dotnet publish -c ${{ matrix.cfg }} -r ${rid//[[:space:]]/} -p:PublishSingleFile=true
                   done
             - name: Test project
               run: |
