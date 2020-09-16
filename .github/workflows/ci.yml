@@ -59,8 +59,7 @@ jobs:
                   dotnet pack -c ${{ matrix.cfg }} --no-build
             - name: Publish project
               run: |
-                  rids="linux-arm linux-arm64 linux-x64 osx-x64 win-arm win-arm64 win-x64 win-x86"
-                  for rid in $rids; do
+                  for rid in $(jq .[] runtimes.json -r); do
                       dotnet publish -c ${{ matrix.cfg }} -r $rid -p:PublishSingleFile=true
                   done
             - name: Test project
