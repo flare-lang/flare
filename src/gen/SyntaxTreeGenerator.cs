@@ -10,9 +10,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 
-// TODO: Remove in final .NET 5.0 release.
-#nullable disable
-
 namespace Flare.Generator
 {
     [Generator]
