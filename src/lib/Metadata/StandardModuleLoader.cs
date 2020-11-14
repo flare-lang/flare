@@ -19,6 +19,7 @@ namespace Flare.Metadata
 
         public HashSet<string> SearchPaths { get; } = new HashSet<string>();
 
+        [SuppressMessage("Publish", "IL3000", Justification = "Handled correctly.")]
         static StandardModuleLoader()
         {
             var loc = Assembly.GetExecutingAssembly().Location;
