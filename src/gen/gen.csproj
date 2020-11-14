@@ -7,8 +7,5 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis" />
-        <!-- TODO: Remove in final .NET 5.0 release. -->
-        <PackageReference Include="System.Collections.Immutable" />
-        <PackageReference Include="System.Reflection.Metadata" />
     </ItemGroup>
 </Project>

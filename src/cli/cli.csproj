@@ -33,7 +33,7 @@
         <PackageReference Include="Nett" />
         <PackageReference Include="NuGet.Versioning" />
         <PackageReference Include="ReadLine" />
-        <PackageReference Include="System.CommandLine.Rendering" />
+        <PackageReference Include="System.CommandLine" />
     </ItemGroup>
 
     <Target AfterTargets="Publish" Condition="'$(PublishSingleFile)' == 'true'" Name="ZipSingleFile">

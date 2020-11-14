@@ -9,13 +9,13 @@
             ]
         },
         "dotnet-counters": {
-            "version": "3.1.141901",
+            "version": "5.0.152202",
             "commands": [
               "dotnet-counters"
             ]
         },
         "dotnet-dump": {
-            "version": "3.1.141901",
+            "version": "5.0.152202",
             "commands": [
               "dotnet-dump"
             ]
@@ -27,37 +27,37 @@
             ]
         },
         "dotnet-gcdump": {
-            "version": "3.1.141901",
+            "version": "5.0.152202",
             "commands": [
               "dotnet-gcdump"
             ]
         },
         "dotnet-sos": {
-            "version": "3.1.141901",
+            "version": "5.0.152202",
             "commands": [
               "dotnet-sos"
             ]
         },
         "dotnet-symbol": {
-            "version": "1.0.142101",
+            "version": "1.0.155902",
             "commands": [
               "dotnet-symbol"
             ]
         },
         "dotnet-trace": {
-            "version": "3.1.141901",
+            "version": "5.0.152202",
             "commands": [
               "dotnet-trace"
             ]
         },
         "gpr": {
-            "version": "0.1.240",
+            "version": "0.1.257",
             "commands": [
                 "gpr"
             ]
         },
         "nbgv": {
-            "version": "3.2.31",
+            "version": "3.3.37",
             "commands": [
                 "nbgv"
             ]
