@@ -18,14 +18,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\..\LICENSE.md; ..\..\README.md">
-            <Pack>true</Pack>
-            <PackagePath>%(Filename)%(Extension)</PackagePath>
-            <Visible>true</Visible>
-        </None>
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\lib\lib.csproj" />
     </ItemGroup>
 

@@ -1,4 +1,11 @@
 <Project>
+    <ItemGroup Condition="$(IsPackable) == 'true'">
+        <None Include="$(MSBuildThisFileDirectory)LICENSE.md; $(MSBuildThisFileDirectory)README.md">
+            <Pack>true</Pack>
+            <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
+
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" />

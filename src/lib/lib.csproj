@@ -7,14 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="..\..\LICENSE.md; ..\..\README.md">
-            <Pack>true</Pack>
-            <PackagePath>%(Filename)%(Extension)</PackagePath>
-            <Visible>true</Visible>
-        </None>
-    </ItemGroup>
-
-    <ItemGroup>
         <AdditionalFiles Include="Syntax\SyntaxTree.xml" />
     </ItemGroup>
 
