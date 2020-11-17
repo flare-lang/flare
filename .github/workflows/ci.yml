@@ -30,7 +30,7 @@ jobs:
         steps:
             - uses: xt0rted/markdownlint-problem-matcher@v1
             - name: Clone repository
-              uses: actions/checkout@v2.3.2
+              uses: actions/checkout@v2.3.4
               with:
                   fetch-depth: 0
             - name: Set up Node.js
@@ -40,7 +40,7 @@ jobs:
               run: |
                   echo ::set-output name=version::$(tail -n +2 global.json | jq .sdk.version -r)
             - name: Set up .NET
-              uses: actions/setup-dotnet@v1.6.0
+              uses: actions/setup-dotnet@v1.7.2
               with:
                   dotnet-version: ${{ steps.dotnet.outputs.version }}
             - name: Install dependencies
@@ -72,6 +72,6 @@ jobs:
                   DOTNET_ROLL_FORWARD=LatestMajor dotnet gpr push src/*/bin/Release/*.nupkg -k ${{ secrets.GITHUB_TOKEN }}
             - name: Notify Discord
               if: failure() && github.event_name == 'push' && github.repository == 'flare-lang/flare'
-              uses: sarisia/actions-status-discord@v1.7.0
+              uses: sarisia/actions-status-discord@v1.8.0
               with:
                   webhook: ${{ secrets.DISCORD_BUILDS_WEBHOOK }}
