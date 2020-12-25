@@ -1,5 +1,6 @@
 using System;
 using System.CommandLine.Invocation;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -73,6 +74,7 @@ namespace Flare.Benchmarks
             }));
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2201", Justification = "Intentional.")]
         static string GitShow(string directory, string format)
         {
             var result = new StringBuilder();

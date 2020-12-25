@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -83,6 +84,7 @@ namespace Flare.Tests.TestAdapter
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1508", Justification = "TODO: False positive.")]
         static void ReadHeader(string path, char prefix, out ImmutableArray<FlareTestFilter> filters,
             out ImmutableDictionary<string, string> variables, out string arguments, out bool succeed)
         {
