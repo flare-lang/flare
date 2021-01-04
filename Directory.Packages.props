@@ -1,0 +1,43 @@
+<Project>
+    <ItemGroup>
+        <PackageVersion Include="BenchmarkDotNet">
+            <Version>0.12.1</Version>
+        </PackageVersion>
+        <PackageVersion Include="Microsoft.CodeAnalysis">
+            <Version>3.8.0</Version>
+        </PackageVersion>
+        <PackageVersion Include="Microsoft.NET.Test.Sdk">
+            <Version>16.8.3</Version>
+        </PackageVersion>
+        <PackageVersion Include="Microsoft.SourceLink.GitHub">
+            <Version>1.1.0-beta-20204-02</Version>
+        </PackageVersion>
+        <PackageVersion Include="Microsoft.TestPlatform.ObjectModel">
+            <Version>16.8.3</Version>
+        </PackageVersion>
+        <PackageVersion Include="Nerdbank.GitVersioning">
+            <Version>3.3.37</Version>
+        </PackageVersion>
+        <PackageVersion Include="Nett">
+            <Version>0.15.0</Version>
+        </PackageVersion>
+        <PackageVersion Include="NuGet.Versioning">
+            <Version>5.8.0</Version>
+        </PackageVersion>
+        <PackageVersion Include="ReadLine">
+            <Version>2.0.1</Version>
+        </PackageVersion>
+        <PackageVersion Include="StyleCop.Analyzers">
+            <Version>1.2.0-beta.312</Version>
+        </PackageVersion>
+        <PackageVersion Include="System.CommandLine">
+            <Version>2.0.0-beta1.20574.7</Version>
+        </PackageVersion>
+        <PackageVersion Include="xunit">
+            <Version>2.4.1</Version>
+        </PackageVersion>
+        <PackageVersion Include="xunit.runner.visualstudio">
+            <Version>2.4.3</Version>
+        </PackageVersion>
+    </ItemGroup>
+</Project>
